@@ -1,0 +1,693 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>mysql运维过程中的小tip [转载] | ruiaylin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="ruichao.lin">
+    
+    <meta name="description" content="mysql运维过程中的小 tips
+
+1.查询数据库不同引擎下表和索引的大小
+
+select engine,count(*) table_num, 
+concat(truncate(sum(DATA_LENGTH/1024/1024),2),&#39;MB&#39;) table_size,
+concat(trun">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="ruiaylin" />
+    <meta name="twitter:title" content="mysql运维过程中的小tip [转载] | ruiaylin&#39;s Blog" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ruiaylin&#39;s Blog">ruiaylin&#39;s Blog</a></h1>
+				<h2 class="blog-motto">蹈之而弗悔 ,  慎思而笃行  ...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/07/22/tips-ops-mysql/" title="mysql运维过程中的小tip [转载]" itemprop="url">mysql运维过程中的小tip [转载]</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-07-22T05:04:23.000Z" itemprop="datePublished">7月 22 2014</time>
+    更新日期:<time datetime="2014-07-21T13:14:05.000Z" itemprop="dateModified">7月 21 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql运维过程中的小_tips"><span class="toc-number">1.</span> <span class="toc-text">mysql运维过程中的小 tips</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-查询数据库不同引擎下表和索引的大小"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.查询数据库不同引擎下表和索引的大小</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-查询数据库用户的状态"><span class="toc-number">2.</span> <span class="toc-text">2.查询数据库用户的状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-mysql>=5-5_查询锁阻塞的情况"><span class="toc-number">3.</span> <span class="toc-text">3.mysql>=5.5 查询锁阻塞的情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-通过抓包获取mysql协议包中的sql语句"><span class="toc-number">4.</span> <span class="toc-text">4.通过抓包获取mysql协议包中的sql语句</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-批量修改存储引擎"><span class="toc-number">5.</span> <span class="toc-text">5.批量修改存储引擎</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-mysql_快速创建空表"><span class="toc-number">6.</span> <span class="toc-text">6.mysql 快速创建空表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-观察mysql_status_变量的变化情况"><span class="toc-number">7.</span> <span class="toc-text">7.观察mysql status 变量的变化情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-left_join_条件的区别"><span class="toc-number">8.</span> <span class="toc-text">8.left join 条件的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-多表关联删除"><span class="toc-number">9.</span> <span class="toc-text">9.多表关联删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-多表更新"><span class="toc-number">10.</span> <span class="toc-text">10.多表更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-myisam表count的优化"><span class="toc-number">11.</span> <span class="toc-text">11.myisam表count的优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-group_concat_函数的使用"><span class="toc-number">12.</span> <span class="toc-text">12.group_concat 函数的使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-下面的命令，可以杀死当前用户bbs正在运行的连接）"><span class="toc-number">13.</span> <span class="toc-text">13.下面的命令，可以杀死当前用户bbs正在运行的连接）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#14-脚本实现qps，tps的查看_（适合5-1~5-5）"><span class="toc-number">14.</span> <span class="toc-text">14.脚本实现qps，tps的查看 （适合5.1~5.5）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#15-not_in_查询的一个改写方式"><span class="toc-number">15.</span> <span class="toc-text">15.not in 查询的一个改写方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#16-一条语句删除重复记录的方式"><span class="toc-number">16.</span> <span class="toc-text">16.一条语句删除重复记录的方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#17-时间取值"><span class="toc-number">17.</span> <span class="toc-text">17.时间取值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#18-查看分区表的执行计划"><span class="toc-number">18.</span> <span class="toc-text">18.查看分区表的执行计划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#19-备库临时表问题"><span class="toc-number">19.</span> <span class="toc-text">19.备库临时表问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#20-mysqldump注意事项"><span class="toc-number">20.</span> <span class="toc-text">20.mysqldump注意事项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#20-mysql需要的最大内存"><span class="toc-number">21.</span> <span class="toc-text">20.mysql需要的最大内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#21-mysql实现oracle的count()_over()"><span class="toc-number">22.</span> <span class="toc-text">21.mysql实现oracle的count() over()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#22-mysql实现oracle_的row_number()_over()"><span class="toc-number">23.</span> <span class="toc-text">22.mysql实现oracle 的row_number() over()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#23-mysqldump_的时候忽略某些表"><span class="toc-number">24.</span> <span class="toc-text">23.mysqldump 的时候忽略某些表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#24-修改mysql默认值无需copy表，是不是终于可以在oracle_dba面前嘚瑟一下了"><span class="toc-number">25.</span> <span class="toc-text">24.修改mysql默认值无需copy表，是不是终于可以在oracle dba面前嘚瑟一下了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#25-查询会话时间超过10秒的top_10_SQL"><span class="toc-number">26.</span> <span class="toc-text">25.查询会话时间超过10秒的top 10 SQL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#26-explain_的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。"><span class="toc-number">27.</span> <span class="toc-text">26.explain 的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#27-mysql_实现时间计算迭代"><span class="toc-number">28.</span> <span class="toc-text">27.mysql 实现时间计算迭代</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#28-mysql复制延迟参数的真正含义"><span class="toc-number">29.</span> <span class="toc-text">28.mysql复制延迟参数的真正含义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#29-关于INSERT_INTO_ON_DUPLICATE_KEY_UPDATE的问题"><span class="toc-number">30.</span> <span class="toc-text">29.关于INSERT INTO ON DUPLICATE KEY UPDATE的问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number"></span> <span class="toc-text">总结</span></a>
+		</div>
+		
+		<h4 id="mysql运维过程中的小_tips">mysql运维过程中的小 tips</h4>
+<blockquote>
+<h6 id="1-查询数据库不同引擎下表和索引的大小">1.查询数据库不同引擎下表和索引的大小</h6>
+</blockquote>
+<pre><code><span class="operator"><span class="keyword">select</span> engine,<span class="aggregate">count</span>(*) table_num, 
+concat(<span class="keyword">truncate</span>(<span class="aggregate">sum</span>(DATA_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) table_size,
+concat(<span class="keyword">truncate</span>(<span class="aggregate">sum</span>(INDEX_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) index_size ,
+concat(<span class="keyword">truncate</span>(<span class="aggregate">sum</span>(DATA_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>)+<span class="aggregate">sum</span>(INDEX_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) total_size 
+<span class="keyword">from</span> information_schema.tables 
+<span class="keyword">where</span> TABLE_TYPE=<span class="string">'BASE TABLE'</span>  
+<span class="keyword">group</span> <span class="keyword">by</span> engine;</span>
+</code></pre><blockquote>
+<h4 id="2-查询数据库用户的状态">2.查询数据库用户的状态</h4>
+</blockquote>
+<pre><code>mysql <span class="attribute">-uroot</span> <span class="attribute">-p</span>  <span class="attribute">-e</span> <span class="string">'show processlist\G'</span><span class="subst">|</span>grep State<span class="subst">|</span>sort<span class="subst">|</span>uniq <span class="attribute">-c</span><span class="subst">|</span>sort <span class="attribute">-n</span>
+</code></pre><p>或<br>    mysql -uroot -p  -e ‘show processlist\G’|grep State|sort|uniq -c|sort -n</p>
+<blockquote>
+<h4 id="3-mysql&gt;=5-5_查询锁阻塞的情况">3.mysql&gt;=5.5 查询锁阻塞的情况</h4>
+</blockquote>
+<pre><code>select   
+r.trx<span class="emphasis">_id,  
+r.trx_</span>mysql<span class="emphasis">_thread_</span>id waiting<span class="emphasis">_thread,  
+r.trx_</span>query id,  
+b.trx<span class="emphasis">_mysql_</span>thread<span class="emphasis">_id blocking_</span>thread,  
+b.trx<span class="emphasis">_query blocking_</span>query 
+from  
+information<span class="emphasis">_schema.innodb_</span>lock<span class="emphasis">_waits w 
+inner join  
+information_</span>schema.innodb<span class="emphasis">_trx b  
+on b.trx_</span>id=w.blocking<span class="emphasis">_trx_</span>id 
+inner join 
+information<span class="emphasis">_schema.innodb_</span>trx r  
+<span class="header">on r.trx_id=w.requesting_trx_id;
++--------+----------------+------------------------------+-----------------+----------------+</span>
+<span class="header">| trx_id | waiting_thread | id                 | blocking_thread | blocking_query |
++--------+----------------+------------------------------+-----------------+----------------+</span>
+| 527    |             17 | insert into lidan values (9) |              14 | NULL           |
+<span class="header">| 526    |             16 | insert into lidan values (6) |              14 | NULL           |
+=======================================================</span>
+</code></pre><blockquote>
+<h4 id="4-通过抓包获取mysql协议包中的sql语句">4.通过抓包获取mysql协议包中的sql语句</h4>
+</blockquote>
+<pre><code>/usr/sbin/tcpdump -i eth0 -s 0 -l -w - dst port 3306 | strings | egrep -i '<span class="operator"><span class="keyword">SELECT</span>|<span class="keyword">UPDATE</span>|<span class="keyword">DELETE</span>|<span class="keyword">INSERT</span>|<span class="keyword">SET</span>|<span class="keyword">COMMIT</span>|<span class="keyword">ROLLBACK</span>|<span class="keyword">CREATE</span>|<span class="keyword">DROP</span>|<span class="keyword">ALTER</span>|<span class="keyword">CALL</span><span class="string">'</span></span>
+</code></pre><ul>
+<li>表示输入的文件名（这里表示先输入文件，然后又输出到stdout）</li>
+</ul>
+<blockquote>
+<h4 id="5-批量修改存储引擎">5.批量修改存储引擎</h4>
+</blockquote>
+<pre><code>/usr/<span class="keyword">local</span>/mysql/bin/mysql_convert_table_format
+</code></pre><p>将  28 行  $opt_type —-&gt;  $opt_engine<br>需要注意innodb 的外键和myisam的fulltext index</p>
+<blockquote>
+<h4 id="6-mysql_快速创建空表">6.mysql 快速创建空表</h4>
+</blockquote>
+<p>在MYSQL中有两种方法。</p>
+<pre><code><span class="number">1</span>、create table select <span class="keyword">...</span>
+<span class="number">2</span>、create table like <span class="keyword">...</span>
+</code></pre><p>第一种很多人都知道，第二种却很少人用。<br>第一种有个缺点<br>1、第一种会取消掉原来表的有些定义。<br>手册上是这么讲的：</p>
+<pre><code>Some conversion <span class="keyword">of</span> data types might occur. <span class="keyword">For</span> example, the AUTO_INCREMENT attribute <span class="keyword">is</span> <span class="keyword">not</span> preserved,
+<span class="keyword">and</span> VARCHAR columns can become <span class="built_in">CHAR</span> columns. 
+</code></pre><blockquote>
+<h4 id="7-观察mysql_status_变量的变化情况">7.观察mysql status 变量的变化情况</h4>
+</blockquote>
+<p>方法一，（推荐）<br>每三秒打印出innodb相关状态的变化情况，并且使用白色标示</p>
+<pre><code>watch <span class="attribute">-d</span> <span class="attribute">-n</span> <span class="number">3</span> <span class="string">"mysqladmin -uroot -pxxx ext|egrep Innodb"</span> 
+</code></pre><p>同样也是没三秒打印相关变化但是并没有白色标示</p>
+<pre><code> mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-p1111</span> <span class="attribute">-i</span> <span class="number">3</span> ext<span class="subst">|</span>egrep Innodb
+</code></pre><blockquote>
+<h4 id="8-left_join_条件的区别">8.left join 条件的区别</h4>
+</blockquote>
+<pre><code><span class="header">SELECT * FROM a LEFT JOIN b ON a.uid=b.uid_a WHERE b.password='abcd';
++-----+---------+----------+----------+-------+</span>
+<span class="header">| uid | userfen | username | password | uid_a |
++-----+---------+----------+----------+-------+</span>
+<span class="header">|   1 |    1000 | admin    | abcd     |     1 | 
++-----+---------+----------+----------+-------+</span>
+1 ROW IN SET (0.00 sec)
+
+<span class="header">mysql&gt; SELECT * FROM a LEFT JOIN b ON a.uid=b.uid_a AND b.password='abcd';     
++-------+---------+----------+----------+-------+</span>
+<span class="header">| uid   | userfen | username | password | uid_a |
++-------+---------+----------+----------+-------+</span>
+|     1 |    1000 | admin    | abcd     |     1 | 
+<span class="header">| 22222 | 2392032 | NULL     | NULL     |  NULL | 
++-------+---------+----------+----------+-------+</span>
+</code></pre><p>2 ROWS IN SET (0.00 sec)<br>WHERE 语句是在left join完成之后才执行的，所以它匹配不到NULL的行，ON语句是在left join之前执行。</p>
+<blockquote>
+<h4 id="9-多表关联删除">9.多表关联删除</h4>
+</blockquote>
+<p>删除表aaa中id 与表t中id相同的数据</p>
+<pre><code><span class="operator"><span class="keyword">delete</span> <span class="keyword">from</span> aaa <span class="keyword">using</span> t ,aaa  <span class="keyword">where</span> aaa.id=t.id ;</span> 
+</code></pre><p>或</p>
+<pre><code><span class="operator"><span class="keyword">delete</span>  aaa ,t <span class="keyword">from</span> aaa ,t  <span class="keyword">where</span> aaa.id=t.id ;</span>
+</code></pre><p>或</p>
+<pre><code><span class="operator"><span class="keyword">delete</span> tt1 <span class="keyword">from</span>  t1  <span class="keyword">as</span> tt1  , t2 <span class="keyword">as</span>  tt2 <span class="keyword">where</span>  tt1.id=tt2.id;</span>
+</code></pre><blockquote>
+<h4 id="10-多表更新">10.多表更新</h4>
+</blockquote>
+<p>只更新表bo</p>
+<pre><code><span class="operator"><span class="keyword">update</span> bo , t_disc td  <span class="keyword">SET</span>  bo.name=<span class="string">'你'</span> <span class="keyword">where</span> bo.name=td.name;</span>
+</code></pre><p>同时更新两个表（线上环境不推荐同时更新多表） </p>
+<pre><code>update bo , t_disc td  <span class="keyword">SET</span>  bo<span class="preprocessor">.name</span>=<span class="string">'你'</span> ,td<span class="preprocessor">.name</span>=<span class="string">'你'</span> where bo<span class="preprocessor">.name</span>=td<span class="preprocessor">.name</span><span class="comment">;  </span>
+</code></pre><p>mysql对ip的存储</p>
+<pre><code><span class="function">INET_ATON(expr)</span>
+</code></pre><p>给出一个作为字符串的网络地址的点地址表示，返回一个代表该地址数值的整数。地址可以是4或8比特地址。</p>
+<pre><code><span class="keyword">SELECT</span> INET_ATON(<span class="string">'209.207.224.40'</span>);
+<span class="subst">-&gt; </span><span class="number">3520061480</span>
+</code></pre><p>产生的数字总是按照网络字节顺序。如上面的例子，数字按照 209×2563 + 207×2562 + 224×256 + 40 进行计算。<br>INET_ATON() 也能理解短格式 IP 地址：</p>
+<pre><code>mysql&gt; <span class="tag">SELECT</span> <span class="function">INET_ATON(<span class="string">'127.0.0.1'</span>)</span>, <span class="function">INET_ATON(<span class="string">'127.1'</span>)</span>;
+        -&gt; 2130706433, 2130706433
+</code></pre><p>注释： 在存储由INET_ATON() 产生的值时，推荐你使用 INT UNSIGNED 列。假如你使用 (带符号) INT列,<br>则相应的第一个八位组大于127的IP 地址值会被截至  2147483647 (即, INET_ATON(‘127.255.255.255’) 所返回的值)。 </p>
+<p>INET_NTOA(expr)<br>给定一个数字网络地址 (4 或 8 比特),返回作为字符串的该地址的电地址表示。</p>
+<pre><code>mysql<span class="subst">&gt;</span> <span class="keyword">SELECT</span> INET_NTOA(<span class="number">3520061480</span>);
+        <span class="subst">-&gt; </span><span class="string">'209.207.224.40'</span>
+</code></pre><blockquote>
+<h4 id="11-myisam表count的优化">11.myisam表count的优化</h4>
+</blockquote>
+<p> count查询<br>对于MYISAM中的SQL：</p>
+<pre><code><span class="operator"><span class="keyword">SELECT</span> <span class="aggregate">count</span>(*) <span class="keyword">from</span> city <span class="keyword">WHERE</span> id &gt; <span class="number">2</span>;</span>
+</code></pre><p>改写为：</p>
+<pre><code><span class="keyword">SELECT</span> (<span class="keyword">SELECT</span> COUNT<span class="comment">(*) FROM city) - count(*)</span> <span class="keyword">FROM</span> city <span class="keyword">where</span> id &lt;=<span class="number">2</span>
+</code></pre><p>数据量大的情况下，并且id最好为顺序增长的或是主键（或是索引）<br>因为misam表count（*）会作为一个常量存储所以会很快</p>
+<blockquote>
+<h4 id="12-group_concat_函数的使用">12.group_concat 函数的使用</h4>
+</blockquote>
+<pre><code>select <span class="property">id</span>,group_concat(<span class="property">name</span>) <span class="property">name</span> <span class="keyword">from</span> tb group <span class="keyword">by</span> <span class="property">id</span>;
+<span class="number">1</span>,a1
+<span class="number">1</span>,a2
+<span class="number">2</span>,b1
+<span class="number">2</span>,b2
+</code></pre><p>结果是</p>
+<pre><code><span class="property">id</span>  <span class="property">name</span>
+<span class="number">1</span>    a1,a2
+<span class="number">2</span>    b1,b2
+</code></pre><p>上边的函数可以实现查询结果<br>另外用group_concat的时候请注意，连接起来的字段如果是int型，一定要转换成char再拼起来，<br>否则在你执行后返回的将不是一个逗号隔开的串，而是byte。需要注意的是如果不带group by<br>那么函数就是对列的所有值进行连接</p>
+<blockquote>
+<h4 id="13-下面的命令，可以杀死当前用户bbs正在运行的连接）">13.下面的命令，可以杀死当前用户bbs正在运行的连接）</h4>
+</blockquote>
+<p>已验证</p>
+<pre><code>mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-p</span>  processlist<span class="subst">|</span>awk <span class="attribute">-F</span> <span class="string">"|"</span> <span class="string">'{if($3~/bbs/)print $2}'</span><span class="subst">|</span>xargs <span class="attribute">-n</span> <span class="number">1</span> mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-p</span> kill
+</code></pre><p>升级版：<br>kill 用户名为haha 执行时间超过50秒的select 语句</p>
+<pre><code>mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-pxxx</span>  processlist<span class="subst">|</span>awk <span class="attribute">-F</span> <span class="string">"|"</span> <span class="string">'/select/{if($3~/haha/ &amp;&amp; $7 &gt; 50)print $2}'</span><span class="subst">|</span>xargs <span class="attribute">-n</span> <span class="number">1</span> mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-pxxx</span> kill
+</code></pre><blockquote>
+<h4 id="14-脚本实现qps，tps的查看_（适合5-1~5-5）">14.脚本实现qps，tps的查看 （适合5.1~5.5）</h4>
+</blockquote>
+<pre><code>mysqladmin -uroot -pxxxx extended-status -i1 |<span class="command">\
+</span>awk 'BEGIN<span class="special">{</span>print " QPS   Com_commit  Com_rollback   Threads_con   Threads_run   TPS<span class="command">\n</span> <span class="command">\
+</span> ---------------------------------------------------------------------------<span class="command">\n</span>"<span class="special">}</span> <span class="command">\
+</span>/Queries/<span class="special">{</span>q=<span class="formula">$4-qp;qp=$</span>4<span class="special">}</span><span class="command">\
+</span>/Com_commit/<span class="special">{</span>com=<span class="formula">$4-qc;qc=$</span>4<span class="special">}</span><span class="command">\
+</span>/Com_rollback/<span class="special">{</span>rol=<span class="formula">$4-cr;cr=$</span>4<span class="special">}</span><span class="command">\
+</span>/Threads_connected/<span class="special">{</span>tc=<span class="formula">$4<span class="special">}</span><span class="command">\
+</span>/Threads_running/<span class="special">{</span>printf "%5d %5d %10d %15d %15d %10d<span class="command">\n</span>",q,com,rol,tc,$</span>4,com + rol<span class="special">}</span>'
+</code></pre><p>上面的是5.1的 5.5的参数增加了很多需要修改</p>
+<pre><code>mysqladmin -uroot -pxxx extended-status -i1|<span class="command">\
+</span>awk 'BEGIN<span class="special">{</span>print " QPS   Com_commit  Com_rollback   Threads_con   Threads_run   TPS<span class="command">\n</span> <span class="command">\
+</span> ---------------------------------------------------------------------------<span class="command">\n</span>"<span class="special">}</span> <span class="command">\
+</span>/Queries/<span class="special">{</span>q=<span class="formula">$4-qp;qp=$</span>4<span class="special">}</span><span class="command">\
+</span>/Com_commit/<span class="special">{</span>com=<span class="formula">$4-qc;qc=$</span>4<span class="special">}</span><span class="command">\
+</span>/Com_rollback /<span class="special">{</span>rol=<span class="formula">$4-cr;cr=$</span>4<span class="special">}</span><span class="command">\
+</span>/Threads_connected/<span class="special">{</span>tc=<span class="formula">$4<span class="special">}</span><span class="command">\
+</span>/Threads_running/<span class="special">{</span>printf "%5d %5d %10d %15d %15d %10d<span class="command">\n</span>",q,com,rol,tc,$</span>4,com + rol<span class="special">}</span>'
+</code></pre><p>注意rollback后面的空格，另外你可能一直看到TPS对应的值为0，原因是：<br> 计算TPS公式（com_commit+com_rollback）/time 这种计算方法必须有一个前提条件是：所有的事务必须是显示提交的，<br>如果存在隐式的提交和会滚（默认autocommit=1，或者value为on）可以看到Com_commit 始终为0 ，这就是隐式提交的时候，<br>不计入com_commit和com_rollback中的。</p>
+<blockquote>
+<h4 id="15-not_in_查询的一个改写方式">15.not in 查询的一个改写方式</h4>
+</blockquote>
+<pre><code><span class="header">mysql&gt; select d.* from d where name&lt;&gt;'1' and id not in (select id from e);
++----+------+</span>
+<span class="header">| id | name |
++----+------+</span>
+|  9 | 9    |
+<span class="header">| 19 | 19   |
++----+------+</span>
+</code></pre><p>2 rows in set (0.00 sec)<br>改装后<br>    mysql&gt;  select d.id ,d.name,e.id,e.name from d left join e on d.id=e.id where d.name&lt;&gt;’1’ and e.id is null;<br>    +——+———+———+———+<br>    | id | name | id   | name |<br>    +——+———+———+———+<br>    |  9 | 9    | NULL | NULL |<br>    | 19 | 19   | NULL | NULL |<br>    +——+———+———+———+<br>    2 rows in set (0.00 sec)</p>
+<blockquote>
+<h4 id="16-一条语句删除重复记录的方式">16.一条语句删除重复记录的方式</h4>
+</blockquote>
+<p>number_id 和number_Pstn_Backup 相同就表示重复而id表示主键<br>==嵌套子查询写法 </p>
+<pre><code><span class="operator"><span class="keyword">delete</span>   k <span class="keyword">from</span> imeet_test <span class="keyword">as</span> k  ,
+(<span class="keyword">select</span> a.id <span class="keyword">from</span> imeet_test a <span class="keyword">where</span> a.id &lt;(<span class="keyword">select</span> <span class="aggregate">max</span>(b.id) <span class="keyword">from</span> imeet_test b <span class="keyword">where</span> b.number_id=a.number_id <span class="keyword">and</span> b.number_Pstn_Backup=a.number_Pstn_Backup)
+) <span class="keyword">as</span>  m <span class="keyword">where</span> k.id=m.id;</span>
+</code></pre><p> ==相关子查询写法</p>
+<pre><code>explain  <span class="operator"><span class="keyword">select</span> a.id <span class="keyword">from</span> imeet_test a ,(<span class="keyword">select</span> <span class="aggregate">max</span>(b.id) id ,b.number_id,b.number_Pstn_Backup <span class="keyword">from</span> imeet_test b <span class="keyword">group</span> <span class="keyword">by</span>  b.number_id, 
+b.number_Pstn_Backup <span class="keyword">having</span> <span class="aggregate">count</span>(<span class="number">1</span>)&gt;<span class="number">1</span>) <span class="keyword">as</span> c <span class="keyword">where</span>  a.number_id= c.number_id <span class="keyword">and</span> a.number_Pstn_Backup= c.number_Pstn_Backup
+<span class="keyword">and</span> a.id&lt;c.id;</span> 
+</code></pre><blockquote>
+<h4 id="17-时间取值">17.时间取值</h4>
+</blockquote>
+<p>前一天</p>
+<pre><code><span class="operator"><span class="keyword">select</span> now()-<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">day</span> </span>
+</code></pre><p>取上一个月的第一天</p>
+<pre><code><span class="operator"><span class="keyword">select</span> date_sub(date_format(now(),<span class="string">'%y-%m-01'</span>),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> date_add(date_add(last_day(now()),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">day</span>),<span class="keyword">interval</span> -<span class="number">2</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> date_sub(date_sub(date_format(now(),<span class="string">'%y-%m-%d'</span>),<span class="keyword">interval</span> extract(<span class="keyword">day</span> <span class="keyword">from</span> now())-<span class="number">1</span> <span class="keyword">day</span>),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
+</code></pre><p>上个月的最后一天</p>
+<pre><code><span class="operator"><span class="keyword">select</span> last_day(now()-<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> date_add(last_day(now()),<span class="keyword">interval</span> -<span class="number">1</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> date_sub(date_sub(date_format(now(),<span class="string">'%y-%m-01'</span>),<span class="keyword">interval</span> <span class="number">0</span> <span class="keyword">month</span>),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">day</span>);</span> 
+<span class="operator"><span class="keyword">select</span> date_add(date_sub(date_format(now(),<span class="string">'%y-%m-01'</span>),<span class="keyword">interval</span> <span class="number">0</span> <span class="keyword">month</span>),<span class="keyword">interval</span> -<span class="number">1</span> <span class="keyword">day</span>);</span>
+<span class="operator"><span class="keyword">select</span> date_sub(date_sub(date_format(now(),<span class="string">'%y-%m-%d'</span>),<span class="keyword">interval</span> extract(<span class="keyword">day</span>     <span class="keyword">from</span> now()) <span class="keyword">day</span>),<span class="keyword">interval</span> <span class="number">0</span> <span class="keyword">month</span>) <span class="keyword">as</span> dt</span>
+</code></pre><p>本周第一天：</p>
+<pre><code><span class="operator"><span class="keyword">select</span> date_add(curdate(),<span class="keyword">interval</span> (WEEKDAY(curdate()) + <span class="number">1</span>)*-<span class="number">1</span><span class="keyword">day</span>) ;</span>
+<span class="operator"><span class="keyword">select</span> date_sub(curdate(),<span class="keyword">interval</span> WEEKDAY(curdate()) + <span class="number">1</span><span class="keyword">day</span>) ;</span>
+</code></pre><p>本周最后一天</p>
+<pre><code><span class="operator"><span class="keyword">select</span> date_sub(curdate(),<span class="keyword">interval</span> WEEKDAY(curdate()) - <span class="number">5</span> <span class="keyword">day</span>);</span>
+<span class="operator"><span class="keyword">select</span> date_add(curdate(),<span class="keyword">INTERVAL</span> (WEEKDAY(curdate()) - <span class="number">5</span>)*-<span class="number">1</span> <span class="keyword">day</span>);</span>
+</code></pre><p>前一周的最后一天</p>
+<pre><code><span class="tag">select</span> <span class="function">date_sub(<span class="function">curdate()</span>,interval <span class="function">WEEKDAY(<span class="function">curdate()</span>)</span> + <span class="number">2</span> day)</span> 
+</code></pre><p>其他的可以类推</p>
+<blockquote>
+<h4 id="18-查看分区表的执行计划">18.查看分区表的执行计划</h4>
+</blockquote>
+<p>查看分区的执行计划 EXPLAIN PARTITIONS SELECT * FROM trb1 WHERE id &lt; 5\G<br>但是记得住不能让两个关键字PARTITIONS 和 EXTENDED 同时出现在explain里 </p>
+<blockquote>
+<h4 id="19-备库临时表问题">19.备库临时表问题</h4>
+</blockquote>
+<p>slave重启的时候要检查是否有临时表show status like ‘%Slav_open_temp_tables%’ 必须为0才能够正常重启<br>否则可能导致报错或数据不一致</p>
+<blockquote>
+<h4 id="20-mysqldump注意事项">20.mysqldump注意事项</h4>
+</blockquote>
+<pre><code> <span class="number">1</span>，mysqldump  默认不会导出 INFORMATION_SCHEMA 库，但是在<span class="number">5.5</span>之后可以在db
+ 列表显示指定该库名并且加上 <span class="subst">--</span><span class="keyword">skip</span><span class="attribute">-lock</span><span class="attribute">-tables</span> 参数
+ <span class="number">2</span>，<span class="number">5.5</span><span class="number">.25</span>之前mysqldump 是不导出mysql系统库的general_log 和 slow_query_log 表，而在此之后mysqldump会生成
+ 重建语句因此在reload 的时候这两个表不会丢失，但是表内容为空。
+ <span class="number">3</span>，mysqldump 可以导出为cvs 和<span class="built_in">xml</span>格式，对于导出为<span class="built_in">xml</span>格式对配置文件的管理是一个不错的应用
+</code></pre><blockquote>
+<h4 id="20-mysql需要的最大内存">20.mysql需要的最大内存</h4>
+</blockquote>
+<p>服务器允许的最大连接数，尽量不要设置太大，因为设置太大的话容易导致内存溢出，需要通过如下公式来确定：</p>
+<pre><code><span class="constant">SET</span> <span class="variable">@k_bytes</span> = <span class="number">1024</span>; <span class="constant">SET</span> <span class="variable">@m_bytes</span> = <span class="variable">@k_bytes</span> * <span class="number">1024</span>; <span class="constant">SET</span> <span class="variable">@g_bytes</span> = <span class="variable">@m_bytes</span> * <span class="number">1024</span>; <span class="constant">SELECT</span> ( <span class="variable">@@key_buffer_size</span> + <span class="variable">@@query_cache_size</span> + <span class="variable">@@tmp_table_size</span>+ <span class="variable">@@innodb_buffer_pool_size</span> + <span class="variable">@@innodb_additional_mem_pool_size</span>+ <span class="variable">@@innodb_log_buffer_size</span>+ <span class="variable">@@max_connections</span> * ( <span class="variable">@@read_buffer_size</span> + <span class="variable">@@read_rnd_buffer_size</span> + <span class="variable">@@sort_buffer_size</span>+ <span class="variable">@@join_buffer_size</span> + <span class="variable">@@binlog_cache_size</span> + <span class="variable">@@thread_stack</span> ) ) / <span class="variable">@g_bytes</span> <span class="constant">AS</span> <span class="constant">MAX_MEMORY_USED_GB</span>;
+</code></pre><blockquote>
+<h4 id="21-mysql实现oracle的count()_over()">21.mysql实现oracle的count() over()</h4>
+</blockquote>
+<pre><code><span class="header">select a.*,b.c_s from c_over a ,(select d ,d2 ,count(*) c_s from c_over group by d,d2  ) as b where a.d=b.d and a.d2=b.d2 order by a.name desc
++---------------------+---------------------+------+-----+</span>
+<span class="header">| d                   | d2                  | name | c_s |
++---------------------+---------------------+------+-----+</span>
+| 2013-12-30 18:27:55 | 2013-12-30 18:27:55 | ee   |   2 |
+| 2013-12-30 18:27:55 | 2013-12-30 18:27:55 | dd   |   2 |
+| 2013-12-30 18:27:48 | 2013-12-30 18:27:44 | bb   |   2 |
+| 2013-12-30 18:27:30 | 2013-12-30 18:27:30 | aa   |   1 |
+<span class="header">| 2013-12-30 18:27:48 | 2013-12-30 18:27:44 | aa   |   2 |
++---------------------+---------------------+------+-----+</span>
+</code></pre><blockquote>
+<h4 id="22-mysql实现oracle_的row_number()_over()">22.mysql实现oracle 的row_number() over()</h4>
+</blockquote>
+<pre><code><span class="header">select a.id ,a.d ,if(@od=a.d,@rank:=@rank+1,@rank:=1) num ,@od:=a.d from (select id ,d from number c order by c.id) as a ,(select @od:=null,@rank:=0 ) as b;                                    
++----+---------------------+------+---------------------+</span>
+<span class="header">| id | d                   | num  | @od:=a.d            |
++----+---------------------+------+---------------------+</span>
+|  1 | 2013-12-30 17:14:11 |    1 | 2013-12-30 17:14:11 |
+|  2 | 2013-12-30 17:14:18 |    1 | 2013-12-30 17:14:18 |
+|  3 | 2013-12-30 17:14:28 |    1 | 2013-12-30 17:14:28 |
+|  4 | 2013-12-30 17:14:28 |    2 | 2013-12-30 17:14:28 |
+|  5 | 2013-12-30 17:15:33 |    1 | 2013-12-30 17:15:33 |
+|  6 | 2013-12-30 17:15:33 |    2 | 2013-12-30 17:15:33 |
+<span class="header">|  7 | 2013-12-30 17:15:33 |    3 | 2013-12-30 17:15:33 |
++----+---------------------+------+---------------------+</span>
+</code></pre><blockquote>
+<h4 id="23-mysqldump_的时候忽略某些表">23.mysqldump 的时候忽略某些表</h4>
+</blockquote>
+<pre><code>mysqldump -uroot -pxxx  --ignore-table=db_name.table_name1 --ignore-table=db_name.table_name2 <span class="keyword">...</span> <span class="keyword">...</span> 
+</code></pre><p>即每一个表需要完整的写一遍，而不是 —ignore-table=db_name.table_name1 ，db_name.table_name2 挺土鳖的</p>
+<blockquote>
+<h4 id="24-修改mysql默认值无需copy表，是不是终于可以在oracle_dba面前嘚瑟一下了">24.修改mysql默认值无需copy表，是不是终于可以在oracle dba面前嘚瑟一下了</h4>
+</blockquote>
+<pre><code><span class="operator"><span class="keyword">alter</span> <span class="keyword">table</span> tt modify t <span class="keyword">timestamp</span> <span class="keyword">default</span> <span class="string">'0000-00-00 00:00:00'</span>;</span>
+Query OK, 0 rows affected (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+</code></pre><p>用modify 修改默认值 1572864 记录瞬间完成<br>如果你喜欢使用change那也行，多打几个字</p>
+<blockquote>
+<h4 id="25-查询会话时间超过10秒的top_10_SQL">25.查询会话时间超过10秒的top 10 SQL</h4>
+</blockquote>
+<pre><code><span class="operator"><span class="keyword">select</span>* <span class="keyword">from</span>  PROCESSLIST <span class="keyword">where</span> command&lt;&gt;<span class="string">"Sleep"</span>  <span class="keyword">and</span> <span class="keyword">time</span> &gt;<span class="number">10</span> <span class="keyword">AND</span> DB <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">TIME</span> <span class="keyword">desc</span> limit <span class="number">10</span>;</span>   
+</code></pre><blockquote>
+<h4 id="26-explain_的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。">26.explain 的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。</h4>
+</blockquote>
+<pre><code>参考： explain <span class="operator"><span class="keyword">select</span> sleep(<span class="number">2</span>) 和 explain <span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> sleep(<span class="number">2</span>)) <span class="keyword">as</span> a ;</span>
+</code></pre><blockquote>
+<h4 id="27-mysql_实现时间计算迭代">27.mysql 实现时间计算迭代</h4>
+</blockquote>
+<pre><code><span class="operator"><span class="keyword">select</span> to_char(add_months(to_date(<span class="string">'201301'</span>,<span class="string">'yyyymm'</span>),<span class="keyword">level</span>-<span class="number">1</span>),<span class="string">'yyyymm'</span>) yyyymm  <span class="keyword">from</span> dual <span class="keyword">connect</span> <span class="keyword">by</span> <span class="keyword">level</span> &lt;<span class="number">13</span>;</span>
+</code></pre><p>改写如下：</p>
+<pre><code><span class="operator"><span class="keyword">select</span> date_format(date_add(now() ,<span class="keyword">interval</span> f.seq <span class="keyword">month</span>),<span class="string">'%Y%m'</span>)  <span class="keyword">as</span> m <span class="keyword">from</span> (<span class="keyword">select</span> ifnull(@rank,<span class="number">0</span>),@rank:=@rank+<span class="number">1</span> <span class="keyword">as</span> seq <span class="keyword">from</span> (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> a ,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> b,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> c,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> d,(<span class="keyword">select</span> @rank:=<span class="number">0</span>) <span class="keyword">as</span> e ) <span class="keyword">as</span> f <span class="keyword">where</span> f.seq&lt;=<span class="number">12</span>;</span> 
+</code></pre><p>结果集：</p>
+<pre><code><span class="code">+--------+</span>
+<span class="header">| m      |
++--------+</span>
+| 201403 |
+| 201404 |
+| 201405 |
+| 201406 |
+| 201407 |
+| 201408 |
+| 201409 |
+| 201410 |
+| 201411 |
+| 201412 |
+| 201501 |
+<span class="header">| 201502 |
++--------+</span>
+</code></pre><blockquote>
+<h4 id="28-mysql复制延迟参数的真正含义">28.mysql复制延迟参数的真正含义</h4>
+</blockquote>
+<p>from : <a href="http://www.dbunix.com/?p=3348" target="_blank" rel="external">http://www.dbunix.com/?p=3348</a><br>源码：</p>
+<pre><code><span class="keyword">long</span> time_diff= ((<span class="keyword">long</span>)(time(<span class="number">0</span>) - mi-&gt;rli.last_master_timestamp)- mi-&gt;clock_diff_with_master);
+mi-&gt;clock_diff_with_master=(<span class="keyword">long</span>) (time((time_t*) <span class="number">0</span>) - strtoul(master_row[<span class="number">0</span>], <span class="number">0</span>, <span class="number">10</span>));
+</code></pre><p>结论：<br>seconds_behind_master=(slave系统时间-master执行最新event的timestamp)-(slave系统时间-master系统时间)<br>(slave系统时间-master执行最新event的timestamp):得到最新event到slave执行还要多久。<br>(slave系统时间-master系统时间):可能存在主备系统时间差别，所以计算seconds_behind_master要减去，但实际情况，slave和master系统时间基本一致，得到结果应该接近0<br>文档中这句误导很多人计算seconds_behind_master</p>
+<pre><code>If <span class="operator">the</span> network is slow, this is <span class="operator">not</span> <span class="operator">a</span> good approximation; <span class="operator">the</span> slave SQL thread may quite often be caught up <span class="operator">with</span> <span class="operator">the</span> slow-reading slave I/O thread, so Seconds_Behind_Master often shows <span class="operator">a</span> <span class="built_in">value</span> <span class="operator">of</span> <span class="number">0</span>
+</code></pre><blockquote>
+<h4 id="29-关于INSERT_INTO_ON_DUPLICATE_KEY_UPDATE的问题">29.关于INSERT INTO ON DUPLICATE KEY UPDATE的问题</h4>
+</blockquote>
+<p>很多小伙伴都知道该语句的用法是如果插入的数据和UNIQUE索引或PRIMARY KEY<br>重复则进行更新，但是如果是扩展插入好像不常见</p>
+<pre><code><span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">TABLE</span> (a,b,c) <span class="keyword">VALUES</span>
+(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>),
+(<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>),</span>
+</code></pre><p>ON DUPLICATE KEY UPDATE b=VALUES(b);<br>测试数据：</p>
+<pre><code><span class="header">select * from group_t;
++------+-----+------+</span>
+<span class="header">| id   | id2 | id3  |
++------+-----+------+</span>
+|    2 |   1 |   10 |
+|    1 |   2 |    2 |
+|    1 |   3 |    2 |
+|    3 |   4 |    4 |
+<span class="header">|    2 |   5 |   10 |
++------+-----+------+</span>
+insert into group<span class="emphasis">_t values (1,1,1),(1,2,1) ON DUPLICATE KEY update id3=values(id3);
+select * from group_</span>t;
+<span class="code">+------+</span>-----<span class="code">+------+</span>
+<span class="header">| id   | id2 | id3  |
++------+-----+------+</span>
+|    2 |   1 |    1 |
+|    1 |   2 |    1 |
+|    1 |   3 |    2 |
+|    3 |   4 |    4 |
+<span class="header">|    2 |   5 |   10 |
++------+-----+------+</span>
+</code></pre><h3 id="总结">总结</h3>
+<pre><code>依旧在路上 <span class="keyword">...</span>
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/mysql/">mysql</a><a href="/tags/tips/">tips</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mysql/">mysql</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2014/07/22/tips-ops-mysql/" data-title="mysql运维过程中的小tip [转载] | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/07/22/mult-instance-mysql/"  title="mysql多实例">
+ <strong>NEXT:</strong><br/> 
+ <span>mysql多实例
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql运维过程中的小_tips"><span class="toc-number">1.</span> <span class="toc-text">mysql运维过程中的小 tips</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#1-查询数据库不同引擎下表和索引的大小"><span class="toc-number">1.0.1.</span> <span class="toc-text">1.查询数据库不同引擎下表和索引的大小</span></a></li></ol></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-查询数据库用户的状态"><span class="toc-number">2.</span> <span class="toc-text">2.查询数据库用户的状态</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-mysql>=5-5_查询锁阻塞的情况"><span class="toc-number">3.</span> <span class="toc-text">3.mysql>=5.5 查询锁阻塞的情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-通过抓包获取mysql协议包中的sql语句"><span class="toc-number">4.</span> <span class="toc-text">4.通过抓包获取mysql协议包中的sql语句</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-批量修改存储引擎"><span class="toc-number">5.</span> <span class="toc-text">5.批量修改存储引擎</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-mysql_快速创建空表"><span class="toc-number">6.</span> <span class="toc-text">6.mysql 快速创建空表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-观察mysql_status_变量的变化情况"><span class="toc-number">7.</span> <span class="toc-text">7.观察mysql status 变量的变化情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#8-left_join_条件的区别"><span class="toc-number">8.</span> <span class="toc-text">8.left join 条件的区别</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#9-多表关联删除"><span class="toc-number">9.</span> <span class="toc-text">9.多表关联删除</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#10-多表更新"><span class="toc-number">10.</span> <span class="toc-text">10.多表更新</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#11-myisam表count的优化"><span class="toc-number">11.</span> <span class="toc-text">11.myisam表count的优化</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#12-group_concat_函数的使用"><span class="toc-number">12.</span> <span class="toc-text">12.group_concat 函数的使用</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#13-下面的命令，可以杀死当前用户bbs正在运行的连接）"><span class="toc-number">13.</span> <span class="toc-text">13.下面的命令，可以杀死当前用户bbs正在运行的连接）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#14-脚本实现qps，tps的查看_（适合5-1~5-5）"><span class="toc-number">14.</span> <span class="toc-text">14.脚本实现qps，tps的查看 （适合5.1~5.5）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#15-not_in_查询的一个改写方式"><span class="toc-number">15.</span> <span class="toc-text">15.not in 查询的一个改写方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#16-一条语句删除重复记录的方式"><span class="toc-number">16.</span> <span class="toc-text">16.一条语句删除重复记录的方式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#17-时间取值"><span class="toc-number">17.</span> <span class="toc-text">17.时间取值</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#18-查看分区表的执行计划"><span class="toc-number">18.</span> <span class="toc-text">18.查看分区表的执行计划</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#19-备库临时表问题"><span class="toc-number">19.</span> <span class="toc-text">19.备库临时表问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#20-mysqldump注意事项"><span class="toc-number">20.</span> <span class="toc-text">20.mysqldump注意事项</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#20-mysql需要的最大内存"><span class="toc-number">21.</span> <span class="toc-text">20.mysql需要的最大内存</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#21-mysql实现oracle的count()_over()"><span class="toc-number">22.</span> <span class="toc-text">21.mysql实现oracle的count() over()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#22-mysql实现oracle_的row_number()_over()"><span class="toc-number">23.</span> <span class="toc-text">22.mysql实现oracle 的row_number() over()</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#23-mysqldump_的时候忽略某些表"><span class="toc-number">24.</span> <span class="toc-text">23.mysqldump 的时候忽略某些表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#24-修改mysql默认值无需copy表，是不是终于可以在oracle_dba面前嘚瑟一下了"><span class="toc-number">25.</span> <span class="toc-text">24.修改mysql默认值无需copy表，是不是终于可以在oracle dba面前嘚瑟一下了</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#25-查询会话时间超过10秒的top_10_SQL"><span class="toc-number">26.</span> <span class="toc-text">25.查询会话时间超过10秒的top 10 SQL</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#26-explain_的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。"><span class="toc-number">27.</span> <span class="toc-text">26.explain 的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#27-mysql_实现时间计算迭代"><span class="toc-number">28.</span> <span class="toc-text">27.mysql 实现时间计算迭代</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#28-mysql复制延迟参数的真正含义"><span class="toc-number">29.</span> <span class="toc-text">28.mysql复制延迟参数的真正含义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#29-关于INSERT_INTO_ON_DUPLICATE_KEY_UPDATE的问题"><span class="toc-number">30.</span> <span class="toc-text">29.关于INSERT INTO ON DUPLICATE KEY UPDATE的问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number"></span> <span class="toc-text">总结</span></a>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/56/" title="5.6">5.6<sup>1</sup></a></li>
+		
+			<li><a href="/tags/backup/" title="backup">backup<sup>1</sup></a></li>
+		
+			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/failover/" title="failover">failover<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+		
+			<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
+		
+			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tips/" title="tips">tips<sup>1</sup></a></li>
+		
+			<li><a href="/tags/优化/" title="优化">优化<sup>1</sup></a></li>
+		
+			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
+		
+			<li><a href="/tags/部署/" title="部署">部署<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
+			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

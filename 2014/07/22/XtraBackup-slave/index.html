@@ -1,0 +1,420 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>使用Percona XtraBackup热备搭建slave数据库 | ruiaylin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="ruichao.lin">
+    
+    <meta name="description" content="使用Percona XtraBackup热备搭建slave数据库
+下载安装XtraBackup
+1.在http://www.percona.com/downloads/XtraBackup/LATEST/   
+2.解压安装，并配置path路径 export PATH=$JAVA_HOME/bin:">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="ruiaylin" />
+    <meta name="twitter:title" content="使用Percona XtraBackup热备搭建slave数据库 | ruiaylin&#39;s Blog" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ruiaylin&#39;s Blog">ruiaylin&#39;s Blog</a></h1>
+				<h2 class="blog-motto">蹈之而弗悔 ,  慎思而笃行  ...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/07/22/XtraBackup-slave/" title="使用Percona XtraBackup热备搭建slave数据库" itemprop="url">使用Percona XtraBackup热备搭建slave数据库</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-07-22T04:55:27.000Z" itemprop="datePublished">7月 22 2014</time>
+    更新日期:<time datetime="2014-07-21T12:59:40.000Z" itemprop="dateModified">7月 21 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#下载安装XtraBackup"><span class="toc-number">1.</span> <span class="toc-text">下载安装XtraBackup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置ssh_信任通道"><span class="toc-number">2.</span> <span class="toc-text">配置ssh 信任通道</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全量备份并传输到slave机器："><span class="toc-number">3.</span> <span class="toc-text">全量备份并传输到slave机器：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录机器恢复"><span class="toc-number">4.</span> <span class="toc-text">登录机器恢复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注_：innobackupex_–copy-back_/data/tmp/_目录下面的"><span class="toc-number">5.</span> <span class="toc-text">注 ：innobackupex –copy-back /data/tmp/　目录下面的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#只读启动mysql数据库"><span class="toc-number">6.</span> <span class="toc-text">只读启动mysql数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql_设置复制结构"><span class="toc-number">7.</span> <span class="toc-text">登录mysql 设置复制结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动恢复"><span class="toc-number">8.</span> <span class="toc-text">启动恢复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他知识_："><span class="toc-number">9.</span> <span class="toc-text">其他知识 ：</span></a></li></ol>
+		</div>
+		
+		<p>使用Percona XtraBackup热备搭建slave数据库</p>
+<h4 id="下载安装XtraBackup">下载安装XtraBackup</h4>
+<pre><code><span class="number">1</span>.在<span class="symbol">http:</span>/<span class="regexp">/www.percona.com/downloads</span><span class="regexp">/XtraBackup/</span><span class="constant">LATEST</span>/   
+<span class="number">2</span>.解压安装，并配置path路径 export <span class="constant">PATH</span>=<span class="variable">$JAVA_HOME</span>/<span class="symbol">bin:</span>/usr/local/<span class="symbol">xxx:</span><span class="variable">$PATH</span>  
+<span class="number">3</span>.我的mysql的配置文件是/xx/my.cnf，如果不指定，<span class="constant">XtraBackup</span>默认使用此文
+  件识别mysql安装目录，数据文件目录等信息
+</code></pre><h4 id="配置ssh_信任通道">配置ssh 信任通道</h4>
+<h4 id="全量备份并传输到slave机器：">全量备份并传输到slave机器：</h4>
+<p>备份数据库，直接传输到对应的机器 ，节省空间</p>
+<pre><code><span class="comment">innobackupex</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">user=root</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">password=xxxx</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">stream=tar</span> <span class="comment">/data/tmp/</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave</span><span class="literal">-</span><span class="comment">info</span> <span class="comment">|</span> <span class="comment">ssh</span> <span class="comment">slaveip</span> <span class="comment">"tar</span> <span class="comment">xfi</span> <span class="literal">-</span> <span class="literal">-</span><span class="comment">C</span> <span class="comment">/data/tmp"</span>
+</code></pre><blockquote>
+<p>备份完成之后会提示日志：<br>日志</p>
+</blockquote>
+<pre><code>innobackupex: Backup created <span class="keyword">in</span> directory <span class="string">'/data/tmp'</span>
+innobackupex: MySQL binlog position: filename <span class="string">'binlog.000755'</span>, position <span class="number">95778375</span>
+innobackupex: MySQL slave binlog position: master host <span class="string">'10.209.140.22'</span>, filename <span class="string">'binlog.001217'</span>, position <span class="number">352370216</span>
+innobackupex: You must use -i (--ignore-zeros) <span class="built_in">option</span> <span class="keyword">for</span> extraction <span class="keyword">of</span> the tar stream.
+<span class="number">140313</span> <span class="number">12</span>:<span class="number">56</span>:<span class="number">53</span>  innobackupex: completed OK!
+</code></pre><h4 id="登录机器恢复">登录机器恢复</h4>
+<pre><code><span class="comment">innobackupex</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">apply</span><span class="literal">-</span><span class="comment">log</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">ibbackup=xtrabackup</span> <span class="comment">/data/tmp/</span>
+</code></pre><blockquote>
+<p>日志</p>
+</blockquote>
+<pre><code><span class="number">140313</span> <span class="number">13</span>:<span class="number">53</span>:<span class="number">30</span> InnoDB: Completed initialization <span class="operator">of</span> buffer pool
+<span class="number">140313</span> <span class="number">13</span>:<span class="number">53</span>:<span class="number">30</span> InnoDB: highest supported <span class="built_in">file</span> <span class="built_in">format</span> is Barracuda.
+<span class="number">140313</span> <span class="number">13</span>:<span class="number">53</span>:<span class="number">34</span>  InnoDB: Waiting <span class="keyword">for</span> <span class="operator">the</span> background threads <span class="built_in">to</span> start
+<span class="number">140313</span> <span class="number">13</span>:<span class="number">53</span>:<span class="number">35</span> Percona XtraDB (<span class="keyword">http</span>://www.percona.com) <span class="number">1.1</span><span class="number">.8</span>-<span class="number">20.1</span> started; <span class="built_in">log</span> sequence <span class="built_in">number</span> <span class="number">6528792620044</span>
+<span class="number">140313</span> <span class="number">13</span>:<span class="number">53</span>:<span class="number">35</span> [Note] Event Scheduler: Loaded <span class="number">0</span> events
+<span class="number">140313</span> <span class="number">13</span>:<span class="number">53</span>:<span class="number">35</span> [Note] /home/oracle/mysql/bin/mysqld: ready <span class="keyword">for</span> connections.
+Version: <span class="string">'5.5.18-log'</span>  <span class="built_in">socket</span>: <span class="string">'/data/mysql3306/run/mysql.sock'</span>  port: <span class="number">3306</span>  Source distribution
+</code></pre><blockquote>
+<h4 id="注_：innobackupex_–copy-back_/data/tmp/_目录下面的">注 ：innobackupex –copy-back /data/tmp/　目录下面的</h4>
+<p> 可以把 /data/tmp/　目录下面的 ib*  copy 到 日志中的iblog目录下。 /data/tmp/下面的其他文件全部导入到 对于的datadir 目录下面。<br>修改conf文件， 配置service_id=xxx </p>
+</blockquote>
+<h4 id="只读启动mysql数据库">只读启动mysql数据库</h4>
+<pre><code><span class="attribute">mysqld_safe --read-only</span>=<span class="string">1 &amp;</span>
+</code></pre><p>   　  </p>
+<h4 id="登录mysql_设置复制结构">登录mysql 设置复制结构</h4>
+<blockquote>
+<p> 在 master 上,需要创建一个复制的帐号:</p>
+</blockquote>
+<pre><code><span class="operator"><span class="keyword">grant</span> replication slave, replication client <span class="keyword">on</span> *.* <span class="keyword">to</span> repl@<span class="string">'219.32.22.%'</span> identified <span class="keyword">by</span> <span class="string">'password'</span>;</span>
+FLUSH PRIVILEGES;
+</code></pre><blockquote>
+<p>根据备份的日志<br>innobackupex: MySQL binlog position: filename ‘binlog.000755’, position 95778375</p>
+</blockquote>
+<pre><code><span class="comment">--- reality like this bellow : </span>
+change master <span class="built_in">to</span> master_host=<span class="string">'xxx'</span>,master_user=<span class="string">'repl'</span>,
+master_password=<span class="string">'xxxx'</span>, master_port=<span class="number">3306</span>,
+master_connect_retry=<span class="number">60</span>,
+master_log_file=<span class="string">'binlog.000755'</span>,
+master_log_pos=<span class="number">95778375</span>; 
+</code></pre><h4 id="启动恢复">启动恢复</h4>
+<pre><code><span class="operator"><span class="keyword">start</span> slave ;</span> 
+<span class="operator"><span class="keyword">show</span> slave status \G</span>
+</code></pre><blockquote>
+<p>到此完成备库搭建</p>
+</blockquote>
+<h4 id="其他知识_：">其他知识 ：</h4>
+<blockquote>
+<p>待续</p>
+</blockquote>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/mysql/">mysql</a><a href="/tags/backup/">backup</a><a href="/tags/备份/">备份</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mysql/">mysql</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2014/07/22/XtraBackup-slave/" data-title="使用Percona XtraBackup热备搭建slave数据库 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/07/22/mysql-auto-failover/" title="mysql5.6自动failover">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  mysql5.6自动failover</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/07/21/hello-world/"  title="Hello World">
+ <strong>NEXT:</strong><br/> 
+ <span>Hello World
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#下载安装XtraBackup"><span class="toc-number">1.</span> <span class="toc-text">下载安装XtraBackup</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置ssh_信任通道"><span class="toc-number">2.</span> <span class="toc-text">配置ssh 信任通道</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#全量备份并传输到slave机器："><span class="toc-number">3.</span> <span class="toc-text">全量备份并传输到slave机器：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录机器恢复"><span class="toc-number">4.</span> <span class="toc-text">登录机器恢复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注_：innobackupex_–copy-back_/data/tmp/_目录下面的"><span class="toc-number">5.</span> <span class="toc-text">注 ：innobackupex –copy-back /data/tmp/　目录下面的</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#只读启动mysql数据库"><span class="toc-number">6.</span> <span class="toc-text">只读启动mysql数据库</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#登录mysql_设置复制结构"><span class="toc-number">7.</span> <span class="toc-text">登录mysql 设置复制结构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#启动恢复"><span class="toc-number">8.</span> <span class="toc-text">启动恢复</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#其他知识_："><span class="toc-number">9.</span> <span class="toc-text">其他知识 ：</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/56/" title="5.6">5.6<sup>1</sup></a></li>
+		
+			<li><a href="/tags/backup/" title="backup">backup<sup>1</sup></a></li>
+		
+			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/failover/" title="failover">failover<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql/" title="mysql">mysql<sup>4</sup></a></li>
+		
+			<li><a href="/tags/python/" title="python">python<sup>1</sup></a></li>
+		
+			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
+		
+			<li><a href="/tags/tips/" title="tips">tips<sup>1</sup></a></li>
+		
+			<li><a href="/tags/优化/" title="优化">优化<sup>1</sup></a></li>
+		
+			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
+		
+			<li><a href="/tags/部署/" title="部署">部署<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
+			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
