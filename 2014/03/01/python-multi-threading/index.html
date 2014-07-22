@@ -1,0 +1,538 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>python-multi-threading | ruiaylin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="ruichao.lin">
+    
+    <meta name="description" content="在运维工作中，随着业务和系统的发展，集群规模会随之增长，就会面临一个大规模，批量运维的难题，这也就要求了，日常的操作，变更，查询，维护任务要能够系统化。并尽可能做到，并发或者并行。运维工具脚本语言中 python 就成了一个很有用利器。python的多线程在实际工作中，还是能够提高很大的工作效率的。">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="ruiaylin" />
+    <meta name="twitter:title" content="python-multi-threading | ruiaylin&#39;s Blog" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ruiaylin&#39;s Blog">ruiaylin&#39;s Blog</a></h1>
+				<h2 class="blog-motto">蹈之而弗悔 ,  慎思而笃行  ...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/03/01/python-multi-threading/" title="python-multi-threading" itemprop="url">python-multi-threading</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-03-01T07:56:29.000Z" itemprop="datePublished">3月 1 2014</time>
+    更新日期:<time datetime="2014-07-22T00:44:02.000Z" itemprop="dateModified">7月 22 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#python多线程的概述和一些不足"><span class="toc-number">1.</span> <span class="toc-text">python多线程的概述和一些不足</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1)-多线程"><span class="toc-number">2.</span> <span class="toc-text">1).多线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2)-_multi-process_多进程"><span class="toc-number">3.</span> <span class="toc-text">2). multi-process 多进程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#多进程编程模型"><span class="toc-number">3.1.</span> <span class="toc-text">多进程编程模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建进程池"><span class="toc-number">3.2.</span> <span class="toc-text">创建进程池</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用进程好处"><span class="toc-number">3.3.</span> <span class="toc-text">使用进程好处</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3)-_multiprocessing-dummy_简化"><span class="toc-number">4.</span> <span class="toc-text">3). multiprocessing.dummy 简化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#准备开始"><span class="toc-number">4.1.</span> <span class="toc-text">准备开始</span></a></li></ol></li></ol>
+		</div>
+		
+		<blockquote>
+<p>在运维工作中，随着业务和系统的发展，集群规模会随之增长，就会面临一个大规模，<br>批量运维的难题，这也就要求了，日常的操作，变更，查询，维护任务要能够系统化。<br>并尽可能做到，并发或者并行。运维工具脚本语言中 python 就成了一个很有用利器。<br>python的多线程在实际工作中，还是能够提高很大的工作效率的。 </p>
+</blockquote>
+<h4 id="python多线程的概述和一些不足">python多线程的概述和一些不足</h4>
+<blockquote>
+<p> python是支持多线程的，并且是native的线程。主要是通过thread和threading这两个<br> 模块来实现的。thread模块是比较底层的，threading模块是对thread做了一些包装<br> threading 模块按照OOP的思想对thread做了封装，主要线程的操作对象化了，创建了<br> 叫Thread的class 。</p>
+</blockquote>
+<h4 id="1)-多线程">1).多线程</h4>
+<p>一般来说，使用线程有3种模式:<br>a.创建任务函数，讲函数传递给thread对象执行 ;<br>b.传入一个可调用的对象，python 对象都是我们所说的可调用的，类的对象也是可以调用的，<br>   当被调用时会自动调用对象的内建方法<strong>call</strong>()，因此这种新建线程的方法就是给线程指<br>   定一个<strong>call</strong>方法被重载了的对象 ；<br>c.创建一个类，从Thread继承，把线程执行的代码放到这个新的class里面的run</p>
+<p>如下 ： </p>
+<blockquote>
+<p>1 : thread.start_new_thread ( function, args[, kwargs] )<br>  function - 线程函数。<br>  args     - 传递给线程函数的参数,他必须是个tuple类型 like thie (1,2)<br>  kwargs   - 可选参数。</p>
+</blockquote>
+<p>样例如下：</p>
+<pre><code><span class="keyword">import</span> sys, os , thread  
+<span class="comment"># 为线程定义 task 函数</span>
+<span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span>
+   count = <span class="number">0</span>
+   <span class="keyword">while</span> count &lt; <span class="number">5</span>:
+      time.sleep(delay)
+      count += <span class="number">1</span>
+      <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  
+<span class="comment"># 创建两个线程</span>
+<span class="keyword">try</span>:
+   thread.start_new_thread( prinft, (<span class="string">"Thread-1"</span>, <span class="number">2</span>, ) )
+   thread.start_new_thread( prinft, (<span class="string">"Thread-2"</span>, <span class="number">4</span>, ) )
+<span class="keyword">except</span>:
+   <span class="keyword">print</span> <span class="string">"Error: unable to start thread"</span>
+</code></pre><blockquote>
+<p>2 : 传入可调用对象<br>   样例如下</p>
+</blockquote>
+<pre><code><span class="keyword">import</span> threading
+<span class="comment">#可调用的类</span>
+<span class="class"><span class="keyword">class</span> <span class="title">Callable</span><span class="params">(object)</span>:</span>
+    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, func, args)</span>:</span>
+        self.func = func;
+        self.args = args;
+    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self)</span>:</span>
+        apply(self.func, self.args);
+<span class="comment">#用于线程执行的函数</span>
+<span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span>
+   count = <span class="number">0</span>
+   <span class="keyword">while</span> count &lt; <span class="number">5</span>:
+      time.sleep(delay)
+      count += <span class="number">1</span>
+      <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  
+<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
+    <span class="comment">#初始化一个线程对象，传入可调用的Callable对象，并用函数counter及其参数1000初始化这个对象</span>
+    th = threading.Thread(target=Callable(prinft, (<span class="string">'th1'</span>,<span class="number">5</span>)));
+    <span class="comment">#启动线程</span>
+    th.start();
+    <span class="comment">#主线程阻塞等待子线程结束</span>
+    th.join();
+</code></pre><blockquote>
+<p>3 : 继承thread类<br>创建类 prinft 继承自 threading.Thread</p>
+</blockquote>
+<pre><code><span class="comment">#线程类创建</span>
+<span class="class"><span class="keyword">class</span> <span class="title">PRINFT</span><span class="params">(threading.Thread)</span>:</span>
+    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,threadname, delay)</span>:</span>
+        threading.Thread.__init__(self)
+        self.name = threadname   
+        self.delay = delay
+    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span>
+        threadName = self.name
+        count = <span class="number">0</span>
+        <span class="keyword">while</span> count &lt; <span class="number">5</span>:
+            time.sleep(self.delay)
+            count += <span class="number">1</span>
+            <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )   
+
+<span class="comment">#创建两个线程</span>
+consumers = [ PRINFT(<span class="string">"thread-"</span>+str(i) ,i+<span class="number">1</span> ,  )  <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">2</span>) ] 
+<span class="comment">#开启线程</span>
+<span class="keyword">for</span> w <span class="keyword">in</span> consumers:
+    w.start()
+<span class="comment">#线程同步</span>
+<span class="keyword">for</span> w <span class="keyword">in</span> consumers:
+    w.join()
+
+注意：目前使用多线程的情况，就是处理很多同质的任务的时候;为了提高性能 。 大多是使用的生产者和消费者模型来组织代码结构。但是Python的thread有天生的缺陷(GIL)，在计算密集型任务中性能会很差，而在io密集型的任务中，IO期间线程会释放解释器 ，性能还是有比较大的提升的，特别是磁盘io密集操作，网络或者数据库相关的任务
+</code></pre><h4 id="2)-_multi-process_多进程">2). multi-process 多进程</h4>
+<blockquote>
+<p>普通的任务或者运维脚本按照上述的两种结构基本上可以完成任务,当然性能上由于GIL的局限肯定有很大<br>的影响。Python 3.X 中有所改善。低版本的Python 引入的多线程的替代品，multiprocessing<br>多进程实现真正意义的并发</p>
+</blockquote>
+<h5 id="多进程编程模型">多进程编程模型</h5>
+<blockquote>
+<p>多进程编程模型和多线程模型基本上一致的，只是应用的lib和调用的方法不一样 。<br>进程的创建方式跟线程完全一致，只不过要将threading.Thread换成multiprocessing.Process。<br>multiprocessing模块尽力保持了与threading模块在方法名上的一致性.</p>
+</blockquote>
+<h5 id="创建进程池">创建进程池</h5>
+<blockquote>
+<p>该模块还允许一次创建一组进程，然后再给他们分配任务，另外包中有很多方法，具体见文档手册</p>
+</blockquote>
+<pre><code><span class="keyword">import</span> multiprocessing
+<span class="keyword">import</span> time
+
+<span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span>
+   count = <span class="number">0</span>
+   <span class="keyword">while</span> count &lt; <span class="number">5</span>:
+      time.sleep(delay)
+      count += <span class="number">1</span>
+      <span class="keyword">return</span>  <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    pool = multiprocessing.Pool(processes=<span class="number">4</span>)
+    result = []<span class="comment">#获得结果</span>
+    <span class="comment">#如无需返回结果 可以直接 pool.apply_async(func, (msg, xx )) </span>
+    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">10</span>):
+        msg = <span class="string">"hello %d"</span> %(i)
+        result.append(pool.apply_async(prinft, (msg, )))
+    pool.close()
+    pool.join()
+    <span class="keyword">for</span> res <span class="keyword">in</span> result:
+        <span class="keyword">print</span> res.get()  
+</code></pre><h5 id="使用进程好处">使用进程好处</h5>
+<blockquote>
+<p>完全并行，无GIL的限制，可充分利用多cpu多核的环境；可以接受linux信号，后面将看到，<br>这个功能非常好用</p>
+</blockquote>
+<h4 id="3)-_multiprocessing-dummy_简化">3). multiprocessing.dummy 简化</h4>
+<blockquote>
+<p>最近看到一个老外的 blog 讲解 multiprocessing.dummy ，感觉很方便，.按照我的理解来记录。<br>dummy 是多进程的 multiprocessing 的一个子包，其中其实引用了map的方式来进行简化多线程<br>Map能够处理集合按顺序遍历，最终将调用产生的结果保存在一个简单的集合当中，因为在引入需要的包<br>文件后，Map能大大简化并发的复杂度!</p>
+</blockquote>
+<p>multiprocessing &amp; multiprocessing.dummy 都是支持 Map 的。Digression这是啥东西？没听说过线程引用叫dummy的多进程包文件。我也是直到最近才知道。它在多进程的说明文档中也只被提到了一句。它的效果也只是让大家直到有这么个东西而已。这可真是营销的失误！<br>Dummy是一个多进程包的完整拷贝。唯一不同的是，多进程包使用进程，而dummy使用线程（自然也有Python本身的一些限制）。所以一个有的另一个也有。这样在两种模式间切换就十分简单，并且在判断框架调用时使用的是IO还是CPU模式非常有帮助</p>
+<h5 id="准备开始">准备开始</h5>
+<blockquote>
+<p>准备使用带有并发的map功能首先要导入相关包文件：</p>
+</blockquote>
+<pre><code><span class="keyword">from</span> multiprocessing <span class="keyword">import</span> Pool
+<span class="keyword">from</span> multiprocessing.dummy <span class="keyword">import</span> Pool <span class="keyword">as</span> ThreadPool
+</code></pre><blockquote>
+<p>然后初始化:</p>
+</blockquote>
+<pre><code><span class="attribute">pool </span>=<span class="string"> ThreadPool()</span>
+</code></pre><blockquote>
+<p>具体来讲，它首先创建一些有效的worker启动它并将其保存在一些变量中以便随时访问。<br>pool对象需要一些参数，但现在最紧要的就是：进程。它可以限定线程池中worker的数量。<br>如果不填，它将采用系统的内核数作为初值. </p>
+</blockquote>
+<p>一般情况下，如果你进行的是计算密集型多进程任务，内核越多意味着速度越快（当然这是有前提的）。但如果是涉及到网络计算方面，影响的因素就千差万别。所以最好还是能给出合适的线程池大小数。</p>
+<pre><code>pool = ThreadPool(<span class="number">4</span>) <span class="comment"># Sets the pool size to 4</span>
+</code></pre><p>如果运行的线程很多，频繁的切换线程会十分影响工作效率。所以最好还是能通过调试找出任务调度的时间平衡点。好的，既然已经建好了线程池对象还有那些简单的并发内容。</p>
+<pre><code>import urllib2 
+from multiprocessing.dummy import Pool as ThreadPool    
+urls = [
+    <span class="attribute">'http</span>://www.python.org', 
+    <span class="attribute">'http</span>://www.python.org/about/',
+    <span class="attribute">'http</span>://www.onlamp.com/pub/a/python/<span class="number">2003</span>/<span class="number">04</span>/<span class="number">17</span>/metaclasses.html',
+    <span class="attribute">'http</span>://www.python.org/doc/',
+    <span class="attribute">'http</span>://www.python.org/download/',
+    <span class="attribute">'http</span>://www.python.org/getit/',
+    <span class="attribute">'http</span>://www.python.org/community/',
+    <span class="attribute">'https</span>://wiki.python.org/moin/',
+    <span class="attribute">'http</span>://planet.python.org/',
+    <span class="attribute">'https</span>://wiki.python.org/moin/LocalUserGroups',
+    <span class="attribute">'http</span>://www.python.org/psf/',
+    <span class="attribute">'http</span>://docs.python.org/devguide/',
+    <span class="attribute">'http</span>://www.python.org/community/awards/'
+    # etc.. 
+    ]   
+# Make the Pool <span class="keyword">of</span> workers
+pool = ThreadPool(<span class="number">4</span>) 
+# <span class="keyword">Open</span> the urls <span class="keyword">in</span> their own threads
+# <span class="keyword">and</span> <span class="keyword">return</span> the results
+results = pool.<span class="keyword">map</span>(urllib2.urlopen, urls)
+#close the pool <span class="keyword">and</span> <span class="keyword">wait</span> <span class="keyword">for</span> the work <span class="keyword">to</span> finish 
+pool.close() 
+pool.join() 
+</code></pre><p>注 ： 这是一个完整的例子，pool的size 要经过调试，然后再进行设置。不过编程模型就是这一的。<br>关于多线程和多进程就到这里 。 还有实际开发工具和脚本的时候，面向对象的方式来进行开发和设计<br>是一个很好的体验。讲任务对象化 。 本篇blog 是以Python特性维度来进行的，后面会再根据任务类型来<br>深入总结。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/threading/">threading</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/python/">python</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2014/03/01/python-multi-threading/" data-title="python-multi-threading | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2014/03/13/XtraBackup-slave/" title="使用Percona XtraBackup热备搭建slave数据库">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  使用Percona XtraBackup热备搭建slave数据库</span>
+</a>
+</div>
+
+
+<div class="next">
+<a href="/2014/02/27/tips-ops-mysql/"  title="mysql运维过程中的小tip [转载]">
+ <strong>NEXT:</strong><br/> 
+ <span>mysql运维过程中的小tip [转载]
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#python多线程的概述和一些不足"><span class="toc-number">1.</span> <span class="toc-text">python多线程的概述和一些不足</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#1)-多线程"><span class="toc-number">2.</span> <span class="toc-text">1).多线程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2)-_multi-process_多进程"><span class="toc-number">3.</span> <span class="toc-text">2). multi-process 多进程</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#多进程编程模型"><span class="toc-number">3.1.</span> <span class="toc-text">多进程编程模型</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#创建进程池"><span class="toc-number">3.2.</span> <span class="toc-text">创建进程池</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#使用进程好处"><span class="toc-number">3.3.</span> <span class="toc-text">使用进程好处</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3)-_multiprocessing-dummy_简化"><span class="toc-number">4.</span> <span class="toc-text">3). multiprocessing.dummy 简化</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#准备开始"><span class="toc-number">4.1.</span> <span class="toc-text">准备开始</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>6</sup></a></li>
+		
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
+		
+			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
+		
+			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
+		
+			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/sharding/" title="sharding">sharding<sup>1</sup></a></li>
+		
+			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
+		
+			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
+		
+			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
+		
+			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
+		
+			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
+		
+			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
+		
+			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
+		
+			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
+			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>

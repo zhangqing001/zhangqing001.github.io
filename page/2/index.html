@@ -71,138 +71,109 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2014/06/15/mysql-fabric1/" title="mysql-fabric [01]" itemprop="url">
+    <a href="/2014/03/13/XtraBackup-slave/" title="使用Percona XtraBackup热备搭建slave数据库" itemprop="url">
   
-    <h1 itemprop="name">mysql-fabric [01]</h1>
+    <h1 itemprop="name">使用Percona XtraBackup热备搭建slave数据库</h1>
     
      
-           <p itemprop="description" >Fabric 简介
-
-MySQL Fabric 是一个用于管理 MySQL 服务器群的可扩展框架。该框架实现了两个特性  高可用性 （（high availablity）使用数据分片的横向扩展（sharding ）。这两个特性既可以单独使用，也可以结合使用。这两个特性都基于以下两</p>
+           <p itemprop="description" >使用Percona XtraBackup热备搭建slave数据库
+下载安装XtraBackup
+1.在http://www.percona.com/downloads/XtraBackup/LATEST/   
+2.解压安装，并配置path路径 export PATH=$JAVA</p>
         
     
-    <time datetime="2014-06-15T06:46:49.000Z" itemprop="datePublished">6月 15 2014</time>
+    <time datetime="2014-03-13T04:55:27.000Z" itemprop="datePublished">3月 13 2014</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2014/05/31/mysql-auto-failover/" title="mysql5.6自动failover" itemprop="url">
+    <a href="/2014/03/01/python-multi-threading/" title="python-multi-threading" itemprop="url">
   
-    <h1 itemprop="name">mysql5.6自动failover</h1>
+    <h1 itemprop="name">python-multi-threading</h1>
     
      
-           <p itemprop="description" >mysql5.6支持以全局统一事务ID（GTID)为基础的复制，当在主库上提交事务或者被从库应用时，可以定位和追踪每一个事务，可以通过使用–gtid-mode和–enforce-gtid-consistency参数启动复制可以开启GTIDs 这也是mysql官方提供的工具集uti</p>
+           <p itemprop="description" >在运维工作中，随着业务和系统的发展，集群规模会随之增长，就会面临一个大规模，批量运维的难题，这也就要求了，日常的操作，变更，查询，维护任务要能够系统化。并尽可能做到，并发或者并行。运维工具脚本语言中 python 就成了一个很有用利器。python的多线程在实际工作中，还是能够提</p>
         
     
-    <time datetime="2014-05-31T05:03:27.000Z" itemprop="datePublished">5月 31 2014</time>
+    <time datetime="2014-03-01T07:56:29.000Z" itemprop="datePublished">3月 1 2014</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2014/05/23/python-privs-profile/" title="python change privs &amp; profile" itemprop="url">
+    <a href="/2014/02/27/tips-ops-mysql/" title="mysql运维过程中的小tip [转载]" itemprop="url">
   
-    <h1 itemprop="name">python change privs &amp; profile</h1>
+    <h1 itemprop="name">mysql运维过程中的小tip [转载]</h1>
     
      
-           <p itemprop="description" >python 日渐成为运维同学喜爱的脚本语言，我也一样，非常喜欢python的简洁，丰富，完善的lib 库，一般稍微成型的工具脚本，我都是选择python来完成，特别是，后台进程， 多线程，以及多进程的编程模型都很容易使用，另外python本身也有比较完善的web（django，</p>
+           <p itemprop="description" >mysql运维过程中的小 tips
+
+1.查询数据库不同引擎下表和索引的大小
+
+select engine,count(*) table_num, 
+concat(truncate(sum(DATA_LENGTH/1024/1024),2),&#39;MB&#39;) table_size,
+c</p>
         
     
-    <time datetime="2014-05-22T16:36:19.000Z" itemprop="datePublished">5月 23 2014</time>
+    <time datetime="2014-02-27T05:04:23.000Z" itemprop="datePublished">2月 27 2014</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2014/04/28/linux-shell/" title="shell脚本常用" itemprop="url">
+    <a href="/2014/02/27/mult-instance-mysql/" title="mysql多实例" itemprop="url">
   
-    <h1 itemprop="name">shell脚本常用</h1>
+    <h1 itemprop="name">mysql多实例</h1>
     
      
-           <p itemprop="description" >作为一个运维工程师（数据库工程师） ，管理和维护成百上千台服务器是很正常的事情，脚本就成为了不可或缺的工具，shell是最基本的了，工作中经常用到，自己讲偶尔犯错的部分记录一下，警示自己。另外，shell 是Linux原生的交互工具，使用方便，简单，可以在运维工作中 ，大大的提高</p>
+           <p itemprop="description" >mysql的多实例有两种方式可以实现
+1.第一种是使用多个配置文件启动不同的进程来实现多实例，这种方式的优势逻辑简单，
+  配置简单，缺点是管理起来不太方便。
+2.第二种是通过官方自带的mysqld_multi使用单独的配置文件来实现多实例，
+  这种方式定制每个实例的配置不太方</p>
         
     
-    <time datetime="2014-04-27T16:31:22.000Z" itemprop="datePublished">4月 28 2014</time>
+    <time datetime="2014-02-27T05:03:51.000Z" itemprop="datePublished">2月 27 2014</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2014/04/02/python-fabric/" title="python fabric" itemprop="url">
+    <a href="/2014/02/17/mysql-load-data/" title="mysql load data 操纵数据" itemprop="url">
   
-    <h1 itemprop="name">python fabric</h1>
+    <h1 itemprop="name">mysql load data 操纵数据</h1>
     
      
-           <p itemprop="description" >Fabric 部署工具
-Fabric 是基于 SSH 协议的 Python 工具，相比传统的 ssh/scp 方式，用 Python 的语法写管理命令更易读也更容易扩展，管理单台或者多台机器犹如本地操作一般。
-官网地址：http://fabfile.org 安装方法这里不在说明，</p>
+           <p itemprop="description" >Load Data
+
+作为数据库工程师，跟数据打交道是常见的事情，数据导入导出也是常遇到的事情。下面对mysql的load data 作一些学习和总结。通过对5.1官方文档学习，并记录一下
+
+工具使用语法
+LOAD DATA [LOW_PRIORITY | CONCURRENT]</p>
         
     
-    <time datetime="2014-04-01T16:34:03.000Z" itemprop="datePublished">4月 2 2014</time>
+    <time datetime="2014-02-17T06:34:52.000Z" itemprop="datePublished">2月 17 2014</time>
   </a>
 </section>
 
   <section class="post" itemscope itemprop="blogPost">
   
-    <a href="/2014/03/23/python-program/" title="the promotion of python programer" itemprop="url">
+    <a href="/2014/01/01/hello-world/" title="Hello World" itemprop="url">
   
-    <h1 itemprop="name">the promotion of python programer</h1>
+    <h1 itemprop="name">Hello World</h1>
     
      
-           <p itemprop="description" >python 程序员的演化
-对同一个问题，不同层次的Python程序员的代码，呵呵。你是哪一种？？？
-编程新手
-def factorial(x):
-if x == 0:
-    return 1
-else:
-    return x * factorial(x - 1) //递归</p>
+           <p itemprop="description" >Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the </p>
         
     
-    <time datetime="2014-03-22T16:39:15.000Z" itemprop="datePublished">3月 23 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/03/22/oracle-plan-stablilty/" title="oracle-plan-stablilty" itemprop="url">
-  
-    <h1 itemprop="name">oracle-plan-stablilty</h1>
-    
-     
-           <p itemprop="description" >执行计划稳固之 SQL PROFILE
-
-生产数据库环境中，经常会遇到执行计划走错的sql，产生异常，使得db的压力很大，更甚者宕机都有可能今天介绍一下如何手工使用sql profile 稳固执行计划 
-
-Step 1: 使用 explain plan for 对sql文本进行p</p>
-        
-    
-    <time datetime="2014-03-22T06:40:53.000Z" itemprop="datePublished">3月 22 2014</time>
-  </a>
-</section>
-
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/03/15/oracle-colquery/" title="oracle-colquery" itemprop="url">
-  
-    <h1 itemprop="name">oracle-colquery</h1>
-    
-     
-           <p itemprop="description" >写了一个小工具，oracle 查询结果列展示，就像mysql的select 之后 添加 \G
-
-# author        : ruichao.lin(baiqiao) 
-# lang          : python 
-# version       : python 2</p>
-        
-    
-    <time datetime="2014-03-15T06:40:33.000Z" itemprop="datePublished">3月 15 2014</time>
+    <time datetime="2014-01-01T06:40:53.000Z" itemprop="datePublished">1月 1 2014</time>
   </a>
 </section>
 
 
   <nav id="page-nav" class="clearfix">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
   </nav>
 
 </div>
