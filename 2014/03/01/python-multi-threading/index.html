@@ -80,7 +80,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-03-01T07:56:29.000Z" itemprop="datePublished">3月 1 2014</time>
-    更新日期:<time datetime="2014-07-22T00:44:02.000Z" itemprop="dateModified">7月 22 2014</time>
+    更新日期:<time datetime="2014-07-22T13:42:23.000Z" itemprop="dateModified">7月 22 2014</time>
     
   </p>
 </header>
@@ -103,76 +103,22 @@
 <p>一般来说，使用线程有3种模式:<br>a.创建任务函数，讲函数传递给thread对象执行 ;<br>b.传入一个可调用的对象，python 对象都是我们所说的可调用的，类的对象也是可以调用的，<br>   当被调用时会自动调用对象的内建方法<strong>call</strong>()，因此这种新建线程的方法就是给线程指<br>   定一个<strong>call</strong>方法被重载了的对象 ；<br>c.创建一个类，从Thread继承，把线程执行的代码放到这个新的class里面的run</p>
 <p>如下 ： </p>
 <blockquote>
-<p>1 : thread.start_new_thread ( function, args[, kwargs] )<br>  function - 线程函数。<br>  args     - 传递给线程函数的参数,他必须是个tuple类型 like thie (1,2)<br>  kwargs   - 可选参数。</p>
+<p>1 : thread.start_new_thread ( function, args[, kwargs] )<br>   function - 线程函数。<br>   args     - 传递给线程函数的参数,他必须是个tuple类型 like thie (1,2)<br>   kwargs   - 可选参数。</p>
 </blockquote>
 <p>样例如下：</p>
-<pre><code><span class="keyword">import</span> sys, os , thread  
-<span class="comment"># 为线程定义 task 函数</span>
-<span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span>
-   count = <span class="number">0</span>
-   <span class="keyword">while</span> count &lt; <span class="number">5</span>:
-      time.sleep(delay)
-      count += <span class="number">1</span>
-      <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  
-<span class="comment"># 创建两个线程</span>
-<span class="keyword">try</span>:
-   thread.start_new_thread( prinft, (<span class="string">"Thread-1"</span>, <span class="number">2</span>, ) )
-   thread.start_new_thread( prinft, (<span class="string">"Thread-2"</span>, <span class="number">4</span>, ) )
-<span class="keyword">except</span>:
-   <span class="keyword">print</span> <span class="string">"Error: unable to start thread"</span>
-</code></pre><blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys, os , thread  </div><div class="line"><span class="comment"># 为线程定义 task 函数</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span></div><div class="line">   count = <span class="number">0</span></div><div class="line">   <span class="keyword">while</span> count &lt; <span class="number">5</span>:</div><div class="line">      time.sleep(delay)</div><div class="line">      count += <span class="number">1</span></div><div class="line">      <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  </div><div class="line"><span class="comment"># 创建两个线程</span></div><div class="line"><span class="keyword">try</span>:</div><div class="line">   thread.start_new_thread( prinft, (<span class="string">"Thread-1"</span>, <span class="number">2</span>, ) )</div><div class="line">   thread.start_new_thread( prinft, (<span class="string">"Thread-2"</span>, <span class="number">4</span>, ) )</div><div class="line"><span class="keyword">except</span>:</div><div class="line">   <span class="keyword">print</span> <span class="string">"Error: unable to start thread"</span></div></pre></td></tr></table></figure>
+
+<blockquote>
 <p>2 : 传入可调用对象<br>   样例如下</p>
 </blockquote>
-<pre><code><span class="keyword">import</span> threading
-<span class="comment">#可调用的类</span>
-<span class="class"><span class="keyword">class</span> <span class="title">Callable</span><span class="params">(object)</span>:</span>
-    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, func, args)</span>:</span>
-        self.func = func;
-        self.args = args;
-    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self)</span>:</span>
-        apply(self.func, self.args);
-<span class="comment">#用于线程执行的函数</span>
-<span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span>
-   count = <span class="number">0</span>
-   <span class="keyword">while</span> count &lt; <span class="number">5</span>:
-      time.sleep(delay)
-      count += <span class="number">1</span>
-      <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  
-<span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:
-    <span class="comment">#初始化一个线程对象，传入可调用的Callable对象，并用函数counter及其参数1000初始化这个对象</span>
-    th = threading.Thread(target=Callable(prinft, (<span class="string">'th1'</span>,<span class="number">5</span>)));
-    <span class="comment">#启动线程</span>
-    th.start();
-    <span class="comment">#主线程阻塞等待子线程结束</span>
-    th.join();
-</code></pre><blockquote>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> threading</div><div class="line"><span class="comment">#可调用的类</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">Callable</span><span class="params">(object)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, func, args)</span>:</span></div><div class="line">        self.func = func;</div><div class="line">        self.args = args;</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__call__</span><span class="params">(self)</span>:</span></div><div class="line">        apply(self.func, self.args);</div><div class="line"><span class="comment">#用于线程执行的函数</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span></div><div class="line">   count = <span class="number">0</span></div><div class="line">   <span class="keyword">while</span> count &lt; <span class="number">5</span>:</div><div class="line">      time.sleep(delay)</div><div class="line">      count += <span class="number">1</span></div><div class="line">      <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    <span class="comment">#初始化一个线程对象，传入可调用的Callable对象，并用函数counter及其参数1000初始化这个对象</span></div><div class="line">    th = threading.Thread(target=Callable(prinft, (<span class="string">'th1'</span>,<span class="number">5</span>)));</div><div class="line">    <span class="comment">#启动线程</span></div><div class="line">    th.start();</div><div class="line">    <span class="comment">#主线程阻塞等待子线程结束</span></div><div class="line">    th.join();</div></pre></td></tr></table></figure>
+
+<blockquote>
 <p>3 : 继承thread类<br>创建类 prinft 继承自 threading.Thread</p>
 </blockquote>
-<pre><code><span class="comment">#线程类创建</span>
-<span class="class"><span class="keyword">class</span> <span class="title">PRINFT</span><span class="params">(threading.Thread)</span>:</span>
-    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,threadname, delay)</span>:</span>
-        threading.Thread.__init__(self)
-        self.name = threadname   
-        self.delay = delay
-    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span>
-        threadName = self.name
-        count = <span class="number">0</span>
-        <span class="keyword">while</span> count &lt; <span class="number">5</span>:
-            time.sleep(self.delay)
-            count += <span class="number">1</span>
-            <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )   
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#线程类创建</span></div><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">PRINFT</span><span class="params">(threading.Thread)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self,threadname, delay)</span>:</span></div><div class="line">        threading.Thread.__init__(self)</div><div class="line">        self.name = threadname   </div><div class="line">        self.delay = delay</div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></div><div class="line">        threadName = self.name</div><div class="line">        count = <span class="number">0</span></div><div class="line">        <span class="keyword">while</span> count &lt; <span class="number">5</span>:</div><div class="line">            time.sleep(self.delay)</div><div class="line">            count += <span class="number">1</span></div><div class="line">            <span class="keyword">print</span> <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )   </div><div class="line"> </div><div class="line"><span class="comment">#创建两个线程</span></div><div class="line">consumers = [ PRINFT(<span class="string">"thread-"</span>+str(i) ,i+<span class="number">1</span> ,  )  <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">2</span>) ] </div><div class="line"><span class="comment">#开启线程</span></div><div class="line"><span class="keyword">for</span> w <span class="keyword">in</span> consumers:</div><div class="line">    w.start()</div><div class="line"><span class="comment">#线程同步</span></div><div class="line"><span class="keyword">for</span> w <span class="keyword">in</span> consumers:</div><div class="line">    w.join()</div><div class="line"></div><div class="line">注意：目前使用多线程的情况，就是处理很多同质的任务的时候;为了提高性能</div><div class="line">大多是使用的生产者和消费者模型来组织代码结构。但是Python的thread有天生的缺陷(GIL)</div><div class="line">在计算密集型任务中性能会很差，而在io密集型的任务中，IO期间线程会释放解释器</div><div class="line">性能还是有比较大的提升的，特别是磁盘io密集操作，网络或者数据库相关的任务</div></pre></td></tr></table></figure>
 
-<span class="comment">#创建两个线程</span>
-consumers = [ PRINFT(<span class="string">"thread-"</span>+str(i) ,i+<span class="number">1</span> ,  )  <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">2</span>) ] 
-<span class="comment">#开启线程</span>
-<span class="keyword">for</span> w <span class="keyword">in</span> consumers:
-    w.start()
-<span class="comment">#线程同步</span>
-<span class="keyword">for</span> w <span class="keyword">in</span> consumers:
-    w.join()
-
-注意：目前使用多线程的情况，就是处理很多同质的任务的时候;为了提高性能 。 大多是使用的生产者和消费者模型来组织代码结构。但是Python的thread有天生的缺陷(GIL)，在计算密集型任务中性能会很差，而在io密集型的任务中，IO期间线程会释放解释器 ，性能还是有比较大的提升的，特别是磁盘io密集操作，网络或者数据库相关的任务
-</code></pre><h4 id="2)-_multi-process_多进程">2). multi-process 多进程</h4>
+<h4 id="2)-_multi-process_多进程">2). multi-process 多进程</h4>
 <blockquote>
 <p>普通的任务或者运维脚本按照上述的两种结构基本上可以完成任务,当然性能上由于GIL的局限肯定有很大<br>的影响。Python 3.X 中有所改善。低版本的Python 引入的多线程的替代品，multiprocessing<br>多进程实现真正意义的并发</p>
 </blockquote>
@@ -184,28 +130,9 @@ consumers = [ PRINFT(<span class="string">"thread-"</span>+str(i) ,i+<span class
 <blockquote>
 <p>该模块还允许一次创建一组进程，然后再给他们分配任务，另外包中有很多方法，具体见文档手册</p>
 </blockquote>
-<pre><code><span class="keyword">import</span> multiprocessing
-<span class="keyword">import</span> time
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> multiprocessing</div><div class="line"><span class="keyword">import</span> time</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span></div><div class="line">   count = <span class="number">0</span></div><div class="line">   <span class="keyword">while</span> count &lt; <span class="number">5</span>:</div><div class="line">      time.sleep(delay)</div><div class="line">      count += <span class="number">1</span></div><div class="line">      <span class="keyword">return</span>  <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  </div><div class="line"> </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    pool = multiprocessing.Pool(processes=<span class="number">4</span>)</div><div class="line">    result = []<span class="comment">#获得结果</span></div><div class="line">    <span class="comment">#如无需返回结果 可以直接 pool.apply_async(func, (msg, xx )) </span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">10</span>):</div><div class="line">        msg = <span class="string">"hello %d"</span> %(i)</div><div class="line">        result.append(pool.apply_async(prinft, (msg, )))</div><div class="line">    pool.close()</div><div class="line">    pool.join()</div><div class="line">    <span class="keyword">for</span> res <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">print</span> res.get()</div></pre></td></tr></table></figure>
 
-<span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span>
-   count = <span class="number">0</span>
-   <span class="keyword">while</span> count &lt; <span class="number">5</span>:
-      time.sleep(delay)
-      count += <span class="number">1</span>
-      <span class="keyword">return</span>  <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  
-
-<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
-    pool = multiprocessing.Pool(processes=<span class="number">4</span>)
-    result = []<span class="comment">#获得结果</span>
-    <span class="comment">#如无需返回结果 可以直接 pool.apply_async(func, (msg, xx )) </span>
-    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">10</span>):
-        msg = <span class="string">"hello %d"</span> %(i)
-        result.append(pool.apply_async(prinft, (msg, )))
-    pool.close()
-    pool.join()
-    <span class="keyword">for</span> res <span class="keyword">in</span> result:
-        <span class="keyword">print</span> res.get()  
-</code></pre><h5 id="使用进程好处">使用进程好处</h5>
+<h5 id="使用进程好处">使用进程好处</h5>
 <blockquote>
 <p>完全并行，无GIL的限制，可充分利用多cpu多核的环境；可以接受linux信号，后面将看到，<br>这个功能非常好用</p>
 </blockquote>
@@ -230,33 +157,7 @@ consumers = [ PRINFT(<span class="string">"thread-"</span>+str(i) ,i+<span class
 <p>一般情况下，如果你进行的是计算密集型多进程任务，内核越多意味着速度越快（当然这是有前提的）。但如果是涉及到网络计算方面，影响的因素就千差万别。所以最好还是能给出合适的线程池大小数。</p>
 <pre><code>pool = ThreadPool(<span class="number">4</span>) <span class="comment"># Sets the pool size to 4</span>
 </code></pre><p>如果运行的线程很多，频繁的切换线程会十分影响工作效率。所以最好还是能通过调试找出任务调度的时间平衡点。好的，既然已经建好了线程池对象还有那些简单的并发内容。</p>
-<pre><code>import urllib2 
-from multiprocessing.dummy import Pool as ThreadPool    
-urls = [
-    <span class="attribute">'http</span>://www.python.org', 
-    <span class="attribute">'http</span>://www.python.org/about/',
-    <span class="attribute">'http</span>://www.onlamp.com/pub/a/python/<span class="number">2003</span>/<span class="number">04</span>/<span class="number">17</span>/metaclasses.html',
-    <span class="attribute">'http</span>://www.python.org/doc/',
-    <span class="attribute">'http</span>://www.python.org/download/',
-    <span class="attribute">'http</span>://www.python.org/getit/',
-    <span class="attribute">'http</span>://www.python.org/community/',
-    <span class="attribute">'https</span>://wiki.python.org/moin/',
-    <span class="attribute">'http</span>://planet.python.org/',
-    <span class="attribute">'https</span>://wiki.python.org/moin/LocalUserGroups',
-    <span class="attribute">'http</span>://www.python.org/psf/',
-    <span class="attribute">'http</span>://docs.python.org/devguide/',
-    <span class="attribute">'http</span>://www.python.org/community/awards/'
-    # etc.. 
-    ]   
-# Make the Pool <span class="keyword">of</span> workers
-pool = ThreadPool(<span class="number">4</span>) 
-# <span class="keyword">Open</span> the urls <span class="keyword">in</span> their own threads
-# <span class="keyword">and</span> <span class="keyword">return</span> the results
-results = pool.<span class="keyword">map</span>(urllib2.urlopen, urls)
-#close the pool <span class="keyword">and</span> <span class="keyword">wait</span> <span class="keyword">for</span> the work <span class="keyword">to</span> finish 
-pool.close() 
-pool.join() 
-</code></pre><p>注 ： 这是一个完整的例子，pool的size 要经过调试，然后再进行设置。不过编程模型就是这一的。<br>关于多线程和多进程就到这里 。 还有实际开发工具和脚本的时候，面向对象的方式来进行开发和设计<br>是一个很好的体验。讲任务对象化 。 本篇blog 是以Python特性维度来进行的，后面会再根据任务类型来<br>深入总结。</p>
+<p><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">import urllib2 </div><div class="line">from multiprocessing.dummy import Pool as ThreadPool    </div><div class="line">urls = [</div><div class="line">    <span class="attribute">'http</span>://www.python.org', </div><div class="line">    <span class="attribute">'http</span>://www.python.org/about/',</div><div class="line">    <span class="attribute">'http</span>://www.onlamp.com/pub/a/python/<span class="number">2003</span>/<span class="number">04</span>/<span class="number">17</span>/metaclasses.html',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/doc/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/download/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/getit/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/community/',</div><div class="line">    <span class="attribute">'https</span>://wiki.python.org/moin/',</div><div class="line">    <span class="attribute">'http</span>://planet.python.org/',</div><div class="line">    <span class="attribute">'https</span>://wiki.python.org/moin/LocalUserGroups',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/psf/',</div><div class="line">    <span class="attribute">'http</span>://docs.python.org/devguide/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/community/awards/'</div><div class="line">    # etc.. </div><div class="line">    ]   </div><div class="line"># Make the Pool <span class="keyword">of</span> workers</div><div class="line">pool = ThreadPool(<span class="number">4</span>) </div><div class="line"># <span class="keyword">Open</span> the urls <span class="keyword">in</span> their own threads</div><div class="line"># <span class="keyword">and</span> <span class="keyword">return</span> the results</div><div class="line">results = pool.<span class="keyword">map</span>(urllib2.urlopen, urls)</div><div class="line">#close the pool <span class="keyword">and</span> <span class="keyword">wait</span> <span class="keyword">for</span> the work <span class="keyword">to</span> finish </div><div class="line">pool.close() </div><div class="line">pool.join()</div></pre></td></tr></table></figure><br>注 ： 这是一个完整的例子，pool的size 要经过调试，然后再进行设置。不过编程模型就是这一的。<br>关于多线程和多进程就到这里 。 还有实际开发工具和脚本的时候，面向对象的方式来进行开发和设计<br>是一个很好的体验。讲任务对象化 。 本篇blog 是以Python特性维度来进行的，后面会再根据任务类型来<br>深入总结。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -286,10 +187,10 @@ pool.join()
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/03/13/XtraBackup-slave/" title="使用Percona XtraBackup热备搭建slave数据库">
+ <a href="/2014/03/15/oracle-colquery/" title="oracle-colquery">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  使用Percona XtraBackup热备搭建slave数据库</span>
+  oracle-colquery</span>
 </a>
 </div>
 

@@ -80,7 +80,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-05-22T16:36:19.000Z" itemprop="datePublished">5月 23 2014</time>
-    更新日期:<time datetime="2014-07-22T00:45:32.000Z" itemprop="dateModified">7月 22 2014</time>
+    更新日期:<time datetime="2014-07-22T13:33:55.000Z" itemprop="dateModified">7月 22 2014</time>
     
   </p>
 </header>
@@ -98,21 +98,15 @@
 </blockquote>
 <h5 id="问题一_：_一个脚本中需要两个用户的权限">问题一 ： 一个脚本中需要两个用户的权限</h5>
 <p>比如说 oracle的sqlplus os 授权，能够使用sqlplus / 登录的用户，有oracle 和同在dba group 组中的用户。root 用户本身也没用权限执行sqlplus。如何解决这个问题。其实很简单<br>使用root权限跑工具脚本，遇到需要使用oracle用户权限的时候使用如下代码可以修改当前用户，不过一旦设置之后，将失去root权限。可以 su oracle -c 调用脚本或者命令来完成，但是稍微有点麻烦，如下<br>代码可以解决的很好。</p>
-<pre><code>import <span class="keyword">pwd</span>
-oracle_uid=<span class="keyword">pwd</span>.getpwnam(<span class="string">'oracle'</span>)[<span class="number">2</span>]
-os.setuid(oracle_uid)
-</code></pre><h5 id="问题二_：_使用多profile文件管理的多实例集群，在脚本中进行profile切换">问题二 ： 使用多profile文件管理的多实例集群，在脚本中进行profile切换</h5>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">import <span class="keyword">pwd</span></div><div class="line">oracle_uid=<span class="keyword">pwd</span>.getpwnam(<span class="string">'oracle'</span>)[<span class="number">2</span>]</div><div class="line">os.setuid(oracle_uid)</div></pre></td></tr></table></figure>
+
+<h5 id="问题二_：_使用多profile文件管理的多实例集群，在脚本中进行profile切换">问题二 ： 使用多profile文件管理的多实例集群，在脚本中进行profile切换</h5>
 <blockquote>
 <p>多实例是很常见的，包括oracle和mysql， mysql多为常见<br>如下脚本可以解决，具体模块做得什么工作，不在此讨论 </p>
 </blockquote>
-<pre><code>import pickle
-<span class="keyword">source</span> = <span class="string">'source '</span>+<span class="string">'/home/oracle/profile_'</span>+t
-dump = <span class="string">'/usr/bin/python -c "import os,pickle;print pickle.dumps(os.environ)"'</span>
-penv = os.<span class="keyword">popen</span>(<span class="string">'%s &amp;&amp; %s'</span> <span class="variable">%(</span><span class="keyword">source</span>,dump))
-<span class="keyword">env</span> = pickle.loads(penv.read())
-os.environ = <span class="keyword">env</span>
-oraclesid = os.environ.get(<span class="string">'ORACLE_SID'</span>) ;
-</code></pre>  
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">import pickle</div><div class="line"><span class="keyword">source</span> = <span class="string">'source '</span>+<span class="string">'/home/oracle/profile_'</span>+t</div><div class="line">dump = <span class="string">'/usr/bin/python -c "import os,pickle;print pickle.dumps(os.environ)"'</span></div><div class="line">penv = os.<span class="keyword">popen</span>(<span class="string">'%s && %s'</span> <span class="variable">%(</span><span class="keyword">source</span>,dump))</div><div class="line"><span class="keyword">env</span> = pickle.loads(penv.read())</div><div class="line">os.environ = <span class="keyword">env</span></div><div class="line">oraclesid = os.environ.get(<span class="string">'ORACLE_SID'</span>) ;</div></pre></td></tr></table></figure>
+
+  
 	</div>
 		<footer class="article-footer clearfix">
 
@@ -150,9 +144,9 @@ oraclesid = os.environ.get(<span class="string">'ORACLE_SID'</span>) ;
 
 
 <div class="next">
-<a href="/2014/04/28/linux-shell/"  title="shell脚本常用">
+<a href="/2014/05/13/XtraBackup-slave/"  title="使用Percona XtraBackup热备搭建slave数据库">
  <strong>NEXT:</strong><br/> 
- <span>shell脚本常用
+ <span>使用Percona XtraBackup热备搭建slave数据库
 </span>
 </a>
 </div>
