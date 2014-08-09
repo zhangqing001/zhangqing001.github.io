@@ -141,12 +141,12 @@ FLUSH PRIVILEGES;
 </code></pre><blockquote>
 <p>根据备份的日志<br>innobackupex: MySQL binlog position: filename ‘binlog.000755’, position 95778375</p>
 </blockquote>
-<pre><code><span class="comment">--- reality like this bellow : </span>
-change master <span class="built_in">to</span> master_host=<span class="string">'xxx'</span>,master_user=<span class="string">'repl'</span>,
-master_password=<span class="string">'xxxx'</span>, master_port=<span class="number">3306</span>,
-master_connect_retry=<span class="number">60</span>,
-master_log_file=<span class="string">'binlog.000755'</span>,
-master_log_pos=<span class="number">95778375</span>; 
+<pre><code><span class="xml"><span class="tag"><span class="attribute">---</span> <span class="attribute">reality</span> <span class="attribute">like</span> <span class="attribute">this</span> <span class="attribute">bellow</span> <span class="attribute">:</span> 
+<span class="attribute">change</span> <span class="attribute">master</span> <span class="attribute">to</span> <span class="attribute">master_host</span>=<span class="value">'xxx'</span><span class="value">,master_user='repl',</span>
+<span class="attribute">master_password</span>=<span class="value">'xxxx'</span><span class="value">,</span> <span class="attribute">master_port</span>=<span class="value">3306,</span>
+<span class="attribute">master_connect_retry</span>=<span class="value">60,</span>
+<span class="attribute">master_log_file</span>=<span class="value">'binlog.000755'</span><span class="value">,</span>
+<span class="attribute">master_log_pos</span>=<span class="value">95778375;</span> </span></span>
 </code></pre><h4 id="启动恢复">启动恢复</h4>
 <pre><code><span class="operator"><span class="keyword">start</span> slave ;</span> 
 <span class="operator"><span class="keyword">show</span> slave status \G</span>
