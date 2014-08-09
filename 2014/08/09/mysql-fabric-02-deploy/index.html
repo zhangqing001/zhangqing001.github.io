@@ -1,0 +1,536 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>mysql fabric [02] 环境部署 | ruiaylin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="ruichao.lin">
+    
+    <meta name="description" content="MySQL Frabric 环境部署
+一步一步的构建fabric的部署环境，时间仓促，大致把命令list做了罗列，很多地方都有很多可以剖析的地方，今天就不多说了，后续会补上…
+构建环境
+
+实例准备
+
+我在本地机器搭建了7个实例分别为 ：3306实例作为back store database。省下三组">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="ruiaylin" />
+    <meta name="twitter:title" content="mysql fabric [02] 环境部署 | ruiaylin&#39;s Blog" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ruiaylin&#39;s Blog">ruiaylin&#39;s Blog</a></h1>
+				<h2 class="blog-motto">蹈之而弗悔 ,  慎思而笃行  ...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/08/09/mysql-fabric-02-deploy/" title="mysql fabric [02] 环境部署" itemprop="url">mysql fabric [02] 环境部署</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-08-09T10:10:49.000Z" itemprop="datePublished">8月 9 2014</time>
+    更新日期:<time datetime="2014-08-09T14:13:04.000Z" itemprop="dateModified">8月 9 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL_Frabric_环境部署"><span class="toc-number">1.</span> <span class="toc-text">MySQL Frabric 环境部署</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建环境"><span class="toc-number">1.1.</span> <span class="toc-text">构建环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#结束"><span class="toc-number">1.2.</span> <span class="toc-text">结束</span></a></li></ol></li></ol>
+		</div>
+		
+		<h3 id="MySQL_Frabric_环境部署">MySQL Frabric 环境部署</h3>
+<p>一步一步的构建fabric的部署环境，时间仓促，大致把命令list做了罗列，很多地方都有很多可以剖析的地方，今天就不多说了，后续会补上…</p>
+<h4 id="构建环境">构建环境</h4>
+<blockquote>
+<p>实例准备</p>
+</blockquote>
+<p>我在本地机器搭建了7个实例分别为 ：3306实例作为back store database。省下三组主备以后用来作为sharding group的实例，M代表主库，S代表slave备库。对应的端口如下</p>
+<pre><code>3306
+3310 <span class="attr_selector">[M]</span> &lt;<span class="tag">----</span>&gt;  3311 <span class="attr_selector">[S]</span> 
+3312 <span class="attr_selector">[M]</span> &lt;<span class="tag">----</span>&gt;  3313 <span class="attr_selector">[S]</span> 
+3314 <span class="attr_selector">[M]</span> &lt;<span class="tag">----</span>&gt;  3315 <span class="attr_selector">[S]</span> 
+</code></pre><p>看一下如下命令：</p>
+<pre><code>ps -ef <span class="localvars">| grep mysqld | grep mysqld_safe</span>
+</code></pre><p>输出： </p>
+<pre><code>   <span class="number">74</span>  <span class="number">6488</span>  <span class="number">5534</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">16</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">86</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3306/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3306/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3306/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3306/run/mysql.sock --port=<span class="number">3306</span>
+   <span class="number">74</span>  <span class="number">7464</span>  <span class="number">6509</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">17</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">78</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/run/mysql.sock --port=<span class="number">3310</span>
+   <span class="number">74</span>  <span class="number">8424</span>  <span class="number">7465</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">17</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">76</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3311/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3311/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3311/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3311/run/mysql.sock --port=<span class="number">3311</span>
+   <span class="number">74</span>  <span class="number">9380</span>  <span class="number">8425</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">17</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">81</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3312/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3312/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3312/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3312/run/mysql.sock --port=<span class="number">3312</span>
+   <span class="number">74</span> <span class="number">10336</span>  <span class="number">9381</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">18</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">80</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3313/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3313/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3313/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3313/run/mysql.sock --port=<span class="number">3313</span>
+   <span class="number">74</span> <span class="number">11292</span> <span class="number">10337</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">18</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">84</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3314/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3314/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3314/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3314/run/mysql.sock --port=<span class="number">3314</span>
+   <span class="number">74</span> <span class="number">12248</span> <span class="number">11293</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">18</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">80</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3315/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3315/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3315/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3315/run/mysql.sock --port=<span class="number">3315</span>
+</code></pre><p>复制结构如下： </p>
+<pre><code> ruiayLinSunnydeMacBook-<span class="constant">Pro</span>-<span class="number">2</span><span class="symbol">:gtidtest</span> root<span class="comment"># mysqlrplshow --master=root:root<span class="yardoctag">@localhost</span>:3310 --discover-slaves-login=root:root -vv</span>
+<span class="comment"># master on localhost: ... connected.</span>
+<span class="comment"># Finding slaves for master: localhost:3310</span>
+<span class="comment"># Replication Topology Graph</span>
+<span class="symbol">localhost:</span><span class="number">3310</span> (<span class="constant">MASTER</span>)
+   |
+   +--- <span class="symbol">localhost:</span><span class="number">3311</span> [<span class="constant">IO</span><span class="symbol">:</span> <span class="constant">Yes</span>, <span class="constant">SQL</span><span class="symbol">:</span> <span class="constant">Yes</span>] - (<span class="constant">SLAVE</span>)
+
+ruiayLinSunnydeMacBook-<span class="constant">Pro</span>-<span class="number">2</span><span class="symbol">:gtidtest</span> root<span class="comment"># mysqlrplshow --master=root:root<span class="yardoctag">@localhost</span>:3312 --discover-slaves-login=root:root -vv</span>
+ <span class="comment"># master on localhost: ... connected.</span>
+<span class="comment"># Finding slaves for master: localhost:3312</span>
+<span class="comment"># Replication Topology Graph</span>
+<span class="symbol">localhost:</span><span class="number">3312</span> (<span class="constant">MASTER</span>)
+   |
+   +--- <span class="symbol">localhost:</span><span class="number">3313</span> [<span class="constant">IO</span><span class="symbol">:</span> <span class="constant">Yes</span>, <span class="constant">SQL</span><span class="symbol">:</span> <span class="constant">Yes</span>] - (<span class="constant">SLAVE</span>)
+
+ruiayLinSunnydeMacBook-<span class="constant">Pro</span>-<span class="number">2</span><span class="symbol">:gtidtest</span> root<span class="comment"># mysqlrplshow --master=root:root<span class="yardoctag">@localhost</span>:3314 --discover-slaves-login=root:root -vv</span>
+<span class="comment"># master on localhost: ... connected.</span>
+<span class="comment"># Finding slaves for master: localhost:3314</span>
+<span class="comment"># Replication Topology Graph</span>
+<span class="symbol">localhost:</span><span class="number">3314</span> (<span class="constant">MASTER</span>)
+   |
+   +--- <span class="symbol">localhost:</span><span class="number">3315</span> [<span class="constant">IO</span><span class="symbol">:</span> <span class="constant">Yes</span>, <span class="constant">SQL</span><span class="symbol">:</span> <span class="constant">Yes</span>] - (<span class="constant">SLAVE</span>)
+</code></pre><blockquote>
+<p>创建用户，配置fabric对应user权限</p>
+</blockquote>
+<pre><code><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'secret'</span>;</span>
+<span class="operator"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">ON</span> fabric.* <span class="keyword">TO</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span>;</span>
+<span class="operator"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">ON</span> fabric.* <span class="keyword">TO</span> <span class="string">'fabric'</span>@<span class="string">'127.0.0.1'</span>;</span>
+<span class="operator"><span class="keyword">SET</span> PASSWORD <span class="keyword">FOR</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span> = PASSWORD(<span class="string">'secret'</span>);</span>
+<span class="operator"><span class="keyword">SET</span> PASSWORD <span class="keyword">FOR</span> <span class="string">'fabric'</span>@<span class="string">'127.0.0.1'</span> = PASSWORD(<span class="string">'secret'</span>);</span>
+</code></pre><blockquote>
+<p>配置fabric</p>
+</blockquote>
+<pre><code><span class="title">[DEFAULT]</span>
+<span class="setting">prefix = <span class="value"></span></span>
+<span class="setting">sysconfdir = <span class="value">/etc</span></span>
+<span class="setting">logdir = <span class="value">/var/log</span></span>
+
+<span class="title">[storage]</span>
+<span class="setting">address = <span class="value">localhost:<span class="number">3306</span></span></span>
+<span class="setting">user = <span class="value">fabric</span></span>
+<span class="setting">password =<span class="value">secret </span></span>
+<span class="setting">database = <span class="value">fabric</span></span>
+<span class="setting">unix_socket=<span class="value">/data/mysql3306/run/mysql.sock</span></span>
+<span class="setting">auth_plugin = <span class="value">mysql_native_password</span></span>
+<span class="setting">connection_timeout = <span class="value"><span class="number">6</span></span></span>
+<span class="setting">connection_attempts = <span class="value"><span class="number">6</span></span></span>
+<span class="setting">connection_delay = <span class="value"><span class="number">1</span></span></span>
+
+<span class="title">[servers]</span>
+<span class="setting">user = <span class="value">fabric</span></span>
+<span class="setting">password =<span class="value">secret</span></span>
+<span class="title">[protocol.xmlrpc]</span>
+<span class="setting">address = <span class="value">localhost:<span class="number">32274</span></span></span>
+<span class="setting">threads = <span class="value"><span class="number">5</span></span></span>
+<span class="setting">user = <span class="value">admin</span></span>
+<span class="setting">password =<span class="value">admin</span></span>
+<span class="setting">disable_authentication = <span class="value"><span class="keyword">no</span></span></span>
+<span class="setting">realm = <span class="value">MySQL Fabric</span></span>
+<span class="setting">ssl_ca = <span class="value"></span></span>
+<span class="setting">ssl_cert = <span class="value"></span></span>
+<span class="setting">ssl_key = <span class="value"></span></span>
+
+<span class="title">[executor]</span>
+<span class="setting">executors = <span class="value"><span class="number">5</span></span></span>
+<span class="title">[logging]</span>
+<span class="setting">level = <span class="value">INFO</span></span>
+<span class="setting">url = <span class="value">file:///var/log/fabric.log</span></span>
+
+<span class="title">[sharding]</span>
+<span class="setting">mysqldump_program =<span class="value">/usr/local/mysql/bin/mysqldump</span></span>
+<span class="setting">mysqlclient_program = <span class="value">/usr/local/mysql/bin/mysql</span></span>
+<span class="title">[statistics]</span>
+<span class="setting">prune_time = <span class="value"><span class="number">3600</span></span></span>
+
+<span class="title">[failure_tracking]</span>
+<span class="setting">notifications = <span class="value"><span class="number">300</span></span></span>
+<span class="setting">notification_clients = <span class="value"><span class="number">50</span></span></span>
+<span class="setting">notification_interval = <span class="value"><span class="number">60</span></span></span>
+<span class="setting">failover_interval = <span class="value"><span class="number">0</span></span></span>
+<span class="setting">detections = <span class="value"><span class="number">3</span></span></span>
+<span class="setting">detection_interval = <span class="value"><span class="number">6</span></span></span>
+<span class="setting">detection_timeout = <span class="value"><span class="number">1</span></span></span>
+<span class="setting">prune_time = <span class="value"><span class="number">3600</span></span></span>
+
+<span class="title">[connector]</span>
+<span class="setting">ttl = <span class="value"><span class="number">1</span></span></span>
+<span class="title">[client]</span>
+<span class="setting">password = <span class="value"></span></span>
+</code></pre><blockquote>
+<p>初始化fabric环境</p>
+</blockquote>
+<p>运行 mysqlfabric manage setup —param=storage.user=fabric —param=storage.password=secret 看到如下输出</p>
+<pre><code>ruiayLinSunnydeMacBook-Pro-<span class="number">2</span>:mysql root<span class="comment"># mysqlfabric manage setup --param=storage.user=fabric --param=storage.password=secret</span>
+[INFO] <span class="number">1402714453.490616</span> - MainThread - Initializing persister: user (fabric), server (localhost:<span class="number">3306</span>), database (fabric).
+[INFO] <span class="number">1402714456.262460</span> - MainThread - Initial password <span class="keyword">for</span> admin/xmlrpc <span class="keyword">set</span>
+Password <span class="keyword">set</span> <span class="keyword">for</span> admin/xmlrpc <span class="keyword">from</span> configuration <span class="type">file</span>.
+[INFO] <span class="number">1402714456.280574</span> - MainThread - Password <span class="keyword">set</span> <span class="keyword">for</span> admin/xmlrpc <span class="keyword">from</span> configuration <span class="type">file</span>.
+</code></pre><p>初始化完毕后可以登录store db ，也就是mysql3306 实例，use fabric ; show tables ; 可以看到如下表： </p>
+<pre><code>root@fabric <span class="number">10</span>:<span class="number">54</span>:<span class="number">41</span>&gt;show tables ;
++-------------------+
+| <span class="class">Tables_in_fabric</span>  |
++-------------------+
+<span class="localvars">| checkpoints       |</span>
+<span class="localvars">| error_log         |</span>
+<span class="localvars">| group_replication |</span>
+<span class="localvars">| group_view        |</span>
+<span class="localvars">| groups            |</span>
+<span class="localvars">| log               |</span>
+<span class="localvars">| permissions       |</span>
+<span class="localvars">| proc_view         |</span>
+<span class="localvars">| role_permissions  |</span>
+<span class="localvars">| roles             |</span>
+<span class="localvars">| servers           |</span>
+<span class="localvars">| shard_maps        |</span>
+<span class="localvars">| shard_ranges      |</span>
+<span class="localvars">| shard_tables      |</span>
+<span class="localvars">| shards            |</span>
+<span class="localvars">| user_roles        |</span>
+<span class="localvars">| users             |</span>
++-------------------+
+<span class="number">17</span> rows in set (<span class="number">0.00</span> sec)
+</code></pre><p>至此 fabric 环境已经准备好了。 可以启动fabric后台进程了。</p>
+<blockquote>
+<p>启动 fabric   </p>
+</blockquote>
+<p>终端执行：mysqlfabric manage start ，当然还有很多参数可以添加，比如 Deamon 选项和指定日志文件选项</p>
+<pre><code><span class="tag">ruiayLinSunnydeMacBook-Pro-2</span><span class="pseudo">:mysql</span> <span class="tag">root</span>#  <span class="tag">mysqlfabric</span> <span class="tag">manage</span> <span class="tag">start</span>
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.474464</span> <span class="tag">-</span> <span class="tag">MainThread</span> <span class="tag">-</span> <span class="tag">Initializing</span> <span class="tag">persister</span>: <span class="tag">user</span> (<span class="tag">fabric</span>), <span class="tag">server</span> (<span class="tag">localhost</span><span class="pseudo">:3306)</span>, <span class="tag">database</span> (<span class="tag">fabric</span>).
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.478876</span> <span class="tag">-</span> <span class="tag">MainThread</span> <span class="tag">-</span> <span class="tag">Loading</span> <span class="tag">Services</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.495904</span> <span class="tag">-</span> <span class="tag">MainThread</span> <span class="tag">-</span> <span class="tag">Fabric</span> <span class="tag">node</span> <span class="tag">starting</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.497266</span> <span class="tag">-</span> <span class="tag">MainThread</span> <span class="tag">-</span> <span class="tag">Starting</span> <span class="tag">Executor</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.497345</span> <span class="tag">-</span> <span class="tag">MainThread</span> <span class="tag">-</span> <span class="tag">Setting</span> 5 <span class="tag">executor</span>(<span class="tag">s</span>).
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.497697</span> <span class="tag">-</span> <span class="tag">Executor-0</span> <span class="tag">-</span> <span class="tag">Started</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.498002</span> <span class="tag">-</span> <span class="tag">Executor-1</span> <span class="tag">-</span> <span class="tag">Started</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.498457</span> <span class="tag">-</span> <span class="tag">Executor-2</span> <span class="tag">-</span> <span class="tag">Started</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.498768</span> <span class="tag">-</span> <span class="tag">Executor-3</span> <span class="tag">-</span> <span class="tag">Started</span>.
+<span class="attr_selector">[INFO]</span> 1402714611<span class="class">.499371</span> <span class="tag">-</span> <span class="tag">Executor-4</span> <span class="tag">-</span> <span class="tag">Started</span>.
+</code></pre><h4 id="结束">结束</h4>
+<p>环境已经配置完成， 接下来就可以配置 group 和 shards，接下来会补充另一篇文章来介绍fabric的sharding以及对于的HA方案，Thanks</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/Fabric/">Fabric</a><a href="/tags/sharding/">sharding</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mysql/">mysql</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2014/08/09/mysql-fabric-02-deploy/" data-title="mysql fabric [02] 环境部署 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/06/15/mysql-fabric-01-desc/"  title="mysql fabric [01] 大致介绍">
+ <strong>NEXT:</strong><br/> 
+ <span>mysql fabric [01] 大致介绍
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL_Frabric_环境部署"><span class="toc-number">1.</span> <span class="toc-text">MySQL Frabric 环境部署</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#构建环境"><span class="toc-number">1.1.</span> <span class="toc-text">构建环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#结束"><span class="toc-number">1.2.</span> <span class="toc-text">结束</span></a></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
+		
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
+		
+			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
+		
+			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
+		
+			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
+		
+			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
+		
+			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
+		
+			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
+		
+			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
+		
+			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
+		
+			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
+		
+			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
+		
+			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
+		
+			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
+		
+			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
+		
+			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
+		
+			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
+			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
