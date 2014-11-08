@@ -53,9 +53,13 @@ LOAD DATA [LOW_PRIORITY | CONCURRENT] [LOCAL] I">
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -84,8 +88,8 @@ LOAD DATA [LOW_PRIORITY | CONCURRENT] [LOCAL] I">
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-02-17T06:34:52.000Z" itemprop="datePublished">2月 17 2014</time>
-    更新日期:<time datetime="2014-07-22T00:29:03.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-02-16T22:34:52.000Z" itemprop="datePublished">2月 17 2014</time>
+    更新日期:<time datetime="2014-11-08T06:26:29.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -102,21 +106,21 @@ LOAD DATA [LOW_PRIORITY | CONCURRENT] [LOCAL] I">
 <p>作为数据库工程师，跟数据打交道是常见的事情，数据导入导出<br>也是常遇到的事情。下面对mysql的load data 作一些学习和总结。<br>通过对5.1官方文档学习，并记录一下</p>
 </blockquote>
 <h4 id="工具使用语法">工具使用语法</h4>
-<pre><code>LOAD DATA [LOW_PRIORITY | CONCURRENT] [LOCAL] INFILE <span class="string">'file_name.txt'</span>
-[REPLACE | IGNORE]
-INTO TABLE tbl_name
-[FIELDS
-    [TERMINATED BY <span class="string">'string'</span>]
-    [[OPTIONALLY] ENCLOSED BY <span class="string">'char'</span>]
-    [ESCAPED BY <span class="string">'char'</span> ]
+<pre><code><span class="operator"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> [<span class="keyword">LOW_PRIORITY</span> | <span class="keyword">CONCURRENT</span>] [<span class="keyword">LOCAL</span>] <span class="keyword">INFILE</span> <span class="string">'file_name.txt'</span>
+[<span class="keyword">REPLACE</span> | <span class="keyword">IGNORE</span>]
+<span class="keyword">INTO</span> <span class="keyword">TABLE</span> tbl_name
+[<span class="keyword">FIELDS</span>
+    [<span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'string'</span>]
+    [[<span class="keyword">OPTIONALLY</span>] <span class="keyword">ENCLOSED</span> <span class="keyword">BY</span> <span class="string">'char'</span>]
+    [<span class="keyword">ESCAPED</span> <span class="keyword">BY</span> <span class="string">'char'</span> ]
 ]
-[LINES
-    [STARTING BY <span class="string">'string'</span>]
-    [TERMINATED BY <span class="string">'string'</span>]
+[<span class="keyword">LINES</span>
+    [<span class="keyword">STARTING</span> <span class="keyword">BY</span> <span class="string">'string'</span>]
+    [<span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'string'</span>]
 ]
-[IGNORE number LINES]
-[(col_name_or_user_var,<span class="keyword">...</span>)]
-[SET col_name = expr,<span class="keyword">...</span>)]
+[<span class="keyword">IGNORE</span> <span class="built_in">number</span> <span class="keyword">LINES</span>]
+[(col_name_or_user_var,...)]
+[<span class="keyword">SET</span> col_name = expr,...)]</span>
 </code></pre><p>LOAD DATA INFILE语句用于高速地从一个文本文件中读取行，并装入一个表中。文件名称必须为一个文字字符串</p>
 <h4 id="LOW_PRIORITY_&amp;_CONCURRENT">LOW_PRIORITY &amp; CONCURRENT</h4>
 <blockquote>
@@ -138,7 +142,7 @@ INTO TABLE tbl_name
 <h4 id="如果您希望在载入运行过程中忽略外键的限制，您可以在执行LOAD_DATA前发送一个SET_FOREIGN_KEY_CHECKS=0语句">如果您希望在载入运行过程中忽略外键的限制，您可以在执行LOAD DATA前发送一个SET FOREIGN_KEY_CHECKS=0语句</h4>
 </blockquote>
 <h5 id="注释-1">注释</h5>
-<pre><code>当您有许多索引时，这通常会使<span class="operator"><span class="keyword">LOAD</span> DATA INFILE大大加快。通常，<span class="keyword">LOAD</span> DATA INFILE的速度会非常快，但是在某些极端情况下，您可以在把文件载入到表中之前使用<span class="keyword">ALTER</span> <span class="keyword">TABLE</span>...DISABLE KEYS关闭<span class="keyword">LOAD</span> DATA INFILE，或者在载入文件之后使用<span class="keyword">ALTER</span> <span class="keyword">TABLE</span>...ENABLE KEYS再次创建索引，使创建索引的速度更快</span>
+<pre><code>当您有许多索引时，这通常会使<span class="operator"><span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">INFILE</span>大大加快。通常，<span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">INFILE</span>的速度会非常快，但是在某些极端情况下，您可以在把文件载入到表中之前使用<span class="keyword">ALTER</span> <span class="keyword">TABLE</span>...DISABLE KEYS关闭<span class="keyword">LOAD</span> <span class="keyword">DATA</span> <span class="keyword">INFILE</span>，或者在载入文件之后使用<span class="keyword">ALTER</span> <span class="keyword">TABLE</span>...ENABLE KEYS再次创建索引，使创建索引的速度更快</span>
 </code></pre><h4 id="LOAD_DATA_INFILE_&amp;SELECT…INTO_OUTFILE_">LOAD DATA INFILE &amp;SELECT…INTO OUTFILE　</h4>
 <blockquote>
 <p>LOAD DATA INFILE是SELECT…INTO OUTFILE的补语,要从一个表中把数据<br>写入一个文件中，应使用SELECT…INTO OUTFILE。要读取文件，放回到表中，<br>应使用LOAD DATA INFILE。FIELDS和LINES子句的语法对于两个语句是一样的。<br>两个子句都是自选的，但是如果两个都被指定了，FIELDS必须位于LINES的前面。</p>
@@ -185,8 +189,8 @@ something xxx<span class="string">"row"</span>,<span class="number">2</span>
 </blockquote>
 <pre><code><span class="string">"1"</span>,<span class="string">"a string"</span>,<span class="string">"100.20"</span>
 <span class="string">"2"</span>,<span class="string">"a string containing a , comma"</span>,<span class="string">"102.20"</span>
-<span class="string">"3"</span>,<span class="string">"a string containing a \"</span> quote<span class="string">","</span><span class="number">102.20</span><span class="string">"</span>
-<span class="string">"4"</span>,<span class="string">"a string containing a \"</span>, quote and comma<span class="string">","</span><span class="number">102.20</span><span class="string">"</span>
+<span class="string">"3"</span>,<span class="string">"a string containing a \" quote"</span>,<span class="string">"102.20"</span>
+<span class="string">"4"</span>,<span class="string">"a string containing a \", quote and comma"</span>,<span class="string">"102.20"</span>
 </code></pre><p>如果您指定了OPTINALLY，则ENCLOSED BY字符只被用于包含具有字符串数据类型<br>（比如CHAR, BINARY, TEXT或ENUM）的列中的值：</p>
 <pre><code><span class="number">1</span>,<span class="string">"a string"</span>,<span class="number">100.20</span>
 <span class="number">2</span>,<span class="string">"a string containing a , comma"</span>,<span class="number">102.20</span>
@@ -195,7 +199,7 @@ something xxx<span class="string">"row"</span>,<span class="number">2</span>
 
 <span class="keyword">...</span>
 </code></pre><h4 id="实际生产中用到_的和字段对应关系">实际生产中用到 的和字段对应关系</h4>
-<pre><code><span class="operator"><span class="keyword">load</span> data infile <span class="string">'/data/tmp/load/test.vp'</span> <span class="keyword">replace</span> <span class="keyword">into</span> <span class="keyword">table</span> mdm_biz_list_interface fields terminated <span class="keyword">by</span> <span class="string">','</span> LINES TERMINATED <span class="keyword">BY</span> <span class="string">'\n'</span>  ( $cols ) ;</span>
+<pre><code><span class="operator"><span class="keyword">load</span> <span class="keyword">data</span> <span class="keyword">infile</span> <span class="string">'/data/tmp/load/test.vp'</span> <span class="keyword">replace</span> <span class="keyword">into</span> <span class="keyword">table</span> mdm_biz_list_interface <span class="keyword">fields</span> <span class="keyword">terminated</span> <span class="keyword">by</span> <span class="string">','</span> <span class="keyword">LINES</span> <span class="keyword">TERMINATED</span> <span class="keyword">BY</span> <span class="string">'\n'</span>  ( $cols ) ;</span>
 </code></pre><h3 id="总结">总结</h3>
 <pre><code>load data 对于mysql 来讲 就相当于oracle的 sql loader ，这些都是作为一个DBA
 的基本工作技能。 mark一下，记做笔记  <span class="keyword">...</span> 
@@ -268,59 +272,35 @@ something xxx<span class="string">"row"</span>,<span class="number">2</span>
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -339,8 +319,8 @@ something xxx<span class="string">"row"</span>,<span class="number">2</span>
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -475,6 +455,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

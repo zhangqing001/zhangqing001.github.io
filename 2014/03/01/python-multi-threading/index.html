@@ -48,9 +48,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -79,8 +83,8 @@
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-01T07:56:29.000Z" itemprop="datePublished">3月 1 2014</time>
-    更新日期:<time datetime="2014-07-22T13:42:23.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-02-28T23:56:29.000Z" itemprop="datePublished">3月 1 2014</time>
+    更新日期:<time datetime="2014-07-22T13:42:24.000Z" itemprop="dateModified">7月 22 2014</time>
     
   </p>
 </header>
@@ -130,7 +134,7 @@
 <blockquote>
 <p>该模块还允许一次创建一组进程，然后再给他们分配任务，另外包中有很多方法，具体见文档手册</p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> multiprocessing</div><div class="line"><span class="keyword">import</span> time</div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">prinft</span><span class="params">( threadName, delay)</span>:</span></div><div class="line">   count = <span class="number">0</span></div><div class="line">   <span class="keyword">while</span> count &lt; <span class="number">5</span>:</div><div class="line">      time.sleep(delay)</div><div class="line">      count += <span class="number">1</span></div><div class="line">      <span class="keyword">return</span>  <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  </div><div class="line"> </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    pool = multiprocessing.Pool(processes=<span class="number">4</span>)</div><div class="line">    result = []<span class="comment">#获得结果</span></div><div class="line">    <span class="comment">#如无需返回结果 可以直接 pool.apply_async(func, (msg, xx )) </span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">10</span>):</div><div class="line">        msg = <span class="string">"hello %d"</span> %(i)</div><div class="line">        result.append(pool.apply_async(prinft, (msg, )))</div><div class="line">    pool.close()</div><div class="line">    pool.join()</div><div class="line">    <span class="keyword">for</span> res <span class="keyword">in</span> result:</div><div class="line">        <span class="keyword">print</span> res.get()</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> multiprocessing</div><div class="line"><span class="keyword">import</span> time</div><div class="line"> </div><div class="line">def prinft( threadName, delay):</div><div class="line">   count = <span class="number">0</span></div><div class="line">   <span class="keyword">while</span> count &lt; <span class="number">5</span>:</div><div class="line">      time.sleep(delay)</div><div class="line">      count += <span class="number">1</span></div><div class="line">      <span class="keyword">return</span>  <span class="string">"%s: %s"</span> % ( threadName, time.ctime(time.time()) )  </div><div class="line"> </div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:</div><div class="line">    pool = multiprocessing.<span class="type">Pool</span>(processes=<span class="number">4</span>)</div><div class="line">    <span class="literal">result</span> = []<span class="comment">#获得结果</span></div><div class="line">    <span class="comment">#如无需返回结果 可以直接 pool.apply_async(func, (msg, xx )) </span></div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> xrange(<span class="number">10</span>):</div><div class="line">        msg = <span class="string">"hello %d"</span> %(i)</div><div class="line">        <span class="literal">result</span>.append(pool.apply_async(prinft, (msg, )))</div><div class="line">    pool.close()</div><div class="line">    pool.join()</div><div class="line">    <span class="keyword">for</span> res <span class="keyword">in</span> <span class="literal">result</span>:</div><div class="line">        print res.get()</div></pre></td></tr></table></figure>
 
 <h5 id="使用进程好处">使用进程好处</h5>
 <blockquote>
@@ -155,9 +159,11 @@
 <p>具体来讲，它首先创建一些有效的worker启动它并将其保存在一些变量中以便随时访问。<br>pool对象需要一些参数，但现在最紧要的就是：进程。它可以限定线程池中worker的数量。<br>如果不填，它将采用系统的内核数作为初值. </p>
 </blockquote>
 <p>一般情况下，如果你进行的是计算密集型多进程任务，内核越多意味着速度越快（当然这是有前提的）。但如果是涉及到网络计算方面，影响的因素就千差万别。所以最好还是能给出合适的线程池大小数。</p>
-<pre><code>pool = ThreadPool(<span class="number">4</span>) <span class="comment"># Sets the pool size to 4</span>
+<pre><code><span class="variable">pool =</span> ThreadPool(<span class="number">4</span>) <span class="comment"># Sets the pool size to 4</span>
 </code></pre><p>如果运行的线程很多，频繁的切换线程会十分影响工作效率。所以最好还是能通过调试找出任务调度的时间平衡点。好的，既然已经建好了线程池对象还有那些简单的并发内容。</p>
-<p><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">import urllib2 </div><div class="line">from multiprocessing.dummy import Pool as ThreadPool    </div><div class="line">urls = [</div><div class="line">    <span class="attribute">'http</span>://www.python.org', </div><div class="line">    <span class="attribute">'http</span>://www.python.org/about/',</div><div class="line">    <span class="attribute">'http</span>://www.onlamp.com/pub/a/python/<span class="number">2003</span>/<span class="number">04</span>/<span class="number">17</span>/metaclasses.html',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/doc/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/download/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/getit/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/community/',</div><div class="line">    <span class="attribute">'https</span>://wiki.python.org/moin/',</div><div class="line">    <span class="attribute">'http</span>://planet.python.org/',</div><div class="line">    <span class="attribute">'https</span>://wiki.python.org/moin/LocalUserGroups',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/psf/',</div><div class="line">    <span class="attribute">'http</span>://docs.python.org/devguide/',</div><div class="line">    <span class="attribute">'http</span>://www.python.org/community/awards/'</div><div class="line">    # etc.. </div><div class="line">    ]   </div><div class="line"># Make the Pool <span class="keyword">of</span> workers</div><div class="line">pool = ThreadPool(<span class="number">4</span>) </div><div class="line"># <span class="keyword">Open</span> the urls <span class="keyword">in</span> their own threads</div><div class="line"># <span class="keyword">and</span> <span class="keyword">return</span> the results</div><div class="line">results = pool.<span class="keyword">map</span>(urllib2.urlopen, urls)</div><div class="line">#close the pool <span class="keyword">and</span> <span class="keyword">wait</span> <span class="keyword">for</span> the work <span class="keyword">to</span> finish </div><div class="line">pool.close() </div><div class="line">pool.join()</div></pre></td></tr></table></figure><br>注 ： 这是一个完整的例子，pool的size 要经过调试，然后再进行设置。不过编程模型就是这一的。<br>关于多线程和多进程就到这里 。 还有实际开发工具和脚本的时候，面向对象的方式来进行开发和设计<br>是一个很好的体验。讲任务对象化 。 本篇blog 是以Python特性维度来进行的，后面会再根据任务类型来<br>深入总结。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line">import urllib2 </div><div class="line">from multiprocessing.dummy import Pool <span class="keyword">as</span> ThreadPool    </div><div class="line">urls = [</div><div class="line">    'http:<span class="comment">//www.python.org', </span></div><div class="line">    'http:<span class="comment">//www.python.org/about/',</span></div><div class="line">    'http:<span class="comment">//www.onlamp.com/pub/a/python/2003/04/17/metaclasses.html',</span></div><div class="line">    'http:<span class="comment">//www.python.org/doc/',</span></div><div class="line">    'http:<span class="comment">//www.python.org/download/',</span></div><div class="line">    'http:<span class="comment">//www.python.org/getit/',</span></div><div class="line">    'http:<span class="comment">//www.python.org/community/',</span></div><div class="line">    'https:<span class="comment">//wiki.python.org/moin/',</span></div><div class="line">    'http:<span class="comment">//planet.python.org/',</span></div><div class="line">    'https:<span class="comment">//wiki.python.org/moin/LocalUserGroups',</span></div><div class="line">    'http:<span class="comment">//www.python.org/psf/',</span></div><div class="line">    'http:<span class="comment">//docs.python.org/devguide/',</span></div><div class="line">    'http:<span class="comment">//www.python.org/community/awards/'</span></div><div class="line">    # etc.. </div><div class="line">    ]   </div><div class="line"># Make the Pool of workers</div><div class="line">pool = ThreadPool(<span class="number">4</span>) </div><div class="line"># Open the urls <span class="keyword">in</span> their own threads</div><div class="line"># and <span class="keyword">return</span> the results</div><div class="line">results = pool.map(urllib2.urlopen, urls)</div><div class="line">#close the pool and wait <span class="keyword">for</span> the work to finish </div><div class="line">pool.close() </div><div class="line">pool.join()</div></pre></td></tr></table></figure>
+
+<p>注 ： 这是一个完整的例子，pool的size 要经过调试，然后再进行设置。不过编程模型就是这一的。<br>关于多线程和多进程就到这里 。 还有实际开发工具和脚本的时候，面向对象的方式来进行开发和设计<br>是一个很好的体验。讲任务对象化 。 本篇blog 是以Python特性维度来进行的，后面会再根据任务类型来<br>深入总结。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -227,59 +233,35 @@
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -298,8 +280,8 @@
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -434,6 +416,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

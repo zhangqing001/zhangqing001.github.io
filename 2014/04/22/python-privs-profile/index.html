@@ -48,9 +48,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -72,15 +76,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/23/python-privs-profile/" title="python change privs &amp; profile" itemprop="url">python change privs &amp; profile</a>
+      <a href="/2014/04/22/python-privs-profile/" title="python change privs &amp; profile" itemprop="url">python change privs &amp; profile</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-04-22T16:36:19.000Z" itemprop="datePublished">4月 23 2014</time>
-    更新日期:<time datetime="2014-08-06T00:26:21.000Z" itemprop="dateModified">8月 6 2014</time>
+    <time datetime="2014-04-22T08:36:19.000Z" itemprop="datePublished">4月 22 2014</time>
+    更新日期:<time datetime="2014-11-08T06:23:58.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -104,7 +108,7 @@
 <blockquote>
 <p>多实例是很常见的，包括oracle和mysql， mysql多为常见<br>如下脚本可以解决，具体模块做得什么工作，不在此讨论 </p>
 </blockquote>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">import pickle</div><div class="line"><span class="keyword">source</span> = <span class="string">'source '</span>+<span class="string">'/home/oracle/profile_'</span>+t</div><div class="line">dump = <span class="string">'/usr/bin/python -c "import os,pickle;print pickle.dumps(os.environ)"'</span></div><div class="line">penv = os.<span class="keyword">popen</span>(<span class="string">'%s && %s'</span> <span class="variable">%(</span><span class="keyword">source</span>,dump))</div><div class="line"><span class="keyword">env</span> = pickle.loads(penv.read())</div><div class="line">os.environ = <span class="keyword">env</span></div><div class="line">oraclesid = os.environ.get(<span class="string">'ORACLE_SID'</span>) ;</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> pickle</div><div class="line"><span class="keyword">source</span> = <span class="string">'source '</span>+<span class="string">'/home/oracle/profile_'</span>+t</div><div class="line"><span class="keyword">dump</span> = <span class="string">'/usr/bin/python -c "import os,pickle;print pickle.dumps(os.environ)"'</span></div><div class="line">penv = os.popen(<span class="string">'%s && %s'</span> %(<span class="keyword">source</span>,<span class="keyword">dump</span>))</div><div class="line">env = pickle.loads(penv.<span class="keyword">read</span>())</div><div class="line">os.environ = env</div><div class="line">oraclesid = os.environ.get(<span class="string">'ORACLE_SID'</span>) ;</div></pre></td></tr></table></figure>
 
   
 	</div>
@@ -125,7 +129,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/04/23/python-privs-profile/" data-title="python change privs &amp; profile | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2014/04/22/python-privs-profile/" data-title="python change privs &amp; profile | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -135,7 +139,7 @@
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/04/28/linux-shell/" title="shell脚本常用">
+ <a href="/2014/04/27/linux-shell/" title="shell脚本常用">
   <strong>PREVIOUS:</strong><br/>
   <span>
   shell脚本常用</span>
@@ -144,7 +148,7 @@
 
 
 <div class="next">
-<a href="/2014/04/02/python-fabric/"  title="python fabric">
+<a href="/2014/04/01/python-fabric/"  title="python fabric">
  <strong>NEXT:</strong><br/> 
  <span>python fabric
 </span>
@@ -175,59 +179,35 @@
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -246,8 +226,8 @@
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -382,6 +362,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

@@ -49,9 +49,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -73,15 +77,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/05/23/xtrabackup/" title="xtrabackup 备份原理" itemprop="url">xtrabackup 备份原理</a>
+      <a href="/2014/05/22/xtrabackup/" title="xtrabackup 备份原理" itemprop="url">xtrabackup 备份原理</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-05-22T16:39:15.000Z" itemprop="datePublished">5月 23 2014</time>
-    更新日期:<time datetime="2014-08-06T00:25:24.000Z" itemprop="dateModified">8月 6 2014</time>
+    <time datetime="2014-05-22T08:39:15.000Z" itemprop="datePublished">5月 22 2014</time>
+    更新日期:<time datetime="2014-11-08T06:24:23.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -107,9 +111,9 @@
 </blockquote>
 <p>xtrabackup会在后台开启一个log-copying的线程，该线程会对redo log file进行监视，并把从lsn1(lsn1是Xtrabackup在启动时会从redo log file中获取最近一次的checkpoint对应的log sequence number lsn1 )开始增加的数据块（日志记录）不断的复制到备份集中一个叫xtrabackup_logfile的文件里面。日志copy操作，会在整个备份过程中一直进行，因为备份集做恢复的时候需要从lsn1开始到备份结束时所有日志记录，恢复原理就是 crash recover 的过程。 </p>
 <pre><code>注：
-<span class="keyword">log</span>-copying 线程每一秒都会去 <span class="keyword">check</span> 事务日志，看是否有新写入的需要<span class="keyword">copy</span>走的日志项.但是有种可能性：
-<span class="keyword">log</span>-copying 线程的<span class="keyword">copy</span>的速度比写入redofile 的速度慢，有可能事务日志循环一周，造成会有一部分日志
-还没有被读取就被覆盖了,此时 <span class="keyword">log</span>—copying 线程会报错，备份失败。
+<span class="built_in">log</span>-copying 线程每一秒都会去 check 事务日志，看是否有新写入的需要<span class="built_in">copy</span>走的日志项.但是有种可能性：
+<span class="built_in">log</span>-copying 线程的<span class="built_in">copy</span>的速度比写入redofile 的速度慢，有可能事务日志循环一周，造成会有一部分日志
+还没有被读取就被覆盖了,此时 <span class="built_in">log</span>—copying 线程会报错，备份失败。
 </code></pre><p>… </p>
 <hr>
 <blockquote>
@@ -120,26 +124,26 @@
 来访问数据文件的，也隐含了你要用对数据文件有读写权限的用户来进行备份。innodb的lib库使用读写方式打
 开是因为正常情况下代开文件就预示着写数据。
 
-  在<span class="keyword">copy</span>数据到备份目标目录的过程中，xtrabackup 每次读取<span class="number">1</span>M数据（不可配置），<span class="keyword">copy</span>日志文件的时候，
+  在<span class="built_in">copy</span>数据到备份目标目录的过程中，xtrabackup 每次读取<span class="number">1</span>M数据（不可配置），<span class="built_in">copy</span>日志文件的时候，
 每次读写<span class="number">512</span>字节，同样不可以配置。数据读取之后，xtrabackup会对这<span class="number">1</span>M的缓存数据块进行扫描，并对每一个
 数据页使用buf_page_is_corrupted()函数进行验证，看起是否损坏，如果page损坏了，对其重新读取并重新
 验证。如果重读<span class="number">10</span>次都失败了，本次备份失败，那么备份失败。
-注 ： (It skips this check <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">the</span> doublewrite buffer)
+注 ： (It skips this check <span class="keyword">on</span> the doublewrite <span class="keyword">buffer</span>)
 </code></pre><h4 id="xtraback备份结尾">xtraback备份结尾</h4>
 <p>当数据文件复制完成，xtrabackup 会停掉log-copying线程，并在备份目录下创建一个<br>xtrabackup_checkpoints 的文件，该文件包含备份的类型，还有备份开始时的log sequence number，还有结束时的log sequence number 。备份过程中，我们会看到数据文件copy信息，也会看到日志复制线程重复的扫描日志文件，并进程copy的信息，信息如下： </p>
-<pre><code>&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646475465483</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646475517369</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646475581716</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646475636841</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646475718082</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646475988095</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646476048286</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646476102877</span>)
-&gt;&gt; <span class="command">log</span> scanned up <span class="keyword">to</span> (<span class="number">3646476140854</span>)
-[<span class="number">01</span>] Copying /usr/<span class="keyword">local</span>/mysql/var/ibdata1
-    <span class="keyword">to</span> /usr/<span class="keyword">local</span>/mysql/Backups/<span class="number">2011</span>-<span class="number">04</span>-<span class="number">18</span>_21-<span class="number">11</span>-<span class="number">15</span>/ibdata1
+<pre><code>&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646475465483</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646475517369</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646475581716</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646475636841</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646475718082</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646475988095</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646476048286</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646476102877</span>)
+&gt;&gt; <span class="built_in">log</span> scanned <span class="keyword">up</span> <span class="keyword">to</span> (<span class="number">3646476140854</span>)
+[<span class="number">01</span>] Copying /usr/local/mysql/var/ibdata1
+    <span class="keyword">to</span> /usr/local/mysql/Backups/<span class="number">2011</span>-<span class="number">04</span>-<span class="number">18</span>_21-<span class="number">11</span>-<span class="number">15</span>/ibdata1
 [<span class="number">01</span>]        ...done
-<span class="keyword">the</span> <span class="command">log</span> <span class="type">file</span> thread repeatedly scanning <span class="keyword">the</span> <span class="command">log</span> files <span class="keyword">and</span> copying <span class="keyword">from</span> <span class="keyword">it</span>
+the <span class="built_in">log</span> <span class="keyword">file</span> thread repeatedly scanning the <span class="built_in">log</span> <span class="keyword">files</span> <span class="built_in">and</span> copying from it
 </code></pre><blockquote>
 <p>注 ： xtrabackup 的使用方式见之前的blog，最好参看官方文档</p>
 </blockquote>
@@ -153,7 +157,7 @@
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mysql，xtrabackup/">mysql，xtrabackup</a>
+  <span></span> <a href="/tags/xtrabackup/">xtrabackup</a>
   </div>
 
 
@@ -166,7 +170,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/05/23/xtrabackup/" data-title="xtrabackup 备份原理 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2014/05/22/xtrabackup/" data-title="xtrabackup 备份原理 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -216,59 +220,35 @@
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -287,8 +267,8 @@
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -423,6 +403,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

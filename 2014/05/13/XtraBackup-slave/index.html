@@ -51,9 +51,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -82,8 +86,8 @@
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-05-13T04:55:27.000Z" itemprop="datePublished">5月 13 2014</time>
-    更新日期:<time datetime="2014-07-22T13:35:49.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-05-12T20:55:27.000Z" itemprop="datePublished">5月 13 2014</time>
+    更新日期:<time datetime="2014-11-08T06:24:30.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -108,11 +112,11 @@
 </code></pre><blockquote>
 <p>备份完成之后会提示日志：<br>日志</p>
 </blockquote>
-<pre><code>innobackupex: Backup created <span class="keyword">in</span> directory <span class="string">'/data/tmp'</span>
-innobackupex: MySQL binlog position: filename <span class="string">'binlog.000755'</span>, position <span class="number">95778375</span>
-innobackupex: MySQL slave binlog position: master host <span class="string">'10.209.140.22'</span>, filename <span class="string">'binlog.001217'</span>, position <span class="number">352370216</span>
-innobackupex: You must use -i (--ignore-zeros) <span class="built_in">option</span> <span class="keyword">for</span> extraction <span class="keyword">of</span> the tar stream.
-<span class="number">140313</span> <span class="number">12</span>:<span class="number">56</span>:<span class="number">53</span>  innobackupex: completed OK!
+<pre><code>innobackupex: <span class="operator"><span class="keyword">Backup</span> created <span class="keyword">in</span> directory <span class="string">'/data/tmp'</span>
+innobackupex: MySQL <span class="keyword">binlog</span> <span class="keyword">position</span>: filename <span class="string">'binlog.000755'</span>, <span class="keyword">position</span> <span class="number">95778375</span>
+innobackupex: MySQL <span class="keyword">slave</span> <span class="keyword">binlog</span> <span class="keyword">position</span>: <span class="keyword">master</span> host <span class="string">'10.209.140.22'</span>, filename <span class="string">'binlog.001217'</span>, <span class="keyword">position</span> <span class="number">352370216</span>
+innobackupex: You must <span class="keyword">use</span> -i (<span class="comment">--ignore-zeros) option for extraction of the tar stream.</span>
+<span class="number">140313</span> <span class="number">12</span>:<span class="number">56</span>:<span class="number">53</span>  innobackupex: completed OK!</span>
 </code></pre><h4 id="登录机器恢复">登录机器恢复</h4>
 <pre><code><span class="comment">innobackupex</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">apply</span><span class="literal">-</span><span class="comment">log</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">ibbackup=xtrabackup</span> <span class="comment">/data/tmp/</span>
 </code></pre><blockquote>
@@ -130,26 +134,26 @@ Version: <span class="string">'5.5.18-log'</span>  <span class="built_in">socket
 <p> 可以把 /data/tmp/　目录下面的 ib*  copy 到 日志中的iblog目录下。 /data/tmp/下面的其他文件全部导入到 对于的datadir 目录下面。<br>修改conf文件， 配置service_id=xxx </p>
 </blockquote>
 <h4 id="只读启动mysql数据库">只读启动mysql数据库</h4>
-<pre><code><span class="attribute">mysqld_safe --read-only</span>=<span class="string">1 &amp;</span>
+<pre><code>mysqld_safe --<span class="keyword">read</span>-<span class="keyword">only</span>=<span class="number">1</span> &amp;
 </code></pre><p>   　  </p>
 <h4 id="登录mysql_设置复制结构">登录mysql 设置复制结构</h4>
 <blockquote>
 <p> 在 master 上,需要创建一个复制的帐号:</p>
 </blockquote>
-<pre><code><span class="operator"><span class="keyword">grant</span> replication slave, replication client <span class="keyword">on</span> *.* <span class="keyword">to</span> repl@<span class="string">'219.32.22.%'</span> identified <span class="keyword">by</span> <span class="string">'password'</span>;</span>
-FLUSH PRIVILEGES;
+<pre><code><span class="operator"><span class="keyword">grant</span> replication <span class="keyword">slave</span>, replication client <span class="keyword">on</span> *.* <span class="keyword">to</span> repl@<span class="string">'219.32.22.%'</span> <span class="keyword">identified</span> <span class="keyword">by</span> <span class="string">'password'</span>;</span>
+<span class="operator"><span class="keyword">FLUSH</span> <span class="keyword">PRIVILEGES</span>;</span>
 </code></pre><blockquote>
 <p>根据备份的日志<br>innobackupex: MySQL binlog position: filename ‘binlog.000755’, position 95778375</p>
 </blockquote>
 <pre><code><span class="comment">--- reality like this bellow : </span>
-change master <span class="built_in">to</span> master_host=<span class="string">'xxx'</span>,master_user=<span class="string">'repl'</span>,
+<span class="operator"><span class="keyword">change</span> <span class="keyword">master</span> <span class="keyword">to</span> master_host=<span class="string">'xxx'</span>,master_user=<span class="string">'repl'</span>,
 master_password=<span class="string">'xxxx'</span>, master_port=<span class="number">3306</span>,
 master_connect_retry=<span class="number">60</span>,
 master_log_file=<span class="string">'binlog.000755'</span>,
-master_log_pos=<span class="number">95778375</span>; 
+master_log_pos=<span class="number">95778375</span>;</span> 
 </code></pre><h4 id="启动恢复">启动恢复</h4>
-<pre><code><span class="operator"><span class="keyword">start</span> slave ;</span> 
-<span class="operator"><span class="keyword">show</span> slave status \G</span>
+<pre><code><span class="operator"><span class="keyword">start</span> <span class="keyword">slave</span> ;</span> 
+<span class="operator"><span class="keyword">show</span> <span class="keyword">slave</span> <span class="keyword">status</span> \G</span>
 </code></pre><blockquote>
 <p>到此完成备库搭建</p>
 </blockquote>
@@ -163,7 +167,7 @@ master_log_pos=<span class="number">95778375</span>;
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/xtrabackup/">xtrabackup</a><a href="/tags/备份/">备份</a>
+  <span></span> <a href="/tags/xtrabackup/">xtrabackup</a>
   </div>
 
 
@@ -186,7 +190,7 @@ master_log_pos=<span class="number">95778375</span>;
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/05/23/xtrabackup/" title="xtrabackup 备份原理">
+ <a href="/2014/05/22/xtrabackup/" title="xtrabackup 备份原理">
   <strong>PREVIOUS:</strong><br/>
   <span>
   xtrabackup 备份原理</span>
@@ -195,7 +199,7 @@ master_log_pos=<span class="number">95778375</span>;
 
 
 <div class="next">
-<a href="/2014/04/28/linux-shell/"  title="shell脚本常用">
+<a href="/2014/04/27/linux-shell/"  title="shell脚本常用">
  <strong>NEXT:</strong><br/> 
  <span>shell脚本常用
 </span>
@@ -226,59 +230,35 @@ master_log_pos=<span class="number">95778375</span>;
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -297,8 +277,8 @@ master_log_pos=<span class="number">95778375</span>;
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -433,6 +413,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

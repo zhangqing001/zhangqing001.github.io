@@ -53,9 +53,13 @@ Step 1: 使用 explain plan for 对sql文本进行plan
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -84,8 +88,8 @@ Step 1: 使用 explain plan for 对sql文本进行plan
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-22T06:40:53.000Z" itemprop="datePublished">3月 22 2014</time>
-    更新日期:<time datetime="2014-07-22T00:27:25.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-03-21T22:40:53.000Z" itemprop="datePublished">3月 22 2014</time>
+    更新日期:<time datetime="2014-11-08T06:23:28.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -104,36 +108,36 @@ Step 1: 使用 explain plan for 对sql文本进行plan
 <h4 id="Step_1:_使用_explain_plan_for_对sql文本进行plan">Step 1: 使用 explain plan for 对sql文本进行plan</h4>
 <pre><code>通常本次都是对通过<span class="keyword">hint</span> 处理的sql进行plan使其生成对的执行计划
 </code></pre><h4 id="Step_2:_generate_the_profile">Step 2: generate the profile</h4>
-<pre><code><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span>(dbms_xplan.display(<span class="keyword">null</span>,<span class="keyword">null</span>,<span class="string">'outline'</span>));</span>
+<pre><code><span class="operator"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">table</span>(dbms_xplan.display(<span class="literal">null</span>,<span class="literal">null</span>,<span class="string">'outline'</span>));</span>
 </code></pre><h4 id="Step_3：_执行计划稳固">Step 3： 执行计划稳固</h4>
 <pre><code> declare
-    v_hints <span class="transposed_variable">sys.</span>sqlprof_attr;
-   sql_fulltext clob;
+    v_hints sys.sqlprof_attr<span class="comment">;</span>
+   sql_fulltext clob<span class="comment">;</span>
    begin
-   <span class="keyword">select</span> SQL_FULLTEXT
+   select SQL_FULLTEXT
    into sql_fulltext
-   from v$sqlarea
-   where sql_id = <span class="string">'$sql_id'</span>;
-   v_hints := <span class="transposed_variable">sys.</span>sqlprof_attr( <span class="string">'USE_NL(@"</span>SEL$<span class="number">1</span><span class="string">" "</span>C<span class="string">"@"</span>SEL$<span class="number">1</span><span class="string">")'</span>,
- <span class="string">'USE_NL(@"</span>SEL$<span class="number">1</span><span class="string">" "</span>P<span class="string">"@"</span>SEL$<span class="number">1</span><span class="string">")'</span>,
- <span class="string">'USE_NL(@"</span>SEL$<span class="number">1</span><span class="string">" "</span>S<span class="string">"@"</span>SEL$<span class="number">1</span><span class="string">")'</span>,
- <span class="string">'INDEX(@"</span>SEL$<span class="number">1</span><span class="string">" "</span>CAM<span class="string">"@"</span>SEL$<span class="number">1</span><span class="string">" ("</span>xxxx<span class="string">"."</span>ID<span class="string">"))'</span>);
-   <span class="transposed_variable">dbms_sqltune.</span>import_sql_profile(sql_fulltext, v_hints,<span class="string">'$sql_id'</span>,force_match =&gt; true);
-   <span class="keyword">end</span>;
+   from v<span class="variable">$sqlarea</span>
+   where sql_id = '<span class="variable">$sql_id</span>'<span class="comment">;</span>
+   v_hints := sys.sqlprof_attr( 'USE_NL(@<span class="string">"SEL<span class="variable">$1</span>"</span> <span class="string">"C"</span>@<span class="string">"SEL<span class="variable">$1</span>"</span>)',
+ 'USE_NL(@<span class="string">"SEL<span class="variable">$1</span>"</span> <span class="string">"P"</span>@<span class="string">"SEL<span class="variable">$1</span>"</span>)',
+ 'USE_NL(@<span class="string">"SEL<span class="variable">$1</span>"</span> <span class="string">"S"</span>@<span class="string">"SEL<span class="variable">$1</span>"</span>)',
+ 'INDEX(@<span class="string">"SEL<span class="variable">$1</span>"</span> <span class="string">"CAM"</span>@<span class="string">"SEL<span class="variable">$1</span>"</span> (<span class="string">"xxxx"</span>.<span class="string">"ID"</span>))')<span class="comment">;</span>
+   dbms_sqltune.import_sql_profile(sql_fulltext, v_hints,'<span class="variable">$sql_id</span>',force_match =&gt; <span class="literal">true</span>)<span class="comment">;</span>
+   end<span class="comment">;</span>
    /
 </code></pre><h4 id="另外oracle11g_提供了另一种稳固执行计划的方式，就是_SQL_baseline_-">另外oracle11g 提供了另一种稳固执行计划的方式，就是 SQL baseline .</h4>
 <p>后续会进行分析 … </p>
 <blockquote>
 <p>注意 ： </p>
 </blockquote>
-<pre><code>如果sql <span class="value">baseline</span> 是开启的情况下， 可能会导致假如的sql profile无效。 
+<pre><code>如果sql baseline 是开启的情况下， 可能会导致假如的sql <span class="keyword">profile</span>无效。 
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/执行计划稳固/">执行计划稳固</a>
+  <span></span> <a href="/tags/optimization/">optimization</a>
   </div>
 
 
@@ -156,7 +160,7 @@ Step 1: 使用 explain plan for 对sql文本进行plan
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/03/23/python-program/" title="the promotion of python programer">
+ <a href="/2014/03/22/python-program/" title="the promotion of python programer">
   <strong>PREVIOUS:</strong><br/>
   <span>
   the promotion of python programer</span>
@@ -196,59 +200,35 @@ Step 1: 使用 explain plan for 对sql文本进行plan
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -267,8 +247,8 @@ Step 1: 使用 explain plan for 对sql文本进行plan
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -403,6 +383,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

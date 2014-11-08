@@ -48,9 +48,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -79,8 +83,8 @@
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-05-31T05:03:27.000Z" itemprop="datePublished">5月 31 2014</time>
-    更新日期:<time datetime="2014-07-22T00:44:59.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-05-30T21:03:27.000Z" itemprop="datePublished">5月 31 2014</time>
+    更新日期:<time datetime="2014-11-08T06:25:07.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -109,94 +113,94 @@ localhost：3309 （ slave  ）
 </code></pre><h5 id="第二步_初始化mysql_DB">第二步 初始化mysql DB</h5>
 <p>配置my.cnf文件</p>
 <pre><code>[client]
-<span class="constant">port</span>=3309
-<span class="constant">socket</span>=/data/mysql3309/run/mysql.sock
+<span class="variable">port=</span><span class="number">3309</span>
+<span class="variable">socket=</span>/data/mysql3309/run/mysql.sock
 [mysql]
-<span class="constant">port</span>=3309
-<span class="constant">prompt</span>=\\u@\\d \\r:\\m:\\s&gt;
-default-character-set=gbk
+<span class="variable">port=</span><span class="number">3309</span>
+<span class="variable">prompt=</span>\\u@\\d \\r:\\m:\\s&gt;
+<span class="variable">default-character-set=</span>gbk
 [mysqld]
-<span class="constant">report_host</span>=localhost
-<span class="constant">explicit_defaults_for_timestamp</span>=true
-default-storage-engine=INNODB
-master-info-repository=TABLE
+<span class="variable">report_host=</span>localhost
+<span class="variable">explicit_defaults_for_timestamp=</span><span class="constant">true</span>
+<span class="variable">default-storage-engine=</span>INNODB
+<span class="variable">master-info-repository=</span>TABLE
 <span class="comment">#dir</span>
-<span class="constant">innodb_log_group_home_dir</span>=/logs/mysql3309/iblog
-<span class="constant">innodb_data_home_dir</span>=/logs/mysql3309/iblog
-<span class="constant">basedir</span>=/usr/local/mysql/
-<span class="constant">datadir</span>=/data/mysql3309/data
-<span class="constant">tmpdir</span>=/data/mysql3309/tmp
-<span class="constant">slave_load_tmpdir</span>=/data/mysql3309/tmp
-log-error=/data/mysql3309/log/alert.log
-<span class="constant">slow_query_log_file</span>=/data/mysql3309/log/slow.log
-<span class="constant">relay_log_info_file</span>=/logs/mysql3309/binlog/relay-log.info
-master-info-file=/logs/mysql3309/binlog/master.info
-<span class="constant">socket</span>=/data/mysql3309/run/mysql.sock
-log-bin=/logs/mysql3309/binlog/binlog
-relay-log=/logs/mysql3309/binlog/relaylog
-<span class="constant">lower_case_table_names</span>=2
+<span class="variable">innodb_log_group_home_dir=</span>/logs/mysql3309/iblog
+<span class="variable">innodb_data_home_dir=</span>/logs/mysql3309/iblog
+<span class="variable">basedir=</span>/usr/local/mysql/
+<span class="variable">datadir=</span>/data/mysql3309/data
+<span class="variable">tmpdir=</span>/data/mysql3309/tmp
+<span class="variable">slave_load_tmpdir=</span>/data/mysql3309/tmp
+<span class="variable">log-error=</span>/data/mysql3309/log/alert.log
+<span class="variable">slow_query_log_file=</span>/data/mysql3309/log/slow.log
+<span class="variable">relay_log_info_file=</span>/logs/mysql3309/binlog/relay-log.info
+<span class="variable">master-info-file=</span>/logs/mysql3309/binlog/master.info
+<span class="variable">socket=</span>/data/mysql3309/run/mysql.sock
+<span class="variable">log-bin=</span>/logs/mysql3309/binlog/binlog
+<span class="variable">relay-log=</span>/logs/mysql3309/binlog/relaylog
+<span class="variable">lower_case_table_names=</span><span class="number">2</span>
 <span class="comment">#innodb</span>
-<span class="constant">innodb_log_files_in_group</span>=4
-<span class="constant">innodb_log_file_size</span>=20M
-<span class="constant">innodb_buffer_pool_size</span>=256m
-<span class="constant">innodb_open_files</span>=65535
-<span class="constant">innodb_flush_log_at_trx_commit</span>=2
-<span class="constant">innodb_max_dirty_pages_pct</span>=50
-<span class="constant">innodb_io_capacity</span>=100
-<span class="constant">innodb_read_io_threads</span>=2
-<span class="constant">innodb_write_io_threads</span>=4
-<span class="constant">innodb_file_format</span>=Barracuda
-<span class="constant">innodb_file_per_table</span>=1
-<span class="constant">innodb_thread_concurrency</span>=10
-<span class="constant">innodb_change_buffering</span>=inserts
-<span class="constant">innodb_adaptive_flushing</span>=1
-<span class="constant">innodb_stats_on_metadata</span>=0
-<span class="constant">innodb_additional_mem_pool_size</span>=10M
-<span class="constant">innodb_flush_method</span>=O_DIRECT
-<span class="constant">innodb_log_buffer_size</span>=10M
-transaction-isolation = READ-COMMITTED
-<span class="constant">query_cache_type</span>=0
-<span class="constant">sync_binlog</span>=100
-<span class="constant">max_binlog_size</span> =50M
-<span class="constant">binlog_cache_size</span>=5M
-binlog-format=ROW
-<span class="constant">expire_logs_days</span>=7
+<span class="variable">innodb_log_files_in_group=</span><span class="number">4</span>
+<span class="variable">innodb_log_file_size=</span><span class="number">20</span>M
+<span class="variable">innodb_buffer_pool_size=</span><span class="number">256</span>m
+<span class="variable">innodb_open_files=</span><span class="number">65535</span>
+<span class="variable">innodb_flush_log_at_trx_commit=</span><span class="number">2</span>
+<span class="variable">innodb_max_dirty_pages_pct=</span><span class="number">50</span>
+<span class="variable">innodb_io_capacity=</span><span class="number">100</span>
+<span class="variable">innodb_read_io_threads=</span><span class="number">2</span>
+<span class="variable">innodb_write_io_threads=</span><span class="number">4</span>
+<span class="variable">innodb_file_format=</span>Barracuda
+<span class="variable">innodb_file_per_table=</span><span class="number">1</span>
+<span class="variable">innodb_thread_concurrency=</span><span class="number">10</span>
+<span class="variable">innodb_change_buffering=</span>inserts
+<span class="variable">innodb_adaptive_flushing=</span><span class="number">1</span>
+<span class="variable">innodb_stats_on_metadata=</span><span class="number">0</span>
+<span class="variable">innodb_additional_mem_pool_size=</span><span class="number">10</span>M
+<span class="variable">innodb_flush_method=</span>O_DIRECT
+<span class="variable">innodb_log_buffer_size=</span><span class="number">10</span>M
+<span class="variable">transaction-isolation =</span> READ-COMMITTED
+<span class="variable">query_cache_type=</span><span class="number">0</span>
+<span class="variable">sync_binlog=</span><span class="number">100</span>
+<span class="variable">max_binlog_size =</span><span class="number">50</span>M
+<span class="variable">binlog_cache_size=</span><span class="number">5</span>M
+<span class="variable">binlog-format=</span>ROW
+<span class="variable">expire_logs_days=</span><span class="number">7</span>
 <span class="comment">#gtid</span>
-gtid-mode=on
-log-slave-updates=true
-enforce-gtid-consistency=true
-<span class="constant">long_query_time</span>=1
-<span class="constant">slow_query_log</span>=1
+<span class="variable">gtid-mode=</span>on
+<span class="variable">log-slave-updates=</span><span class="constant">true</span>
+<span class="variable">enforce-gtid-consistency=</span><span class="constant">true</span>
+<span class="variable">long_query_time=</span><span class="number">1</span>
+<span class="variable">slow_query_log=</span><span class="number">1</span>
 skip-slave-start
-<span class="constant">server_id</span>=1
+<span class="variable">server_id=</span><span class="number">1</span>
 <span class="comment">#timeout</span>
-<span class="constant">connect_timeout</span>=30
-<span class="constant">delayed_insert_timeout</span> =300
-<span class="constant">innodb_lock_wait_timeout</span>=50
-<span class="constant">innodb_rollback_on_timeout</span>=OFF
-<span class="constant">net_read_timeout</span>=30
-<span class="constant">net_write_timeout</span>=60
-<span class="constant">slave_net_timeout</span>=30
-<span class="constant">port</span>=3309
+<span class="variable">connect_timeout=</span><span class="number">30</span>
+<span class="variable">delayed_insert_timeout =</span><span class="number">300</span>
+<span class="variable">innodb_lock_wait_timeout=</span><span class="number">50</span>
+<span class="variable">innodb_rollback_on_timeout=</span>OFF
+<span class="variable">net_read_timeout=</span><span class="number">30</span>
+<span class="variable">net_write_timeout=</span><span class="number">60</span>
+<span class="variable">slave_net_timeout=</span><span class="number">30</span>
+<span class="variable">port=</span><span class="number">3309</span>
 skip-name-resolve
-<span class="constant">max_connect_errors</span>=1500
-<span class="constant">connect_timeout</span>=30
-<span class="constant">max_allowed_packet</span>=24M
+<span class="variable">max_connect_errors=</span><span class="number">1500</span>
+<span class="variable">connect_timeout=</span><span class="number">30</span>
+<span class="variable">max_allowed_packet=</span><span class="number">24</span>M
 <span class="comment">#myisam</span>
-<span class="constant">concurrent_insert</span>=2
-<span class="constant">key_buffer_size</span>=8M
-<span class="constant">sort_buffer_size</span>=4M
-<span class="constant">join_buffer_size</span>=4M
-<span class="constant">read_buffer_size</span>=4M
-<span class="constant">myisam_sort_buffer_size</span>=20M
+<span class="variable">concurrent_insert=</span><span class="number">2</span>
+<span class="variable">key_buffer_size=</span><span class="number">8</span>M
+<span class="variable">sort_buffer_size=</span><span class="number">4</span>M
+<span class="variable">join_buffer_size=</span><span class="number">4</span>M
+<span class="variable">read_buffer_size=</span><span class="number">4</span>M
+<span class="variable">myisam_sort_buffer_size=</span><span class="number">20</span>M
 <span class="comment">#common</span>
-character-set-server=gbk
+<span class="variable">character-set-server=</span>gbk
 skip-external-locking
-<span class="constant">read_rnd_buffer_size</span>=5M
+<span class="variable">read_rnd_buffer_size=</span><span class="number">5</span>M
 safe-user-create
-local-infile=0
+<span class="variable">local-infile=</span><span class="number">0</span>
 [mysqld_safe]
-pid-file=/data/mysql3309/run/mysqld.pid
+<span class="variable">pid-file=</span>/data/mysql3309/run/mysqld.pid
 </code></pre><p>其中：     report_host=localhost<br>          explicit_defaults_for_timestamp=true<br>          gtid-mode=on log-slave-updates=true<br>          enforce-gtid-consistency=true<br>    是必须的；注意四个实例的server_id 不能一样。</p>
 <p>配置每个实例的环境变量</p>
 <pre><code><span class="keyword">alias</span> my3306=<span class="string">'export MYSQL_HOME=/data/mysql3306/'</span>
@@ -207,13 +211,13 @@ pid-file=/data/mysql3309/run/mysqld.pid
 <span class="keyword">alias</span> nsql=<span class="string">'mysql '</span>
 <span class="keyword">alias</span> alert=<span class="string">'tail -100f $MYSQL_HOME/log/alert.log'</span>
 </code></pre><p>初始化每一个实例(以3309为例子) 创建目录，赋权</p>
-<pre><code>mkdir <span class="attribute">-p</span> /<span class="built_in">data</span>/mysql3309<span class="subst">/</span>{<span class="built_in">data</span>,tmp,run,<span class="keyword">log</span>}
-mkdir <span class="attribute">-p</span> /<span class="keyword">log</span>/mysql3309<span class="subst">/</span>{iblog,binlog}
-chmod <span class="attribute">-R</span> <span class="number">777</span> /<span class="built_in">data</span>/mysql3309<span class="subst">/</span>
-chmod <span class="attribute">-R</span> <span class="number">777</span> /logs/mysql3309<span class="subst">/</span>
-chmod <span class="number">644</span>  /<span class="built_in">data</span>/mysql3309/my<span class="built_in">.</span>cnf
+<pre><code><span class="keyword">mkdir</span> -p /data/mysql3309/{data,tmp,run,<span class="keyword">log</span>}
+<span class="keyword">mkdir</span> -p /<span class="keyword">log</span>/mysql3309/{iblog,binlog}
+<span class="keyword">chmod</span> -R <span class="number">777</span> /data/mysql3309/
+<span class="keyword">chmod</span> -R <span class="number">777</span> /logs/mysql3309/
+<span class="keyword">chmod</span> <span class="number">644</span>  /data/mysql3309/<span class="keyword">my</span>.cnf
 </code></pre><p>create database </p>
-<pre><code>/usr/<span class="built_in">local</span>/mysql/scripts/mysql_install_db <span class="subst">--</span>defaults<span class="attribute">-file</span><span class="subst">=</span>/<span class="built_in">data</span>/mysql3309/my<span class="built_in">.</span>cnf <span class="subst">--</span>basedir<span class="subst">=</span>/usr/<span class="built_in">local</span>/mysql <span class="subst">--</span>datadir<span class="subst">=</span>/<span class="built_in">data</span>/mysql3309/<span class="built_in">data</span>  <span class="subst">--</span>user<span class="subst">=</span>root
+<pre><code><span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>scripts<span class="regexp">/mysql_install_db --defaults-file=/</span>data<span class="regexp">/mysql3309/m</span>y.cnf --basedir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql --datadir=/</span>data<span class="regexp">/mysql3309/</span>data  --user=root
 </code></pre><p>启动实例</p>
 <pre><code><span class="title">export</span> <span class="type">MYSQL_HOME</span>=/<span class="typedef"><span class="keyword">data</span>/mysql3309/</span>
 <span class="title">mysqld_safe</span> &amp;
@@ -257,7 +261,7 @@ chmod <span class="number">644</span>  /<span class="built_in">data</span>/mysql
 </code></pre><p>至此我们的环境已经搭建完成。</p>
 <h3 id="mysql_utilities的几个常用命令">mysql utilities的几个常用命令</h3>
 <p>检查复制环境：</p>
-<pre><code><span class="comment">mysqlrplcheck</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3307</span> <span class="literal">-</span><span class="comment">s</span>
+<pre><code><span class="title">mysqlrplcheck</span> --master=root:root@<span class="number">127.0.0.1:3306</span> --slave=root:root@<span class="number">127.0.0.1:3307</span> -s
 </code></pre><p>—-&gt;:检查日志</p>
 <pre><code>ruiayLinSunny <span class="keyword">at</span> ruiayLinSunnydeMacBook-Pro-<span class="number">2</span> <span class="keyword">in</span> ~
 $ mysqlrplcheck <span class="comment">--master=root:root@127.0.0.1:3306 --slave=root:root@127.0.0.1:3307 -s</span>
@@ -277,7 +281,7 @@ Checking storage engines compatibility                               [pass]
 Checking lower_case_table_names settings                             [pass]
 Checking slave <span class="command">delay</span> (seconds <span class="keyword">behind</span> master)                         [pass]
 </code></pre><p>检查复制健康状态：</p>
-<pre><code><span class="comment">mysqlrpladmin</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3307</span> <span class="comment">health</span>
+<pre><code><span class="title">mysqlrpladmin</span> --master=root:root@<span class="number">127.0.0.1:3306</span> --slave=root:root@<span class="number">127.0.0.1:3307</span> health
 </code></pre><p>—-&gt;: 检查日志</p>
 <pre><code>$ mysqlrpladmin --master=root:root@127.0.0.1:3306 --slave=root:root@127.0.0.1:3307 health
 # Checking privileges.
@@ -290,7 +294,7 @@ Checking slave <span class="command">delay</span> (seconds <span class="keyword"
 <span class="header">| 127.0.0.1  | 3307  | SLAVE   | UP     | ON         | OK      |
 +------------+-------+---------+--------+------------+---------+</span>
 </code></pre><p>显示整体拓扑结构：</p>
-<pre><code>mysqlrplshow <span class="subst">--</span>master<span class="subst">=</span>root:root@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">3306</span>  <span class="subst">--</span>discover<span class="attribute">-slaves</span><span class="attribute">-login</span><span class="subst">=</span>root:root <span class="attribute">-v</span>
+<pre><code><span class="comment">mysqlrplshow</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">discover</span><span class="literal">-</span><span class="comment">slaves</span><span class="literal">-</span><span class="comment">login=root:root</span> <span class="literal">-</span><span class="comment">v</span>
 </code></pre><p>—-&gt;: 检查结果</p>
 <pre><code><span class="title">ruiaylinydembp2</span>:manages root# mysqlrplshow <span class="comment">--master=root:root@localhost:3306 --discover-slaves-login=root:root</span>
 <span class="preprocessor"># master on localhost: ... connected.</span>
@@ -304,8 +308,8 @@ Checking slave <span class="command">delay</span> (seconds <span class="keyword"
    |
    +<span class="comment">--- localhost:3309 - (SLAVE)</span>
 </code></pre><p>通过 mysqlrpladmin 来打开和关闭复制</p>
-<pre><code><span class="comment">mysqlrpladmin</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3308</span> <span class="comment">start</span>
-<span class="comment">mysqlrpladmin</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3308</span> <span class="comment">stop</span>
+<pre><code><span class="title">mysqlrpladmin</span> --master=root:root@<span class="number">127.0.0.1:3306</span> --slave=root:root@<span class="number">127.0.0.1:3308</span> start
+mysqlrpladmin --master=root:root@<span class="number">127.0.0.1:3306</span> --slave=root:root@<span class="number">127.0.0.1:3308</span> stop
 </code></pre><p>以上是几个比较常用的工具，每一个具体工具详细内容，请自行看文档，呵呵</p>
 <h3 id="自动和手动_failover">自动和手动 failover</h3>
 <blockquote>
@@ -338,7 +342,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 
 Q-quit R-refresh H-health G-GTID Lists U-UUIDs
 </code></pre><p>另外开一个终端<br>执行 ：</p>
-<pre><code>mysqladmin  <span class="attribute">-uroot</span> <span class="attribute">-proot</span> shutdown
+<pre><code>mysqladmin  -uroot -proot <span class="keyword">shutdown</span>
 </code></pre><p>failover终端：</p>
 <pre><code>### mysqlfailover --master=root:root@127.0.0.1:3306 --candidates=root:root@127.0.0.1:3307  --discover-slaves-login=root:root
 <span class="header">Master Information
@@ -418,7 +422,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 <span class="header">| localhost  | 3309  | SLAVE   | UP     | ON         | OK      |
 +------------+-------+---------+--------+------------+---------+</span>
 </code></pre><p>我们执行手动切换： </p>
-<pre><code>mysqlrpladmin <span class="subst">--</span>master<span class="subst">=</span>root:root@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">3307</span> <span class="subst">--</span><span class="literal">new</span><span class="attribute">-master</span><span class="subst">=</span>root:root@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">3306</span> <span class="subst">--</span>discover<span class="attribute">-slaves</span><span class="attribute">-login</span><span class="subst">=</span>root:root <span class="subst">--</span>demote<span class="attribute">-master</span> switchover
+<pre><code><span class="comment">mysqlrpladmin</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3307</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">new</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">discover</span><span class="literal">-</span><span class="comment">slaves</span><span class="literal">-</span><span class="comment">login=root:root</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">demote</span><span class="literal">-</span><span class="comment">master</span> <span class="comment">switchover</span>
 </code></pre><p>—-&gt;：日志输出</p>
 <pre><code>ruiayLinSunnydeMacBook-Pro-<span class="number">2</span>:~ root# mysqlrpladmin --master=root:root@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">3307</span> --<span class="keyword">new</span>-master=root:root@<span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">3306</span> --discover-slaves-login=root:root --demote-master switchover
 <span class="preprocessor"># Discovering slaves for master at 127.0.0.1:3307</span>
@@ -478,7 +482,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/mysql56/">mysql5.6</a><a href="/tags/autofailover/">autofailover</a><a href="/tags/fabric/">fabric</a>
+  <span></span> <a href="/tags/autofailover/">autofailover</a>
   </div>
 
 
@@ -501,16 +505,16 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/06/15/mysql-fabric-01-desc/" title="mysql fabric [01] 大致介绍">
+ <a href="/2014/06/15/mysql-fabric-01-desc/" title="mysql fabric [01] 简介">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  mysql fabric [01] 大致介绍</span>
+  mysql fabric [01] 简介</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2014/05/23/xtrabackup/"  title="xtrabackup 备份原理">
+<a href="/2014/05/22/xtrabackup/"  title="xtrabackup 备份原理">
  <strong>NEXT:</strong><br/> 
  <span>xtrabackup 备份原理
 </span>
@@ -541,59 +545,35 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -612,8 +592,8 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -748,6 +728,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

@@ -48,9 +48,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -72,15 +76,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/28/linux-shell/" title="shell脚本常用" itemprop="url">shell脚本常用</a>
+      <a href="/2014/04/27/linux-shell/" title="shell脚本常用" itemprop="url">shell脚本常用</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-04-27T16:31:22.000Z" itemprop="datePublished">4月 28 2014</time>
-    更新日期:<time datetime="2014-07-22T00:33:15.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-04-27T08:31:22.000Z" itemprop="datePublished">4月 27 2014</time>
+    更新日期:<time datetime="2014-11-08T06:24:46.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -128,12 +132,12 @@
 <blockquote>
 <p><code> </code> 和 $() 是对等的，但是后者更清晰，特别是多层次嵌套的时候。 反单引号在有些字体里<br>跟正单引号很相似。 $()能够内嵌使用，而且避免了转义符的麻烦。</p>
 </blockquote>
-<pre><code><span class="keyword">for</span> x <span class="keyword">in</span> <span class="variable">$(</span> seq <span class="number">1</span> <span class="number">10</span> ) 和 <span class="keyword">for</span> x <span class="keyword">in</span> <span class="string">`seq 1 10 `</span> 是对等的
+<pre><code><span class="keyword">for</span> x <span class="keyword">in</span> $( <span class="type">seq</span> <span class="number">1</span> <span class="number">10</span> ) 和 <span class="keyword">for</span> x <span class="keyword">in</span> `<span class="type">seq</span> <span class="number">1</span> <span class="number">10</span> ` 是对等的
 </code></pre><blockquote>
 <p> 比如要是 输出 ： 1-2-3-4 。 明显第二个更加简单方便，并且不需要转义</p>
 </blockquote>
-<pre><code><span class="keyword">echo</span> "<span class="number">1</span>-`<span class="keyword">echo</span> <span class="number">2</span>-\`<span class="keyword">echo</span> <span class="number">3</span>-\\\`<span class="keyword">echo</span> <span class="number">4</span>\\\`\``"
-<span class="keyword">echo</span> "<span class="number">1</span>-$(<span class="keyword">echo</span> <span class="number">2</span>-$(<span class="keyword">echo</span> <span class="number">3</span>-$(<span class="keyword">echo</span> <span class="number">4</span>)))"
+<pre><code>echo <span class="string">"1-`echo 2-\`echo 3-\\\`echo 4\\\`\``"</span>
+echo <span class="string">"1-$(echo 2-$(echo 3-$(echo 4)))"</span>
 </code></pre><h4 id="3-_从文件中按照行级别读取">3. 从文件中按照行级别读取</h4>
 <blockquote>
 <p>以下三个方式都可以的<br>3.1 while </p>
@@ -145,10 +149,10 @@
 </code></pre><blockquote>
 <p>3.2  cat | while</p>
 </blockquote>
-<pre><code>cat filename | <span class="keyword">while</span> <span class="built_in">read</span> line
+<pre><code><span class="keyword">cat</span> filename | <span class="keyword">while</span> <span class="keyword">read</span> <span class="built_in">line</span>
 <span class="keyword">do</span>
-    <span class="built_in">echo</span> <span class="variable">$line</span>
-<span class="keyword">done</span>
+    <span class="keyword">echo</span> $<span class="built_in">line</span>
+done
 </code></pre><blockquote>
 <p>3.3 for<br>注意 此方式在行中有空格的时候 会变为多行</p>
 </blockquote>
@@ -238,21 +242,21 @@ ${<span class="keyword">string</span>/<span class="variable">%substring</span>/r
 </code></pre><blockquote>
 <p>Bash里有各种各样操作字符串的方式<br>基本用户</p>
 </blockquote>
-<pre><code>    f=<span class="string">"path1/path2/file.ext"</span> 
-    len=<span class="string">"<span class="variable">${#f}</span>"</span> <span class="comment"># = 20 (字符串长度) </span>
+<pre><code>    <span class="variable">f=</span><span class="string">"path1/path2/file.ext"</span> 
+    <span class="variable">len=</span><span class="string">"<span class="subst">${<span class="comment">#f}" # = 20 (字符串长度) </span>
     <span class="comment"># 切片操作: ${&lt;var&gt;:&lt;start&gt;} or ${&lt;var&gt;:&lt;start&gt;:&lt;length&gt;}</span>
-    slice1=<span class="string">"<span class="variable">${f:6}</span>"</span> <span class="comment"># = "path2/file.ext"</span>
-    slice2=<span class="string">"<span class="variable">${f:6:5}</span>"</span> <span class="comment"># = "path2"</span>
-    slice3=<span class="string">"<span class="variable">${f: -8}</span>"</span> <span class="comment"># = "file.ext"(注意："-"前有空格)</span>
-    pos=<span class="number">6</span>
-    len=<span class="number">5</span>
-    slice4=<span class="string">"<span class="variable">${f:${pos}</span>:<span class="variable">${len}</span>}"</span> <span class="comment"># = "path2"</span>
+    <span class="variable">slice1=</span><span class="string">"<span class="subst">${f:<span class="number">6</span>}</span>"</span> <span class="comment"># = "path2/file.ext"</span>
+    <span class="variable">slice2=</span><span class="string">"<span class="subst">${f:<span class="number">6</span>:<span class="number">5</span>}</span>"</span> <span class="comment"># = "path2"</span>
+    <span class="variable">slice3=</span><span class="string">"<span class="subst">${f: -<span class="number">8</span>}</span>"</span> <span class="comment"># = "file.ext"(注意："-"前有空格)</span>
+    <span class="variable">pos=</span><span class="number">6</span>
+    <span class="variable">len=</span><span class="number">5</span>
+    <span class="variable">slice4=</span><span class="string">"<span class="subst">${f:${pos}</span>:<span class="subst">${len}</span>}"</span> <span class="comment"># = "path2"</span></span></span>
 </code></pre><blockquote>
 <p>替换操作</p>
 </blockquote>
-<pre><code><span class="setting">f=<span class="value"><span class="string">"path1/path2/file.ext"</span> </span></span>
-<span class="setting">single_subst=<span class="value"><span class="string">"${f/path?/x}"</span>   # = <span class="string">"x/path2/file.ext"</span></span></span>
-<span class="setting">global_subst=<span class="value"><span class="string">"${f//path?/x}"</span>  # = <span class="string">"x/x/file.ext"</span> </span></span>
+<pre><code><span class="variable">f=</span><span class="string">"path1/path2/file.ext"</span> 
+<span class="variable">single_subst=</span><span class="string">"<span class="subst">${f/path?/x}</span>"</span>   <span class="comment"># = "x/path2/file.ext"</span>
+<span class="variable">global_subst=</span><span class="string">"<span class="subst">${f//path?/x}</span>"</span>  <span class="comment"># = "x/x/file.ext" </span>
 </code></pre><blockquote>
 <p>删除头部或尾部 </p>
 </blockquote>
@@ -279,16 +283,16 @@ root=<span class="string">"<span class="variable">${f%%/*}</span>"</span>      <
 <p>在这里，-a 选项告诉read命令将分割后的元素保存到数组parts中。随后，你可以通过${parts[0]}<br>${parts[1]}和${parts[0]}来访问数组的各个元素，或者通过${parts[@]}来访问所有元素。</p>
 </blockquote>
 <h4 id="9-_转换大小写">9. 转换大小写</h4>
-<pre><code>使用<span class="keyword">tr</span> 命令替换
+<pre><code>使用<span class="built_in">tr</span> 命令替换
 </code></pre><h3 id="总结">总结</h3>
-<pre><code><span class="built_in">shell</span> 使用比较方便，系统原生，属于轻量级脚本，但是不得不承认，语法上面不如Python 简洁，另外<span class="built_in">shell</span> 用起来很多地方容易出错。 
+<pre><code><span class="keyword">shell</span> 使用比较方便，系统原生，属于轻量级脚本，但是不得不承认，语法上面不如Python 简洁，另外<span class="keyword">shell</span> 用起来很多地方容易出错。 
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/linux/">linux</a><a href="/tags/shell/">shell</a><a href="/tags/bash/">bash</a>
+  <span></span> <a href="/tags/shell/">shell</a>
   </div>
 
 
@@ -301,7 +305,7 @@ root=<span class="string">"<span class="variable">${f%%/*}</span>"</span>      <
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/04/28/linux-shell/" data-title="shell脚本常用 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2014/04/27/linux-shell/" data-title="shell脚本常用 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -320,7 +324,7 @@ root=<span class="string">"<span class="variable">${f%%/*}</span>"</span>      <
 
 
 <div class="next">
-<a href="/2014/04/23/python-privs-profile/"  title="python change privs &amp; profile">
+<a href="/2014/04/22/python-privs-profile/"  title="python change privs &amp; profile">
  <strong>NEXT:</strong><br/> 
  <span>python change privs &amp; profile
 </span>
@@ -351,59 +355,35 @@ root=<span class="string">"<span class="variable">${f%%/*}</span>"</span>      <
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -422,8 +402,8 @@ root=<span class="string">"<span class="variable">${f%%/*}</span>"</span>      <
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -558,6 +538,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

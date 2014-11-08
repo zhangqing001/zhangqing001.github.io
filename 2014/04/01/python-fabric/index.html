@@ -50,9 +50,13 @@ Fabric 是基于 SSH 协议的 Python 工具，相比传统的 ssh/scp 方式，
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -74,15 +78,15 @@ Fabric 是基于 SSH 协议的 Python 工具，相比传统的 ssh/scp 方式，
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/04/02/python-fabric/" title="python fabric" itemprop="url">python fabric</a>
+      <a href="/2014/04/01/python-fabric/" title="python fabric" itemprop="url">python fabric</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-04-01T16:34:03.000Z" itemprop="datePublished">4月 2 2014</time>
-    更新日期:<time datetime="2014-07-22T13:36:54.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-04-01T08:34:03.000Z" itemprop="datePublished">4月 1 2014</time>
+    更新日期:<time datetime="2014-11-08T06:23:39.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -102,7 +106,9 @@ Fabric 是基于 SSH 协议的 Python 工具，相比传统的 ssh/scp 方式，
 </blockquote>
 <pre><code><span class="variable">$ </span>ssh x.x.x.x <span class="string">'uname -a'</span> -- 输出略
 </code></pre><p>Fabric 示例：</p>
-<p><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cat fabfile.py</div><div class="line"><span class="keyword">from</span> fabric.api <span class="keyword">import</span> run</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">uname</span><span class="params">()</span>:</span></div><div class="line">    run(<span class="string">'uname -a'</span>)</div><div class="line">$ fab -H x.x.x.x uname -- 输出略</div></pre></td></tr></table></figure><br>肉眼直观看上去，貌似比 ssh 方式要写不少代码，但是基于 ssh 方式中间可控环节比较少，例如：你想判断某服务是否已经启动，没有启动则执行启动等等操作。ssh 命令式的做法稍显麻烦。（当然龌龊一点可以在被操作机器上写好一个脚本，ssh 调用这个脚本）</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">$ cat fabfile.py</div><div class="line"><span class="keyword">from</span> fabric.api <span class="keyword">import</span> run</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">uname</span><span class="params">()</span>:</span></div><div class="line">    run(<span class="string">'uname -a'</span>)</div><div class="line">$ fab -H x.x.x.x uname -- 输出略</div></pre></td></tr></table></figure>
+
+<p>肉眼直观看上去，貌似比 ssh 方式要写不少代码，但是基于 ssh 方式中间可控环节比较少，例如：你想判断某服务是否已经启动，没有启动则执行启动等等操作。ssh 命令式的做法稍显麻烦。（当然龌龊一点可以在被操作机器上写好一个脚本，ssh 调用这个脚本）</p>
 <blockquote>
 <p>说几个 Fabric 的优点吧：</p>
 </blockquote>
@@ -172,14 +178,16 @@ env.roledefs = {<span class="string">'nginx'</span><span class="symbol">:</span>
 </code></pre><blockquote>
 <p>示例3：混合本地和远程操作</p>
 </blockquote>
-<p><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cat fabfile</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">''' test hello '''</span></div><div class="line">    <span class="keyword">with</span> lcd(<span class="string">'/tmp'</span>):  <span class="comment"># 切换到 /tmp 目录下</span></div><div class="line">        local(<span class="string">'svn co http://xxx xxx'</span>) <span class="comment"># check 代码到本地</span></div><div class="line">        local(<span class="string">'tar czf xxx.tar.gz xxx/'</span>) <span class="comment"># 压缩本地包</span></div><div class="line">        put(<span class="string">'xxx.tar.gz'</span>, <span class="string">'/tmp'</span>) <span class="comment"># 上传压缩包到远程 /tmp 目录下</span></div><div class="line">    <span class="keyword">with</span> cd(<span class="string">'/tmp'</span>):   <span class="comment"># 切换到远程 /tmp 目录</span></div><div class="line">        run(<span class="string">'tar zxf xxx.tar.gz'</span>) <span class="comment"># 远程解压</span></div></pre></td></tr></table></figure><br>是不是看上去都是像本地一样？对吧。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">$ cat fabfile</div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">''' test hello '''</span></div><div class="line">    <span class="keyword">with</span> lcd(<span class="string">'/tmp'</span>):  <span class="comment"># 切换到 /tmp 目录下</span></div><div class="line">        local(<span class="string">'svn co http://xxx xxx'</span>) <span class="comment"># check 代码到本地</span></div><div class="line">        local(<span class="string">'tar czf xxx.tar.gz xxx/'</span>) <span class="comment"># 压缩本地包</span></div><div class="line">        put(<span class="string">'xxx.tar.gz'</span>, <span class="string">'/tmp'</span>) <span class="comment"># 上传压缩包到远程 /tmp 目录下</span></div><div class="line">    <span class="keyword">with</span> cd(<span class="string">'/tmp'</span>):   <span class="comment"># 切换到远程 /tmp 目录</span></div><div class="line">        run(<span class="string">'tar zxf xxx.tar.gz'</span>) <span class="comment"># 远程解压</span></div></pre></td></tr></table></figure>
+
+<p>是不是看上去都是像本地一样？对吧。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/python-fabric/">python-fabric</a>
+  <span></span> <a href="/tags/fabric/">fabric</a>
   </div>
 
 
@@ -192,7 +200,7 @@ env.roledefs = {<span class="string">'nginx'</span><span class="symbol">:</span>
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/04/02/python-fabric/" data-title="python fabric | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2014/04/01/python-fabric/" data-title="python fabric | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -202,7 +210,7 @@ env.roledefs = {<span class="string">'nginx'</span><span class="symbol">:</span>
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/04/23/python-privs-profile/" title="python change privs &amp; profile">
+ <a href="/2014/04/22/python-privs-profile/" title="python change privs &amp; profile">
   <strong>PREVIOUS:</strong><br/>
   <span>
   python change privs &amp; profile</span>
@@ -211,7 +219,7 @@ env.roledefs = {<span class="string">'nginx'</span><span class="symbol">:</span>
 
 
 <div class="next">
-<a href="/2014/03/23/python-program/"  title="the promotion of python programer">
+<a href="/2014/03/22/python-program/"  title="the promotion of python programer">
  <strong>NEXT:</strong><br/> 
  <span>the promotion of python programer
 </span>
@@ -242,59 +250,35 @@ env.roledefs = {<span class="string">'nginx'</span><span class="symbol">:</span>
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -313,8 +297,8 @@ env.roledefs = {<span class="string">'nginx'</span><span class="symbol">:</span>
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -449,6 +433,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

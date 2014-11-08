@@ -54,9 +54,13 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -85,8 +89,8 @@
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-08-09T10:10:49.000Z" itemprop="datePublished">8月 9 2014</time>
-    更新日期:<time datetime="2014-08-09T14:13:04.000Z" itemprop="dateModified">8月 9 2014</time>
+    <time datetime="2014-08-09T02:10:49.000Z" itemprop="datePublished">8月 9 2014</time>
+    更新日期:<time datetime="2014-11-08T06:26:18.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -105,20 +109,20 @@
 <p>实例准备</p>
 </blockquote>
 <p>我在本地机器搭建了7个实例分别为 ：3306实例作为back store database。省下三组主备以后用来作为sharding group的实例，M代表主库，S代表slave备库。对应的端口如下</p>
-<pre><code>3306
-3310 <span class="attr_selector">[M]</span> &lt;<span class="tag">----</span>&gt;  3311 <span class="attr_selector">[S]</span> 
-3312 <span class="attr_selector">[M]</span> &lt;<span class="tag">----</span>&gt;  3313 <span class="attr_selector">[S]</span> 
-3314 <span class="attr_selector">[M]</span> &lt;<span class="tag">----</span>&gt;  3315 <span class="attr_selector">[S]</span> 
+<pre><code><span class="input"><span class="prompt">3306
+3310 [M] &lt;----&gt;</span>  <span class="number">3311</span> [<span class="constant">S</span>] </span>
+<span class="input"><span class="prompt">3312 [M] &lt;----&gt;</span>  <span class="number">3313</span> [<span class="constant">S</span>] </span>
+<span class="input"><span class="prompt">3314 [M] &lt;----&gt;</span>  <span class="number">3315</span> [<span class="constant">S</span>] </span>
 </code></pre><p>看一下如下命令：</p>
 <pre><code>ps -ef <span class="localvars">| grep mysqld | grep mysqld_safe</span>
 </code></pre><p>输出： </p>
-<pre><code>   <span class="number">74</span>  <span class="number">6488</span>  <span class="number">5534</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">16</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">86</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3306/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3306/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3306/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3306/run/mysql.sock --port=<span class="number">3306</span>
-   <span class="number">74</span>  <span class="number">7464</span>  <span class="number">6509</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">17</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">78</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>331<span class="number">0</span>/run/mysql.sock --port=<span class="number">3310</span>
-   <span class="number">74</span>  <span class="number">8424</span>  <span class="number">7465</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">17</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">76</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3311/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3311/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3311/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3311/run/mysql.sock --port=<span class="number">3311</span>
-   <span class="number">74</span>  <span class="number">9380</span>  <span class="number">8425</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">17</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">81</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3312/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3312/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3312/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3312/run/mysql.sock --port=<span class="number">3312</span>
-   <span class="number">74</span> <span class="number">10336</span>  <span class="number">9381</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">18</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">80</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3313/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3313/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3313/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3313/run/mysql.sock --port=<span class="number">3313</span>
-   <span class="number">74</span> <span class="number">11292</span> <span class="number">10337</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">18</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">84</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3314/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3314/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3314/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3314/run/mysql.sock --port=<span class="number">3314</span>
-   <span class="number">74</span> <span class="number">12248</span> <span class="number">11293</span>   <span class="number">0</span>  <span class="number">9</span><span class="symbol">:</span><span class="number">18</span>下午 ttys00<span class="number">0</span>    <span class="number">0</span><span class="symbol">:</span><span class="number">00</span>.<span class="number">80</span> /usr/local/mysql/bin/mysqld --basedir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span> --datadir=<span class="regexp">/data/mysql</span>3315/data --plugin-dir=<span class="regexp">/usr/local</span><span class="regexp">/mysql/</span><span class="regexp">/lib/plugin</span> --user=mysql --log-error=<span class="regexp">/data/mysql</span>3315/log/alert.log --pid-file=<span class="regexp">/data/mysql</span>3315/run/mysqld.pid --socket=<span class="regexp">/data/mysql</span>3315/run/mysql.sock --port=<span class="number">3315</span>
+<pre><code>   <span class="number">74</span>  <span class="number">6488</span>  <span class="number">5534</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">16</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.86</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3306/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3306<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3306<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3306<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3306</span>
+   <span class="number">74</span>  <span class="number">7464</span>  <span class="number">6509</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">17</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.78</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3310/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3310<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3310<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3310<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3310</span>
+   <span class="number">74</span>  <span class="number">8424</span>  <span class="number">7465</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">17</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.76</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3311/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3311<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3311<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3311<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3311</span>
+   <span class="number">74</span>  <span class="number">9380</span>  <span class="number">8425</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">17</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.81</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3312/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3312<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3312<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3312<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3312</span>
+   <span class="number">74</span> <span class="number">10336</span>  <span class="number">9381</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">18</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.80</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3313/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3313<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3313<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3313<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3313</span>
+   <span class="number">74</span> <span class="number">11292</span> <span class="number">10337</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">18</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.84</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3314/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3314<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3314<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3314<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3314</span>
+   <span class="number">74</span> <span class="number">12248</span> <span class="number">11293</span>   <span class="number">0</span>  <span class="number">9</span>:<span class="number">18</span>下午 ttys000    <span class="number">0</span>:<span class="number">00.80</span> <span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysqld --basedir=/</span>usr<span class="regexp">/local/m</span>ysql<span class="regexp">/ --datadir=/</span>data<span class="regexp">/mysql3315/</span>data --plugin-dir=<span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span><span class="regexp">/lib/</span>plugin --user=mysql --log-error=<span class="regexp">/data/m</span>ysql3315<span class="regexp">/log/</span>alert.log --pid-<span class="keyword">file</span>=<span class="regexp">/data/m</span>ysql3315<span class="regexp">/run/m</span>ysqld.pid --socket=<span class="regexp">/data/m</span>ysql3315<span class="regexp">/run/m</span>ysql.sock --port=<span class="number">3315</span>
 </code></pre><p>复制结构如下： </p>
 <pre><code> ruiayLinSunnydeMacBook-<span class="constant">Pro</span>-<span class="number">2</span><span class="symbol">:gtidtest</span> root<span class="comment"># mysqlrplshow --master=root:root<span class="yardoctag">@localhost</span>:3310 --discover-slaves-login=root:root -vv</span>
 <span class="comment"># master on localhost: ... connected.</span>
@@ -146,11 +150,11 @@ ruiayLinSunnydeMacBook-<span class="constant">Pro</span>-<span class="number">2<
 </code></pre><blockquote>
 <p>创建用户，配置fabric对应user权限</p>
 </blockquote>
-<pre><code><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span> IDENTIFIED <span class="keyword">BY</span> <span class="string">'secret'</span>;</span>
+<pre><code><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span> <span class="keyword">IDENTIFIED</span> <span class="keyword">BY</span> <span class="string">'secret'</span>;</span>
 <span class="operator"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">ON</span> fabric.* <span class="keyword">TO</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span>;</span>
 <span class="operator"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> <span class="keyword">ON</span> fabric.* <span class="keyword">TO</span> <span class="string">'fabric'</span>@<span class="string">'127.0.0.1'</span>;</span>
-<span class="operator"><span class="keyword">SET</span> PASSWORD <span class="keyword">FOR</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span> = PASSWORD(<span class="string">'secret'</span>);</span>
-<span class="operator"><span class="keyword">SET</span> PASSWORD <span class="keyword">FOR</span> <span class="string">'fabric'</span>@<span class="string">'127.0.0.1'</span> = PASSWORD(<span class="string">'secret'</span>);</span>
+<span class="operator"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">'fabric'</span>@<span class="string">'localhost'</span> = <span class="keyword">PASSWORD</span>(<span class="string">'secret'</span>);</span>
+<span class="operator"><span class="keyword">SET</span> <span class="keyword">PASSWORD</span> <span class="keyword">FOR</span> <span class="string">'fabric'</span>@<span class="string">'127.0.0.1'</span> = <span class="keyword">PASSWORD</span>(<span class="string">'secret'</span>);</span>
 </code></pre><blockquote>
 <p>配置fabric</p>
 </blockquote>
@@ -267,7 +271,7 @@ Password <span class="keyword">set</span> <span class="keyword">for</span> admin
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/Fabric/">Fabric</a><a href="/tags/sharding/">sharding</a>
+  <span></span> <a href="/tags/sharding/">sharding</a><a href="/tags/fabric/">fabric</a>
   </div>
 
 
@@ -291,9 +295,9 @@ Password <span class="keyword">set</span> <span class="keyword">for</span> admin
  
 
 <div class="next">
-<a href="/2014/06/15/mysql-fabric-01-desc/"  title="mysql fabric [01] 大致介绍">
+<a href="/2014/06/15/mysql-fabric-01-desc/"  title="mysql fabric [01] 简介">
  <strong>NEXT:</strong><br/> 
- <span>mysql fabric [01] 大致介绍
+ <span>mysql fabric [01] 简介
 </span>
 </a>
 </div>
@@ -322,59 +326,35 @@ Password <span class="keyword">set</span> <span class="keyword">for</span> admin
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -393,8 +373,8 @@ Password <span class="keyword">set</span> <span class="keyword">for</span> admin
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -529,6 +509,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 

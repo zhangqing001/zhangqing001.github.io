@@ -54,9 +54,13 @@ concat(trun">
 				<ul>
 					<ul>
 					 
-						<li><a href="/">Home</a></li>
+						<li><a href="/">博客</a></li>
 					
-						<li><a href="/archives">Archives</a></li>
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
 					
 					<li>
 					
@@ -85,8 +89,8 @@ concat(trun">
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-02-27T05:04:23.000Z" itemprop="datePublished">2月 27 2014</time>
-    更新日期:<time datetime="2014-07-22T00:29:48.000Z" itemprop="dateModified">7月 22 2014</time>
+    <time datetime="2014-02-26T21:04:23.000Z" itemprop="datePublished">2月 27 2014</time>
+    更新日期:<time datetime="2014-11-08T06:24:10.000Z" itemprop="dateModified">11月 8 2014</time>
     
   </p>
 </header>
@@ -102,17 +106,17 @@ concat(trun">
 <blockquote>
 <h6 id="1-查询数据库不同引擎下表和索引的大小">1.查询数据库不同引擎下表和索引的大小</h6>
 </blockquote>
-<pre><code><span class="operator"><span class="keyword">select</span> engine,<span class="aggregate">count</span>(*) table_num, 
-concat(<span class="keyword">truncate</span>(<span class="aggregate">sum</span>(DATA_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) table_size,
-concat(<span class="keyword">truncate</span>(<span class="aggregate">sum</span>(INDEX_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) index_size ,
-concat(<span class="keyword">truncate</span>(<span class="aggregate">sum</span>(DATA_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>)+<span class="aggregate">sum</span>(INDEX_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) total_size 
-<span class="keyword">from</span> information_schema.tables 
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">engine</span>,<span class="keyword">count</span>(*) table_num, 
+<span class="keyword">concat</span>(<span class="keyword">truncate</span>(<span class="keyword">sum</span>(DATA_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) table_size,
+<span class="keyword">concat</span>(<span class="keyword">truncate</span>(<span class="keyword">sum</span>(INDEX_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) index_size ,
+<span class="keyword">concat</span>(<span class="keyword">truncate</span>(<span class="keyword">sum</span>(DATA_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>)+<span class="keyword">sum</span>(INDEX_LENGTH/<span class="number">1024</span>/<span class="number">1024</span>),<span class="number">2</span>),<span class="string">'MB'</span>) total_size 
+<span class="keyword">from</span> information_schema.<span class="keyword">tables</span> 
 <span class="keyword">where</span> TABLE_TYPE=<span class="string">'BASE TABLE'</span>  
-<span class="keyword">group</span> <span class="keyword">by</span> engine;</span>
+<span class="keyword">group</span> <span class="keyword">by</span> <span class="keyword">engine</span>;</span>
 </code></pre><blockquote>
 <h4 id="2-查询数据库用户的状态">2.查询数据库用户的状态</h4>
 </blockquote>
-<pre><code>mysql <span class="attribute">-uroot</span> <span class="attribute">-p</span>  <span class="attribute">-e</span> <span class="string">'show processlist\G'</span><span class="subst">|</span>grep State<span class="subst">|</span>sort<span class="subst">|</span>uniq <span class="attribute">-c</span><span class="subst">|</span>sort <span class="attribute">-n</span>
+<pre><code>mysql -uroot -<span class="keyword">p</span>  -<span class="keyword">e</span> <span class="string">'show processlist\G'</span>|<span class="keyword">grep</span> State|<span class="built_in">sort</span>|uniq -<span class="keyword">c</span>|<span class="built_in">sort</span> -<span class="keyword">n</span>
 </code></pre><p>或<br>    mysql -uroot -p  -e ‘show processlist\G’|grep State|sort|uniq -c|sort -n</p>
 <blockquote>
 <h4 id="3-mysql&gt;=5-5_查询锁阻塞的情况">3.mysql&gt;=5.5 查询锁阻塞的情况</h4>
@@ -147,7 +151,7 @@ information<span class="emphasis">_schema.innodb_</span>trx r
 <blockquote>
 <h4 id="5-批量修改存储引擎">5.批量修改存储引擎</h4>
 </blockquote>
-<pre><code>/usr/<span class="keyword">local</span>/mysql/bin/mysql_convert_table_format
+<pre><code><span class="regexp">/usr/</span>local<span class="regexp">/mysql/</span>bin<span class="regexp">/mysql_convert_table_format</span>
 </code></pre><p>将  28 行  $opt_type —-&gt;  $opt_engine<br>需要注意innodb 的外键和myisam的fulltext index</p>
 <blockquote>
 <h4 id="6-mysql_快速创建空表">6.mysql 快速创建空表</h4>
@@ -162,9 +166,9 @@ information<span class="emphasis">_schema.innodb_</span>trx r
 <h4 id="7-观察mysql_status_变量的变化情况">7.观察mysql status 变量的变化情况</h4>
 </blockquote>
 <p>方法一，（推荐）<br>每三秒打印出innodb相关状态的变化情况，并且使用白色标示</p>
-<pre><code>watch <span class="attribute">-d</span> <span class="attribute">-n</span> <span class="number">3</span> <span class="string">"mysqladmin -uroot -pxxx ext|egrep Innodb"</span> 
+<pre><code>watch <span class="operator">-d</span> -n <span class="number">3</span> <span class="string">"mysqladmin -uroot -pxxx ext|egrep Innodb"</span> 
 </code></pre><p>同样也是没三秒打印相关变化但是并没有白色标示</p>
-<pre><code> mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-p1111</span> <span class="attribute">-i</span> <span class="number">3</span> ext<span class="subst">|</span>egrep Innodb
+<pre><code> mysqladmin -uroot -p1111 -i <span class="number">3</span> ext<span class="string">|egrep Innodb</span>
 </code></pre><blockquote>
 <h4 id="8-left_join_条件的区别">8.left join 条件的区别</h4>
 </blockquote>
@@ -197,37 +201,37 @@ information<span class="emphasis">_schema.innodb_</span>trx r
 <h4 id="10-多表更新">10.多表更新</h4>
 </blockquote>
 <p>只更新表bo</p>
-<pre><code><span class="operator"><span class="keyword">update</span> bo , t_disc td  <span class="keyword">SET</span>  bo.name=<span class="string">'你'</span> <span class="keyword">where</span> bo.name=td.name;</span>
+<pre><code><span class="keyword">update</span> <span class="keyword">bo</span> , t_disc td  SET  <span class="keyword">bo</span>.name=<span class="string">'你'</span> where <span class="keyword">bo</span>.name=td.name;
 </code></pre><p>同时更新两个表（线上环境不推荐同时更新多表） </p>
-<pre><code>update bo , t_disc td  <span class="keyword">SET</span>  bo<span class="preprocessor">.name</span>=<span class="string">'你'</span> ,td<span class="preprocessor">.name</span>=<span class="string">'你'</span> where bo<span class="preprocessor">.name</span>=td<span class="preprocessor">.name</span><span class="comment">;  </span>
+<pre><code><span class="keyword">update</span> <span class="keyword">bo</span> , t_disc td  SET  <span class="keyword">bo</span>.name=<span class="string">'你'</span> ,td.name=<span class="string">'你'</span> where <span class="keyword">bo</span>.name=td.name;  
 </code></pre><p>mysql对ip的存储</p>
-<pre><code><span class="function">INET_ATON(expr)</span>
+<pre><code><span class="type">INET_ATON</span>(<span class="type">expr</span>)
 </code></pre><p>给出一个作为字符串的网络地址的点地址表示，返回一个代表该地址数值的整数。地址可以是4或8比特地址。</p>
-<pre><code><span class="keyword">SELECT</span> INET_ATON(<span class="string">'209.207.224.40'</span>);
-<span class="subst">-&gt; </span><span class="number">3520061480</span>
+<pre><code><span class="input"><span class="prompt">SELECT INET_ATON('209.207.224.40');
+-&gt;</span> <span class="number">3520061480</span></span>
 </code></pre><p>产生的数字总是按照网络字节顺序。如上面的例子，数字按照 209×2563 + 207×2562 + 224×256 + 40 进行计算。<br>INET_ATON() 也能理解短格式 IP 地址：</p>
-<pre><code>mysql&gt; <span class="tag">SELECT</span> <span class="function">INET_ATON(<span class="string">'127.0.0.1'</span>)</span>, <span class="function">INET_ATON(<span class="string">'127.1'</span>)</span>;
-        -&gt; 2130706433, 2130706433
+<pre><code><span class="input"><span class="prompt">mysql&gt;</span> <span class="constant">SELECT</span> <span class="constant">INET_ATON</span>(<span class="string">'127.0.0.1'</span>), <span class="constant">INET_ATON</span>(<span class="string">'127.1'</span>);
+        -&gt; <span class="number">2130706433</span>, <span class="number">2130706433</span></span>
 </code></pre><p>注释： 在存储由INET_ATON() 产生的值时，推荐你使用 INT UNSIGNED 列。假如你使用 (带符号) INT列,<br>则相应的第一个八位组大于127的IP 地址值会被截至  2147483647 (即, INET_ATON(‘127.255.255.255’) 所返回的值)。 </p>
 <p>INET_NTOA(expr)<br>给定一个数字网络地址 (4 或 8 比特),返回作为字符串的该地址的电地址表示。</p>
-<pre><code>mysql<span class="subst">&gt;</span> <span class="keyword">SELECT</span> INET_NTOA(<span class="number">3520061480</span>);
-        <span class="subst">-&gt; </span><span class="string">'209.207.224.40'</span>
+<pre><code><span class="input"><span class="prompt">mysql&gt;</span> <span class="constant">SELECT</span> <span class="constant">INET_NTOA</span>(<span class="number">3520061480</span>);
+        -&gt; <span class="string">'209.207.224.40'</span></span>
 </code></pre><blockquote>
 <h4 id="11-myisam表count的优化">11.myisam表count的优化</h4>
 </blockquote>
 <p> count查询<br>对于MYISAM中的SQL：</p>
-<pre><code><span class="operator"><span class="keyword">SELECT</span> <span class="aggregate">count</span>(*) <span class="keyword">from</span> city <span class="keyword">WHERE</span> id &gt; <span class="number">2</span>;</span>
+<pre><code><span class="operator"><span class="keyword">SELECT</span> <span class="keyword">count</span>(*) <span class="keyword">from</span> city <span class="keyword">WHERE</span> id &gt; <span class="number">2</span>;</span>
 </code></pre><p>改写为：</p>
 <pre><code><span class="keyword">SELECT</span> (<span class="keyword">SELECT</span> COUNT<span class="comment">(*) FROM city) - count(*)</span> <span class="keyword">FROM</span> city <span class="keyword">where</span> id &lt;=<span class="number">2</span>
 </code></pre><p>数据量大的情况下，并且id最好为顺序增长的或是主键（或是索引）<br>因为misam表count（*）会作为一个常量存储所以会很快</p>
 <blockquote>
 <h4 id="12-group_concat_函数的使用">12.group_concat 函数的使用</h4>
 </blockquote>
-<pre><code>select <span class="property">id</span>,group_concat(<span class="property">name</span>) <span class="property">name</span> <span class="keyword">from</span> tb group <span class="keyword">by</span> <span class="property">id</span>;
-<span class="number">1</span>,a1
-<span class="number">1</span>,a2
-<span class="number">2</span>,b1
-<span class="number">2</span>,b2
+<pre><code><span class="operator"><span class="keyword">select</span> id,<span class="keyword">group_concat</span>(name) name <span class="keyword">from</span> tb <span class="keyword">group</span> <span class="keyword">by</span> id;</span>
+1,a1
+1,a2
+2,b1
+2,b2
 </code></pre><p>结果是</p>
 <pre><code><span class="property">id</span>  <span class="property">name</span>
 <span class="number">1</span>    a1,a2
@@ -237,9 +241,9 @@ information<span class="emphasis">_schema.innodb_</span>trx r
 <h4 id="13-下面的命令，可以杀死当前用户bbs正在运行的连接）">13.下面的命令，可以杀死当前用户bbs正在运行的连接）</h4>
 </blockquote>
 <p>已验证</p>
-<pre><code>mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-p</span>  processlist<span class="subst">|</span>awk <span class="attribute">-F</span> <span class="string">"|"</span> <span class="string">'{if($3~/bbs/)print $2}'</span><span class="subst">|</span>xargs <span class="attribute">-n</span> <span class="number">1</span> mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-p</span> kill
+<pre><code><span class="title">mysqladmin</span> -uroot -p  processlist|awk -F <span class="string">"|"</span> <span class="string">'{if(<span class="variable">$3</span>~/bbs/)print <span class="variable">$2</span>}'</span>|xargs -n <span class="number">1</span> mysqladmin -uroot -p kill
 </code></pre><p>升级版：<br>kill 用户名为haha 执行时间超过50秒的select 语句</p>
-<pre><code>mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-pxxx</span>  processlist<span class="subst">|</span>awk <span class="attribute">-F</span> <span class="string">"|"</span> <span class="string">'/select/{if($3~/haha/ &amp;&amp; $7 &gt; 50)print $2}'</span><span class="subst">|</span>xargs <span class="attribute">-n</span> <span class="number">1</span> mysqladmin <span class="attribute">-uroot</span> <span class="attribute">-pxxx</span> kill
+<pre><code><span class="title">mysqladmin</span> -uroot -pxxx  processlist|awk -F <span class="string">"|"</span> <span class="string">'/select/{if(<span class="variable">$3</span>~/haha/ &amp;&amp; <span class="variable">$7</span> &gt; 50)print <span class="variable">$2</span>}'</span>|xargs -n <span class="number">1</span> mysqladmin -uroot -pxxx kill
 </code></pre><blockquote>
 <h4 id="14-脚本实现qps，tps的查看_（适合5-1~5-5）">14.脚本实现qps，tps的查看 （适合5.1~5.5）</h4>
 </blockquote>
@@ -277,35 +281,35 @@ information<span class="emphasis">_schema.innodb_</span>trx r
 </blockquote>
 <p>number_id 和number_Pstn_Backup 相同就表示重复而id表示主键<br>==嵌套子查询写法 </p>
 <pre><code><span class="operator"><span class="keyword">delete</span>   k <span class="keyword">from</span> imeet_test <span class="keyword">as</span> k  ,
-(<span class="keyword">select</span> a.id <span class="keyword">from</span> imeet_test a <span class="keyword">where</span> a.id &lt;(<span class="keyword">select</span> <span class="aggregate">max</span>(b.id) <span class="keyword">from</span> imeet_test b <span class="keyword">where</span> b.number_id=a.number_id <span class="keyword">and</span> b.number_Pstn_Backup=a.number_Pstn_Backup)
+(<span class="keyword">select</span> a.id <span class="keyword">from</span> imeet_test a <span class="keyword">where</span> a.id &lt;(<span class="keyword">select</span> <span class="keyword">max</span>(b.id) <span class="keyword">from</span> imeet_test b <span class="keyword">where</span> b.number_id=a.number_id <span class="keyword">and</span> b.number_Pstn_Backup=a.number_Pstn_Backup)
 ) <span class="keyword">as</span>  m <span class="keyword">where</span> k.id=m.id;</span>
 </code></pre><p> ==相关子查询写法</p>
-<pre><code>explain  <span class="operator"><span class="keyword">select</span> a.id <span class="keyword">from</span> imeet_test a ,(<span class="keyword">select</span> <span class="aggregate">max</span>(b.id) id ,b.number_id,b.number_Pstn_Backup <span class="keyword">from</span> imeet_test b <span class="keyword">group</span> <span class="keyword">by</span>  b.number_id, 
-b.number_Pstn_Backup <span class="keyword">having</span> <span class="aggregate">count</span>(<span class="number">1</span>)&gt;<span class="number">1</span>) <span class="keyword">as</span> c <span class="keyword">where</span>  a.number_id= c.number_id <span class="keyword">and</span> a.number_Pstn_Backup= c.number_Pstn_Backup
+<pre><code><span class="operator"><span class="keyword">explain</span>  <span class="keyword">select</span> a.id <span class="keyword">from</span> imeet_test a ,(<span class="keyword">select</span> <span class="keyword">max</span>(b.id) id ,b.number_id,b.number_Pstn_Backup <span class="keyword">from</span> imeet_test b <span class="keyword">group</span> <span class="keyword">by</span>  b.number_id, 
+b.number_Pstn_Backup <span class="keyword">having</span> <span class="keyword">count</span>(<span class="number">1</span>)&gt;<span class="number">1</span>) <span class="keyword">as</span> c <span class="keyword">where</span>  a.number_id= c.number_id <span class="keyword">and</span> a.number_Pstn_Backup= c.number_Pstn_Backup
 <span class="keyword">and</span> a.id&lt;c.id;</span> 
 </code></pre><blockquote>
 <h4 id="17-时间取值">17.时间取值</h4>
 </blockquote>
 <p>前一天</p>
-<pre><code><span class="operator"><span class="keyword">select</span> now()-<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">day</span> </span>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">now</span>()-<span class="built_in">interval</span> <span class="number">1</span> <span class="keyword">day</span> </span>
 </code></pre><p>取上一个月的第一天</p>
-<pre><code><span class="operator"><span class="keyword">select</span> date_sub(date_format(now(),<span class="string">'%y-%m-01'</span>),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
-<span class="operator"><span class="keyword">select</span> date_add(date_add(last_day(now()),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">day</span>),<span class="keyword">interval</span> -<span class="number">2</span> <span class="keyword">month</span>);</span>
-<span class="operator"><span class="keyword">select</span> date_sub(date_sub(date_format(now(),<span class="string">'%y-%m-%d'</span>),<span class="keyword">interval</span> extract(<span class="keyword">day</span> <span class="keyword">from</span> now())-<span class="number">1</span> <span class="keyword">day</span>),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%y-%m-01'</span>),<span class="built_in">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_add</span>(<span class="keyword">date_add</span>(<span class="keyword">last_day</span>(<span class="keyword">now</span>()),<span class="built_in">interval</span> <span class="number">1</span> <span class="keyword">day</span>),<span class="built_in">interval</span> -<span class="number">2</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">date_sub</span>(<span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%y-%m-%d'</span>),<span class="built_in">interval</span> <span class="keyword">extract</span>(<span class="keyword">day</span> <span class="keyword">from</span> <span class="keyword">now</span>())-<span class="number">1</span> <span class="keyword">day</span>),<span class="built_in">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
 </code></pre><p>上个月的最后一天</p>
-<pre><code><span class="operator"><span class="keyword">select</span> last_day(now()-<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
-<span class="operator"><span class="keyword">select</span> date_add(last_day(now()),<span class="keyword">interval</span> -<span class="number">1</span> <span class="keyword">month</span>);</span>
-<span class="operator"><span class="keyword">select</span> date_sub(date_sub(date_format(now(),<span class="string">'%y-%m-01'</span>),<span class="keyword">interval</span> <span class="number">0</span> <span class="keyword">month</span>),<span class="keyword">interval</span> <span class="number">1</span> <span class="keyword">day</span>);</span> 
-<span class="operator"><span class="keyword">select</span> date_add(date_sub(date_format(now(),<span class="string">'%y-%m-01'</span>),<span class="keyword">interval</span> <span class="number">0</span> <span class="keyword">month</span>),<span class="keyword">interval</span> -<span class="number">1</span> <span class="keyword">day</span>);</span>
-<span class="operator"><span class="keyword">select</span> date_sub(date_sub(date_format(now(),<span class="string">'%y-%m-%d'</span>),<span class="keyword">interval</span> extract(<span class="keyword">day</span>     <span class="keyword">from</span> now()) <span class="keyword">day</span>),<span class="keyword">interval</span> <span class="number">0</span> <span class="keyword">month</span>) <span class="keyword">as</span> dt</span>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">last_day</span>(<span class="keyword">now</span>()-<span class="built_in">interval</span> <span class="number">1</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_add</span>(<span class="keyword">last_day</span>(<span class="keyword">now</span>()),<span class="built_in">interval</span> -<span class="number">1</span> <span class="keyword">month</span>);</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">date_sub</span>(<span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%y-%m-01'</span>),<span class="built_in">interval</span> <span class="number">0</span> <span class="keyword">month</span>),<span class="built_in">interval</span> <span class="number">1</span> <span class="keyword">day</span>);</span> 
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_add</span>(<span class="keyword">date_sub</span>(<span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%y-%m-01'</span>),<span class="built_in">interval</span> <span class="number">0</span> <span class="keyword">month</span>),<span class="built_in">interval</span> -<span class="number">1</span> <span class="keyword">day</span>);</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">date_sub</span>(<span class="keyword">date_format</span>(<span class="keyword">now</span>(),<span class="string">'%y-%m-%d'</span>),<span class="built_in">interval</span> <span class="keyword">extract</span>(<span class="keyword">day</span>     <span class="keyword">from</span> <span class="keyword">now</span>()) <span class="keyword">day</span>),<span class="built_in">interval</span> <span class="number">0</span> <span class="keyword">month</span>) <span class="keyword">as</span> dt</span>
 </code></pre><p>本周第一天：</p>
-<pre><code><span class="operator"><span class="keyword">select</span> date_add(curdate(),<span class="keyword">interval</span> (WEEKDAY(curdate()) + <span class="number">1</span>)*-<span class="number">1</span><span class="keyword">day</span>) ;</span>
-<span class="operator"><span class="keyword">select</span> date_sub(curdate(),<span class="keyword">interval</span> WEEKDAY(curdate()) + <span class="number">1</span><span class="keyword">day</span>) ;</span>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">date_add</span>(<span class="keyword">curdate</span>(),<span class="built_in">interval</span> (<span class="keyword">WEEKDAY</span>(<span class="keyword">curdate</span>()) + <span class="number">1</span>)*-<span class="number">1</span><span class="keyword">day</span>) ;</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">curdate</span>(),<span class="built_in">interval</span> <span class="keyword">WEEKDAY</span>(<span class="keyword">curdate</span>()) + <span class="number">1</span><span class="keyword">day</span>) ;</span>
 </code></pre><p>本周最后一天</p>
-<pre><code><span class="operator"><span class="keyword">select</span> date_sub(curdate(),<span class="keyword">interval</span> WEEKDAY(curdate()) - <span class="number">5</span> <span class="keyword">day</span>);</span>
-<span class="operator"><span class="keyword">select</span> date_add(curdate(),<span class="keyword">INTERVAL</span> (WEEKDAY(curdate()) - <span class="number">5</span>)*-<span class="number">1</span> <span class="keyword">day</span>);</span>
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">curdate</span>(),<span class="built_in">interval</span> <span class="keyword">WEEKDAY</span>(<span class="keyword">curdate</span>()) - <span class="number">5</span> <span class="keyword">day</span>);</span>
+<span class="operator"><span class="keyword">select</span> <span class="keyword">date_add</span>(<span class="keyword">curdate</span>(),<span class="built_in">INTERVAL</span> (<span class="keyword">WEEKDAY</span>(<span class="keyword">curdate</span>()) - <span class="number">5</span>)*-<span class="number">1</span> <span class="keyword">day</span>);</span>
 </code></pre><p>前一周的最后一天</p>
-<pre><code><span class="tag">select</span> <span class="function">date_sub(<span class="function">curdate()</span>,interval <span class="function">WEEKDAY(<span class="function">curdate()</span>)</span> + <span class="number">2</span> day)</span> 
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">date_sub</span>(<span class="keyword">curdate</span>(),<span class="built_in">interval</span> <span class="keyword">WEEKDAY</span>(<span class="keyword">curdate</span>()) + <span class="number">2</span> <span class="keyword">day</span>) </span>
 </code></pre><p>其他的可以类推</p>
 <blockquote>
 <h4 id="18-查看分区表的执行计划">18.查看分区表的执行计划</h4>
@@ -327,7 +331,7 @@ b.number_Pstn_Backup <span class="keyword">having</span> <span class="aggregate"
 <h4 id="20-mysql需要的最大内存">20.mysql需要的最大内存</h4>
 </blockquote>
 <p>服务器允许的最大连接数，尽量不要设置太大，因为设置太大的话容易导致内存溢出，需要通过如下公式来确定：</p>
-<pre><code><span class="constant">SET</span> <span class="variable">@k_bytes</span> = <span class="number">1024</span>; <span class="constant">SET</span> <span class="variable">@m_bytes</span> = <span class="variable">@k_bytes</span> * <span class="number">1024</span>; <span class="constant">SET</span> <span class="variable">@g_bytes</span> = <span class="variable">@m_bytes</span> * <span class="number">1024</span>; <span class="constant">SELECT</span> ( <span class="variable">@@key_buffer_size</span> + <span class="variable">@@query_cache_size</span> + <span class="variable">@@tmp_table_size</span>+ <span class="variable">@@innodb_buffer_pool_size</span> + <span class="variable">@@innodb_additional_mem_pool_size</span>+ <span class="variable">@@innodb_log_buffer_size</span>+ <span class="variable">@@max_connections</span> * ( <span class="variable">@@read_buffer_size</span> + <span class="variable">@@read_rnd_buffer_size</span> + <span class="variable">@@sort_buffer_size</span>+ <span class="variable">@@join_buffer_size</span> + <span class="variable">@@binlog_cache_size</span> + <span class="variable">@@thread_stack</span> ) ) / <span class="variable">@g_bytes</span> <span class="constant">AS</span> <span class="constant">MAX_MEMORY_USED_GB</span>;
+<pre><code><span class="title">SET</span> <span class="variable">@k_bytes</span> = <span class="number">1024</span>; <span class="title">SET</span> <span class="variable">@m_bytes</span> = <span class="variable">@k_bytes</span> * <span class="number">1024</span>; <span class="title">SET</span> <span class="variable">@g_bytes</span> = <span class="variable">@m_bytes</span> * <span class="number">1024</span>; <span class="title">SELECT</span> ( @<span class="variable">@key_buffer_size</span> + @<span class="variable">@query_cache_size</span> + @<span class="variable">@tmp_table_size</span>+ @<span class="variable">@innodb_buffer_pool_size</span> + @<span class="variable">@innodb_additional_mem_pool_size</span>+ @<span class="variable">@innodb_log_buffer_size</span>+ @<span class="variable">@max_connections</span> * ( @<span class="variable">@read_buffer_size</span> + @<span class="variable">@read_rnd_buffer_size</span> + @<span class="variable">@sort_buffer_size</span>+ @<span class="variable">@join_buffer_size</span> + @<span class="variable">@binlog_cache_size</span> + @<span class="variable">@thread_stack</span> ) ) / <span class="variable">@g_bytes</span> AS MAX_MEMORY_USED_GB;
 </code></pre><blockquote>
 <h4 id="21-mysql实现oracle的count()_over()">21.mysql实现oracle的count() over()</h4>
 </blockquote>
@@ -371,17 +375,17 @@ Records: 0  Duplicates: 0  Warnings: 0
 <blockquote>
 <h4 id="25-查询会话时间超过10秒的top_10_SQL">25.查询会话时间超过10秒的top 10 SQL</h4>
 </blockquote>
-<pre><code><span class="operator"><span class="keyword">select</span>* <span class="keyword">from</span>  PROCESSLIST <span class="keyword">where</span> command&lt;&gt;<span class="string">"Sleep"</span>  <span class="keyword">and</span> <span class="keyword">time</span> &gt;<span class="number">10</span> <span class="keyword">AND</span> DB <span class="keyword">is</span> <span class="keyword">not</span> <span class="keyword">null</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">TIME</span> <span class="keyword">desc</span> limit <span class="number">10</span>;</span>   
+<pre><code><span class="operator"><span class="keyword">select</span>* <span class="keyword">from</span>  <span class="keyword">PROCESSLIST</span> <span class="keyword">where</span> command&lt;&gt;<span class="string">"Sleep"</span>  <span class="keyword">and</span> <span class="keyword">time</span> &gt;<span class="number">10</span> <span class="keyword">AND</span> DB <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">null</span> <span class="keyword">order</span> <span class="keyword">by</span> <span class="keyword">TIME</span> <span class="keyword">desc</span> <span class="keyword">limit</span> <span class="number">10</span>;</span>   
 </code></pre><blockquote>
 <h4 id="26-explain_的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。">26.explain 的时候，对于子查询，优化器会先去执行子查询，得到结果集后，再将结果与其他部分进行计算。</h4>
 </blockquote>
-<pre><code>参考： explain <span class="operator"><span class="keyword">select</span> sleep(<span class="number">2</span>) 和 explain <span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> sleep(<span class="number">2</span>)) <span class="keyword">as</span> a ;</span>
+<pre><code>参考： <span class="operator"><span class="keyword">explain</span> <span class="keyword">select</span> <span class="keyword">sleep</span>(<span class="number">2</span>) 和 <span class="keyword">explain</span> <span class="keyword">select</span> * <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">sleep</span>(<span class="number">2</span>)) <span class="keyword">as</span> a ;</span>
 </code></pre><blockquote>
 <h4 id="27-mysql_实现时间计算迭代">27.mysql 实现时间计算迭代</h4>
 </blockquote>
 <pre><code><span class="operator"><span class="keyword">select</span> to_char(add_months(to_date(<span class="string">'201301'</span>,<span class="string">'yyyymm'</span>),<span class="keyword">level</span>-<span class="number">1</span>),<span class="string">'yyyymm'</span>) yyyymm  <span class="keyword">from</span> dual <span class="keyword">connect</span> <span class="keyword">by</span> <span class="keyword">level</span> &lt;<span class="number">13</span>;</span>
 </code></pre><p>改写如下：</p>
-<pre><code><span class="operator"><span class="keyword">select</span> date_format(date_add(now() ,<span class="keyword">interval</span> f.seq <span class="keyword">month</span>),<span class="string">'%Y%m'</span>)  <span class="keyword">as</span> m <span class="keyword">from</span> (<span class="keyword">select</span> ifnull(@rank,<span class="number">0</span>),@rank:=@rank+<span class="number">1</span> <span class="keyword">as</span> seq <span class="keyword">from</span> (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> a ,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> b,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> c,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> d,(<span class="keyword">select</span> @rank:=<span class="number">0</span>) <span class="keyword">as</span> e ) <span class="keyword">as</span> f <span class="keyword">where</span> f.seq&lt;=<span class="number">12</span>;</span> 
+<pre><code><span class="operator"><span class="keyword">select</span> <span class="keyword">date_format</span>(<span class="keyword">date_add</span>(<span class="keyword">now</span>() ,<span class="built_in">interval</span> f.seq <span class="keyword">month</span>),<span class="string">'%Y%m'</span>)  <span class="keyword">as</span> m <span class="keyword">from</span> (<span class="keyword">select</span> <span class="keyword">ifnull</span>(@rank,<span class="number">0</span>),@rank:=@rank+<span class="number">1</span> <span class="keyword">as</span> seq <span class="keyword">from</span> (<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> a ,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> b,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> c,(<span class="keyword">select</span> <span class="number">1</span> <span class="keyword">from</span> dual <span class="keyword">union</span> <span class="keyword">all</span> <span class="keyword">select</span> <span class="number">0</span> <span class="keyword">from</span> dual) <span class="keyword">as</span> d,(<span class="keyword">select</span> @rank:=<span class="number">0</span>) <span class="keyword">as</span> e ) <span class="keyword">as</span> f <span class="keyword">where</span> f.seq&lt;=<span class="number">12</span>;</span> 
 </code></pre><p>结果集：</p>
 <pre><code><span class="code">+--------+</span>
 <span class="header">| m      |
@@ -444,7 +448,7 @@ select * from group_</span>t;
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/总结/">总结</a>
+  <span></span> <a href="/tags/summary/">summary</a>
   </div>
 
 
@@ -507,59 +511,35 @@ select * from group_</span>t;
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
 		
-			<li><a href="/categories/oracle/" title="oracle">oracle<sup>2</sup></a></li>
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
 		
-			<li><a href="/categories/python/" title="python">python<sup>4</sup></a></li>
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
 		
 		</ul>
 </div>
 
 
   
-<div class="tagslist">
-	<p class="asidetitle">标签</p>
-		<ul class="clearfix">
-		
-			<li><a href="/tags/Fabric/" title="Fabric">Fabric<sup>2</sup></a></li>
-		
-			<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
-		
-			<li><a href="/tags/bash/" title="bash">bash<sup>1</sup></a></li>
-		
-			<li><a href="/tags/fabric/" title="fabric">fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/linux/" title="linux">linux<sup>1</sup></a></li>
-		
-			<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql56/" title="mysql5.6">mysql5.6<sup>1</sup></a></li>
-		
-			<li><a href="/tags/mysql，xtrabackup/" title="mysql，xtrabackup">mysql，xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/python/" title="python">python<sup>2</sup></a></li>
-		
-			<li><a href="/tags/python-fabric/" title="python-fabric">python-fabric<sup>1</sup></a></li>
-		
-			<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
-		
-			<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
-		
-			<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
-		
-			<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>1</sup></a></li>
-		
-			<li><a href="/tags/列查询/" title="列查询">列查询<sup>1</sup></a></li>
-		
-			<li><a href="/tags/备份/" title="备份">备份<sup>1</sup></a></li>
-		
-			<li><a href="/tags/多实例/" title="多实例">多实例<sup>1</sup></a></li>
-		
-			<li><a href="/tags/总结/" title="总结">总结<sup>1</sup></a></li>
-		
-			<li><a href="/tags/执行计划稳固/" title="执行计划稳固">执行计划稳固<sup>1</sup></a></li>
-		
-		</ul>
-</div>
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
 
 
   <div class="rsspart">
@@ -578,8 +558,8 @@ select * from group_</span>t;
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiaylin , working as a DBA at alibaba  <br/>
-			expert in data arch ,mysql ,oracle ,python and large DB cluster management</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
@@ -714,6 +694,27 @@ $(document).ready(function(){
 
 
 
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
 
 
 
