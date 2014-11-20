@@ -9,7 +9,9 @@
     
     <meta name="author" content="ruichao.lin">
     
-    <meta name="description" content="mysql5.6支持以全局统一事务ID（GTID)为基础的复制，当在主库上提交事务或者被从库应用时，可以定位和追踪每一个事务，可以通过使用–gtid-mode和–enforce-gtid-consistency参数启动复制可以开启GTIDs 这也是mysql官方提供的工具集utilities中的自动">
+    <meta name="description" content="MySQL自动failover介绍
+
+mysql5.6支持以全局统一事务ID（GTID)为基础的复制，当在主库上提交事务或者被从库应用时， 可以定位和追踪每一个事务，可以通过使用–gtid-mode 和–enforce-gtid-consistency 参数启动复制可以开启GTIDs 这也是mysq">
     
     
     
@@ -84,7 +86,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-05-30T21:03:27.000Z" itemprop="datePublished">5月 31 2014</time>
-    更新日期:<time datetime="2014-11-08T06:25:07.000Z" itemprop="dateModified">11月 8 2014</time>
+    更新日期:<time datetime="2014-11-20T08:42:53.000Z" itemprop="dateModified">11月 20 2014</time>
     
   </p>
 </header>
@@ -93,11 +95,12 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#第一步安装mysql_DB"><span class="toc-number">1.0.1.</span> <span class="toc-text">第一步安装mysql DB</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第二步_初始化mysql_DB"><span class="toc-number">1.0.2.</span> <span class="toc-text">第二步 初始化mysql DB</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第三步构建复制结构"><span class="toc-number">1.0.3.</span> <span class="toc-text">第三步构建复制结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql_utilities的几个常用命令"><span class="toc-number">2.</span> <span class="toc-text">mysql utilities的几个常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动和手动_failover"><span class="toc-number">3.</span> <span class="toc-text">自动和手动 failover</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自动_failover"><span class="toc-number">3.1.</span> <span class="toc-text">自动 failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动_failover"><span class="toc-number">3.2.</span> <span class="toc-text">手动 failover</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL自动failover介绍"><span class="toc-number">1.</span> <span class="toc-text">MySQL自动failover介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备"><span class="toc-number">1.1.</span> <span class="toc-text">环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步安装mysql_DB"><span class="toc-number">1.1.1.</span> <span class="toc-text">第一步安装mysql DB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步_初始化mysql_DB"><span class="toc-number">1.1.2.</span> <span class="toc-text">第二步 初始化mysql DB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第三步构建复制结构"><span class="toc-number">1.1.3.</span> <span class="toc-text">第三步构建复制结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql_utilities的几个常用命令"><span class="toc-number">1.2.</span> <span class="toc-text">mysql utilities的几个常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动和手动_failover"><span class="toc-number">1.3.</span> <span class="toc-text">自动和手动 failover</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自动_failover"><span class="toc-number">1.3.1.</span> <span class="toc-text">自动 failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动_failover"><span class="toc-number">1.3.2.</span> <span class="toc-text">手动 failover</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
 		</div>
 		
-		<blockquote>
-<p>mysql5.6支持以全局统一事务ID（GTID)为基础的复制，当在主库上提交事务或者被从库应用时，<br>可以定位和追踪每一个事务，可以通过使用–gtid-mode和–enforce-gtid-consistency<br>参数启动复制可以开启GTIDs 这也是mysql官方提供的工具集utilities中的自动failover的一个<br>基础，今天我们一步一步的来使用mysql utilities来搭建一套 MySQL自动failover结构</p>
+		<h2 id="MySQL自动failover介绍">MySQL自动failover介绍</h2>
+<blockquote>
+<p>mysql5.6支持以全局统一事务ID（GTID)为基础的复制，当在主库上<br>提交事务或者被从库应用时， 可以定位和追踪每一个事务，可以通<br>过使用–gtid-mode 和–enforce-gtid-consistency 参数启动复制可<br>以开启GTIDs 这也是mysql官方提供的工具集utilities中的自动failover<br>的一个基础，今天我们一步一步的来使用mysql utilities<br>来搭建一套 MySQL自动failover结构</p>
 </blockquote>
 <h3 id="环境准备">环境准备</h3>
 <p>我准备在我自己的电脑上面搭建四台mysql实例，一个master和三个slave</p>
@@ -105,12 +108,12 @@
 localhost：3307 （ slave  ） 
 localhost：3308 （ slave  ）
 localhost：3309 （ slave  ）
-</code></pre><h5 id="第一步安装mysql_DB">第一步安装mysql DB</h5>
+</code></pre><h4 id="第一步安装mysql_DB">第一步安装mysql DB</h4>
 <p>从官方网站下载 &gt;= 5.6.10 的mysql dmg版本。安装到系统中之后，配置好path 和 mysql_base</p>
 <pre><code><span class="keyword">export</span> MYSQL_BASE=/usr/local/mysql
 <span class="keyword">export</span> DYLD_LIBRARY_PATH=<span class="string">"<span class="variable">$DYLD_LIBRARY_PATH</span>:/usr/local/mysql/lib"</span> <span class="comment">#for python </span>
 <span class="keyword">export</span> PATH=<span class="variable">$MYSQL_BASE</span>/bin:<span class="variable">$PATH</span> 
-</code></pre><h5 id="第二步_初始化mysql_DB">第二步 初始化mysql DB</h5>
+</code></pre><h4 id="第二步_初始化mysql_DB">第二步 初始化mysql DB</h4>
 <p>配置my.cnf文件</p>
 <pre><code>[client]
 <span class="variable">port=</span><span class="number">3309</span>
@@ -201,7 +204,7 @@ safe-user-create
 <span class="variable">local-infile=</span><span class="number">0</span>
 [mysqld_safe]
 <span class="variable">pid-file=</span>/data/mysql3309/run/mysqld.pid
-</code></pre><p>其中：     report_host=localhost<br>          explicit_defaults_for_timestamp=true<br>          gtid-mode=on log-slave-updates=true<br>          enforce-gtid-consistency=true<br>    是必须的；注意四个实例的server_id 不能一样。</p>
+</code></pre><p>其中：    report_host=localhost<br>          explicit_defaults_for_timestamp=true<br>          gtid-mode=on log-slave-updates=true<br>          enforce-gtid-consistency=true<br>    是必须的；注意四个实例的server_id 不能一样。</p>
 <p>配置每个实例的环境变量</p>
 <pre><code><span class="keyword">alias</span> my3306=<span class="string">'export MYSQL_HOME=/data/mysql3306/'</span>
 <span class="keyword">alias</span> my3307=<span class="string">'export MYSQL_HOME=/data/mysql3307/'</span>
@@ -221,7 +224,7 @@ safe-user-create
 </code></pre><p>启动实例</p>
 <pre><code><span class="title">export</span> <span class="type">MYSQL_HOME</span>=/<span class="typedef"><span class="keyword">data</span>/mysql3309/</span>
 <span class="title">mysqld_safe</span> &amp;
-</code></pre><h5 id="第三步构建复制结构">第三步构建复制结构</h5>
+</code></pre><h4 id="第三步构建复制结构">第三步构建复制结构</h4>
 <pre><code><span class="comment">mysqlreplicate</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3307</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rpl</span><span class="literal">-</span><span class="comment">user=repl:repl</span> <span class="literal">-</span><span class="comment">vv</span>
 <span class="comment">mysqlreplicate</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3308</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rpl</span><span class="literal">-</span><span class="comment">user=repl:repl</span> <span class="literal">-</span><span class="comment">vv</span>
 <span class="comment">mysqlreplicate</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3309</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rpl</span><span class="literal">-</span><span class="comment">user=repl:repl</span> <span class="literal">-</span><span class="comment">vv</span>
@@ -312,9 +315,7 @@ Checking slave <span class="command">delay</span> (seconds <span class="keyword"
 mysqlrpladmin --master=root:root@<span class="number">127.0.0.1:3306</span> --slave=root:root@<span class="number">127.0.0.1:3308</span> stop
 </code></pre><p>以上是几个比较常用的工具，每一个具体工具详细内容，请自行看文档，呵呵</p>
 <h3 id="自动和手动_failover">自动和手动 failover</h3>
-<blockquote>
 <h4 id="自动_failover">自动 failover</h4>
-</blockquote>
 <pre><code><span class="comment">mysqlfailover</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">candidates=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3307</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">discover</span><span class="literal">-</span><span class="comment">slaves</span><span class="literal">-</span><span class="comment">login=root:root</span>
 </code></pre><p>执行这个命令之后，会在当前终端打开failover check的终端， like this ： </p>
 <pre><code>### mysqlfailover --master=root:root@127.0.0.1:3306 --candidates=root:root@127.0.0.1:3307  --discover-slaves-login=root:root
@@ -406,9 +407,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 <p>切换收尾：<br>    启动 3306 实例，也就是老的master ； 调整复制链路 ，使 3306 成为新的slave； </p>
 <pre><code><span class="comment">mysqld_safe</span> <span class="comment">&amp;</span>
 <span class="comment">mysqlreplicate</span>  <span class="literal">-</span><span class="literal">-</span><span class="comment">master=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3307</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">slave=root:root@127</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">0</span><span class="string">.</span><span class="comment">1:3306</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">rpl</span><span class="literal">-</span><span class="comment">user=repl:repl</span> <span class="literal">-</span><span class="comment">vv</span>
-</code></pre><blockquote>
-<h4 id="手动_failover">手动 failover</h4>
-</blockquote>
+</code></pre><h4 id="手动_failover">手动 failover</h4>
 <p>此时我们的链路是如下样子：</p>
 <pre><code>GTID Executed Set
 dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
@@ -473,7 +472,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 <blockquote>
 <p>mysqlfailover 可以以Deamon的方式启动，还可以指定 —log=LOG_FILE 打印到日志文件中</p>
 </blockquote>
-<h3 id="总结">总结</h3>
+<h2 id="总结">总结</h2>
 <pre><code>mysql新版本的功能真的很让人鼓舞兴奋，作为一个dba尤然，继续学习，继续进步，才是硬道理 <span class="keyword">...</span>
 持续研究和学习 mysql 数据库，做一个好dba， 一个好数据架构师 <span class="keyword">...</span>
 </code></pre>  
@@ -529,7 +528,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备"><span class="toc-number">1.</span> <span class="toc-text">环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#第一步安装mysql_DB"><span class="toc-number">1.0.1.</span> <span class="toc-text">第一步安装mysql DB</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第二步_初始化mysql_DB"><span class="toc-number">1.0.2.</span> <span class="toc-text">第二步 初始化mysql DB</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#第三步构建复制结构"><span class="toc-number">1.0.3.</span> <span class="toc-text">第三步构建复制结构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql_utilities的几个常用命令"><span class="toc-number">2.</span> <span class="toc-text">mysql utilities的几个常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动和手动_failover"><span class="toc-number">3.</span> <span class="toc-text">自动和手动 failover</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自动_failover"><span class="toc-number">3.1.</span> <span class="toc-text">自动 failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动_failover"><span class="toc-number">3.2.</span> <span class="toc-text">手动 failover</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL自动failover介绍"><span class="toc-number">1.</span> <span class="toc-text">MySQL自动failover介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#环境准备"><span class="toc-number">1.1.</span> <span class="toc-text">环境准备</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#第一步安装mysql_DB"><span class="toc-number">1.1.1.</span> <span class="toc-text">第一步安装mysql DB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第二步_初始化mysql_DB"><span class="toc-number">1.1.2.</span> <span class="toc-text">第二步 初始化mysql DB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#第三步构建复制结构"><span class="toc-number">1.1.3.</span> <span class="toc-text">第三步构建复制结构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql_utilities的几个常用命令"><span class="toc-number">1.2.</span> <span class="toc-text">mysql utilities的几个常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#自动和手动_failover"><span class="toc-number">1.3.</span> <span class="toc-text">自动和手动 failover</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#自动_failover"><span class="toc-number">1.3.1.</span> <span class="toc-text">自动 failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动_failover"><span class="toc-number">1.3.2.</span> <span class="toc-text">手动 failover</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">2.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
@@ -557,7 +556,7 @@ dd1f65aa-e2d0-11e3-89e3-7f8d49c2f173:1-14
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/ops/" style="font-size: 10.00px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
     </div>
   </div>
 

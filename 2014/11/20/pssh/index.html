@@ -1,0 +1,504 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>批量管理主机之 - [pssh] | ruiaylin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="ruichao.lin">
+    
+    <meta name="description" content="并行执行命令工具简介
+
+作为运维工程师来讲，机器数量到一定级别的时候，批量运维和管理机器就是一件费神的事情，还好有很多可以批量并行执行命令的工具，比如 pssh  , python fabrictaobao 有在pssh基础之上改造的pgm. 这几个工具都可以帮助我们批量运行命令。当然随着 pupp">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="ruiaylin" />
+    <meta name="twitter:title" content="批量管理主机之 - [pssh] | ruiaylin&#39;s Blog" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ruiaylin&#39;s Blog">ruiaylin&#39;s Blog</a></h1>
+				<h2 class="blog-motto">蹈之而弗悔 ,  慎思而笃行  ...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2014/11/20/pssh/" title="批量管理主机之 - [pssh]" itemprop="url">批量管理主机之 - [pssh]</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2014-11-20T08:40:53.000Z" itemprop="datePublished">11月 20 2014</time>
+    更新日期:<time datetime="2014-11-20T09:07:15.000Z" itemprop="dateModified">11月 20 2014</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行执行命令工具简介"><span class="toc-number">1.</span> <span class="toc-text">并行执行命令工具简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python并行执行命令工具"><span class="toc-number">1.1.</span> <span class="toc-text">python并行执行命令工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_官方介绍"><span class="toc-number">2.</span> <span class="toc-text">pssh 官方介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_安装部署"><span class="toc-number">3.</span> <span class="toc-text">pssh 安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载_parallel-ssh_并安装"><span class="toc-number">3.1.</span> <span class="toc-text">下载 parallel-ssh 并安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_install"><span class="toc-number">3.2.</span> <span class="toc-text">安装 install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置待批量管理的服务器列表"><span class="toc-number">3.3.</span> <span class="toc-text">配置待批量管理的服务器列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#examples_:"><span class="toc-number">3.4.</span> <span class="toc-text">examples :</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pssh_to_execute_command"><span class="toc-number">3.4.1.</span> <span class="toc-text">pssh to execute command</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pscp_集中分到文件到_主机列表的机器"><span class="toc-number">3.4.2.</span> <span class="toc-text">pscp 集中分到文件到 主机列表的机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slurp_copy文件到管理机器"><span class="toc-number">3.4.3.</span> <span class="toc-text">slurp copy文件到管理机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pnuke"><span class="toc-number">3.4.4.</span> <span class="toc-text">pnuke</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+		</div>
+		
+		<h2 id="并行执行命令工具简介">并行执行命令工具简介</h2>
+<blockquote>
+<p>作为运维工程师来讲，机器数量到一定级别的时候，批量运维和管理机器就是一件费神<br>的事情，还好有很多可以批量并行执行命令的工具，比如 pssh  , python fabric<br>taobao 有在pssh基础之上改造的pgm. 这几个工具都可以帮助我们批量运行命令。当然<br>随着 puppet, ansible 等工具的流行这些并行工具变的弱化了，不过依然还是很有用<br>今天我们来讲述一下 pssh 的使用方式</p>
+</blockquote>
+<h3 id="python并行执行命令工具">python并行执行命令工具</h3>
+<pre><code><span class="title">fabric</span> pssh pgm 
+</code></pre><h2 id="pssh_官方介绍">pssh 官方介绍</h2>
+<blockquote>
+<p>PSSH provides parallel versions of OpenSSH and related tools. </p>
+</blockquote>
+<p>  Included are pssh, pscp, prsync, pnuke, and pslurp. The project includes psshlib which can be used within custom applications.<br>  PSSH is supported on Python 2.4 and greater (including Python 3.1 and greater). It was originally written and maintained by Brent N. Chun. Due to his busy schedule, Brent handed over maintenance to Andrew McNabb in October 2009.</p>
+<h2 id="pssh_安装部署">pssh 安装部署</h2>
+<h3 id="下载_parallel-ssh_并安装">下载 parallel-ssh 并安装</h3>
+<pre><code>git clone http<span class="variable">s:</span>//github.<span class="keyword">com</span>/ruiaylin/pssh.git
+</code></pre><h3 id="安装_install">安装 install</h3>
+<pre><code><span class="keyword">cd</span> pssh/
+<span class="keyword">python</span> setup.<span class="keyword">py</span> install 
+</code></pre><h3 id="配置待批量管理的服务器列表">配置待批量管理的服务器列表</h3>
+<p>like this ： pssh_config</p>
+<pre><code>192<span class="class">.168</span><span class="class">.102</span><span class="class">.81</span><span class="pseudo">:10000</span>
+192<span class="class">.168</span><span class="class">.8</span><span class="class">.183</span><span class="pseudo">:10000</span>
+</code></pre><blockquote>
+<p>为了管理方便,需要打通管理机器（有些公司叫做跳板机，也有叫做堡垒机）到各个主<br>机的信任通道，这样会避免每次ssh操作都需要输入密码，机器多的时候会真的疯掉的</p>
+</blockquote>
+<p>打通信任通道 ： </p>
+<pre><code>cd 
+mkdir .ssh 
+ssh-keygen -t dsa
+cd .ssh ; ll
+[root@xxxxxx .ssh]# ll
+total 32
+-<span class="ruby">rw-------  <span class="number">1</span> root root  <span class="number">1588</span> <span class="constant">Nov</span> <span class="number">19</span> <span class="number">14</span><span class="symbol">:</span><span class="number">29</span> authorized_keys 
+</span>-<span class="ruby">rw-------  <span class="number">1</span> root root   <span class="number">668</span> <span class="constant">Sep</span> <span class="number">11</span> <span class="number">16</span><span class="symbol">:</span><span class="number">15</span> id_dsa
+</span>-<span class="ruby">rw-r--r--  <span class="number">1</span> root root   <span class="number">602</span> <span class="constant">Sep</span> <span class="number">11</span> <span class="number">16</span><span class="symbol">:</span><span class="number">15</span> id_dsa.pub
+</span>-<span class="ruby">rw-r--r--. <span class="number">1</span> root root <span class="number">14490</span> <span class="constant">Nov</span> <span class="number">13</span> <span class="number">14</span><span class="symbol">:</span><span class="number">58</span> known_hosts
+</span>#然后将 id_dsa.pub 文件内容 copy 到 各个主机的 
+<span class="comment">/home/youruser/.ssh/authorized_keys 文件中 ， 打通完毕， 如果</span>
+操作完成，之后仍然无法直接ssh 登录，问题可能出在 authorized_keys 该文件的属性上面。 一般设置为700
+</code></pre><h3 id="examples_:">examples :</h3>
+<h4 id="pssh_to_execute_command">pssh to execute command</h4>
+<blockquote>
+<p>pssh options</p>
+</blockquote>
+<pre><code>OPTIONS
+   -<span class="ruby">h host_file   <span class="comment"># -h + 包含IP的文件名</span>
+</span>      -<span class="ruby">-hosts host_file
+</span>   -<span class="ruby"><span class="constant">H</span>     [user@]host[<span class="symbol">:port</span>]  <span class="comment"># -H + &lt;span style="font-family: Arial, Helvetica, sans-serif;"&gt;[用户@]主机IP[:端口]   [  ]内的是可选参数 ,若有多个主机,用" "引起来,主机之间用空格分开&lt;/span&gt;</span>
+</span>       -<span class="ruby">-host [user@]host[<span class="symbol">:port</span>]
+</span>   -<span class="ruby"><span class="constant">H</span>     <span class="string">"[user@]host[:port] [ [user@]host[:port ] ... ]"</span>  
+</span>   &lt;span style="white-space:pre"&gt;   &lt;/span&gt;   --host "[user@]host[:port] [ [user@]host[:port ] ... ]"
+   -<span class="ruby">l user   <span class="comment"># -l + 用户名(用于连接远程主机的用户名)</span>
+</span>       -<span class="ruby">-user user
+</span>   -<span class="ruby">p parallelism   <span class="comment"># -p + 并发数</span>
+</span>       -<span class="ruby">-par parallelism
+</span>   -<span class="ruby">t timeout   <span class="comment"># -t + 超时秒数</span>
+</span>       -<span class="ruby">-timeout timeout
+</span>   -<span class="ruby">o outdir   <span class="comment"># -o + 输出目录  说明:会在该目录下创建  &lt;span style="font-family: Arial, Helvetica, sans-serif;"&gt;[用户@]主机IP[:端口]&lt;/span&gt;&lt;span style="font-family: Arial, Helvetica, sans-serif;"&gt;  格式的文件名,用于保存输出结果&lt;/span&gt;</span>
+</span>       -<span class="ruby">-outdir outdir
+</span>   -<span class="ruby">e errdir   <span class="comment"># -e + 错误输出目录  </span>
+</span>      -<span class="ruby">-errdir errdir
+</span>   -<span class="ruby">x args  <span class="comment"># -x + ssh连接时可提供的参数 ,例: -x "-o </span>
+</span>   StrictHostKeyChecking=no" 表示跳过ssh链接时询问yes/no 
+       -<span class="ruby">-extra-args args  
+</span>   -<span class="ruby"><span class="constant">X</span> arg
+</span>       -<span class="ruby">-extra-arg arg 
+</span>   -<span class="ruby"><span class="constant">O</span> options   <span class="comment"># -O + SSH配置文件中的选项  可以出现多个 -O 选项</span>
+</span>       -<span class="ruby">-options options
+</span>   -<span class="ruby"><span class="constant">A</span>
+</span>       -<span class="ruby">-askpass
+</span>   -<span class="ruby">i    <span class="comment"># -i 参数用于将输出结果直接显示在当前终端</span>
+</span>       -<span class="ruby">-inline
+</span>       -<span class="ruby">-inline-stdout
+</span>   -<span class="ruby">v  <span class="comment"># -v 参数用于显示ssh连接时的错误信息</span>
+</span>      -<span class="ruby">-verbose
+</span>   -<span class="ruby"><span class="constant">I</span>
+</span>       -<span class="ruby">-send-input
+</span>          Read input and send to each ssh process.  Since ssh allows a command script to be sent on standard input, the -I option may be used in lieu of the command argument.
+   -<span class="ruby"><span class="constant">P</span>  <span class="comment"># -P 参数用于当主机连接上之后,输出执行结果,先输出执行结果,</span>
+</span>            再显示连接 的主机信息.
+     -<span class="ruby">-print</span>
+</code></pre><blockquote>
+<p>执行命令 ， 并check </p>
+</blockquote>
+<pre><code><span class="comment">#创建几个目录</span>
+pssh -h pssh_config -l root -i 'mkdir -p  /root/works/{<span class="keyword">script</span>,tmp,<span class="command">log</span>} '
+<span class="comment">#check 刚才创建的结果</span>
+[root@dbtaskm works]<span class="comment">#  pssh -h pssh_config -l root -i 'ls  /root/works/   '</span>
+    [<span class="number">1</span>] <span class="number">14</span>:<span class="number">12</span>:<span class="number">24</span> [SUCCESS] <span class="number">192.168</span><span class="number">.102</span><span class="number">.81</span>:<span class="number">10000</span>
+    <span class="command">log</span>
+    <span class="keyword">script</span>
+    tmp
+    [<span class="number">2</span>] <span class="number">14</span>:<span class="number">12</span>:<span class="number">24</span> [SUCCESS] <span class="number">192.168</span><span class="number">.8</span><span class="number">.183</span>:<span class="number">10000</span>
+    <span class="command">log</span>
+    <span class="keyword">script</span>
+    tmp
+</code></pre><blockquote>
+<p>多条命令要用分好分割</p>
+</blockquote>
+<pre><code><span class="title">pssh</span> -h pssh_config -l root -i <span class="string">'cd  /root/works/  ; ls '</span>
+<span class="comment">#执行结果</span>
+[root<span class="variable">@dbtaskm</span> works]<span class="comment"># pssh -h pssh_config -l root -i 'cd  /root/works/  ; ls '</span>
+[<span class="number">1</span>] <span class="number">14</span>:<span class="number">13</span>:<span class="number">33</span> [SUCCESS] <span class="number">192.168.8.183:10000</span>
+log
+script
+tmp
+[<span class="number">2</span>] <span class="number">14</span>:<span class="number">13</span>:<span class="number">33</span> [SUCCESS] <span class="number">192.168.102.81:10000</span>
+log
+script
+tmp 
+<span class="comment"># 关闭selinux</span>
+pssh -h servers.txt -l root -P <span class="string">"sed -i '/SELINUX=enforcing/s/SELINUX=enforcing/SELINUX=disabled/'/etc/sysconfig/selinux"</span>
+</code></pre><h4 id="pscp_集中分到文件到_主机列表的机器">pscp 集中分到文件到 主机列表的机器</h4>
+<pre><code>#将文件 <span class="keyword">collect</span>-mysql.py 分发到机器列表对应目录
+pscp -h pssh_config  <span class="keyword">collect</span>-mysql.py   <span class="regexp">/root/</span>works<span class="regexp">/tmp/</span>
+#check 执行结果
+pssh -h pssh_config -l root -i <span class="string">'cd  /root/works/tmp ; ls '</span>
+[<span class="number">1</span>] <span class="number">14</span>:<span class="number">18</span>:<span class="number">09</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">102.81</span>:<span class="number">10000</span>
+<span class="keyword">collect</span>-mysql.py
+[<span class="number">2</span>] <span class="number">14</span>:<span class="number">18</span>:<span class="number">09</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">8.183</span>:<span class="number">10000</span>
+<span class="keyword">collect</span>-mysql.py
+</code></pre><h4 id="slurp_copy文件到管理机器">slurp copy文件到管理机器</h4>
+<pre><code><span class="title">pslurp</span> -L /root/works/testlurp/ -h ../pssh_config  /root/works/tmp/collect-mysql.py  mysql.py
+<span class="comment">#</span>
+[<span class="number">1</span>] <span class="number">14</span>:<span class="number">53</span>:<span class="number">55</span> [SUCCESS] <span class="number">192.168.102.81:10000</span>
+[<span class="number">2</span>] <span class="number">14</span>:<span class="number">53</span>:<span class="number">55</span> [SUCCESS] <span class="number">192.168.8.183:10000</span>
+<span class="comment"># check the result </span>
+    [root<span class="variable">@dbtaskm</span> testlurp]<span class="comment"># cd /root/works/testlurp/ ; ls * </span>
+    <span class="number">192.168.102.81</span>:
+    mysql.py        
+    <span class="number">192.168.8.183</span>:
+    mysql.py 
+</code></pre><h4 id="pnuke">pnuke</h4>
+<p>  The pnuke command is useful when you want to kill a bunch of processes on a set of machines. For example, suppose you’ve got a bunch of java processes running on three nodes that you’d like to nuke (let’s use the three machines from the pssh example). Here you would do the following:</p>
+<pre><code> <span class="comment"># pnuke -h ips.txt -l irb2 java</span>
+ <span class="title">Success</span> <span class="built_in">on</span> <span class="number">128.112.152.122:22</span>
+ Success <span class="built_in">on</span> <span class="number">18.31.0.190:22</span>
+ Success <span class="built_in">on</span> <span class="number">128.232.103.201:22</span>
+</code></pre><h2 id="总结">总结</h2>
+<p>  pssh 是基于python的一个batch 管理主机的工具, 现在也有 python 的 fabric 模块，也可以完成这类似的工具， 后面有时间可以总结一下。</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/ops/">ops</a><a href="/tags/pssh/">pssh</a>
+  </div>
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2014/11/20/pssh/" data-title="批量管理主机之 - [pssh] | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/08/09/mysql-fabric-02-deploy/"  title="mysql fabric [02] 环境部署">
+ <strong>NEXT:</strong><br/> 
+ <span>mysql fabric [02] 环境部署
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行执行命令工具简介"><span class="toc-number">1.</span> <span class="toc-text">并行执行命令工具简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python并行执行命令工具"><span class="toc-number">1.1.</span> <span class="toc-text">python并行执行命令工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_官方介绍"><span class="toc-number">2.</span> <span class="toc-text">pssh 官方介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_安装部署"><span class="toc-number">3.</span> <span class="toc-text">pssh 安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载_parallel-ssh_并安装"><span class="toc-number">3.1.</span> <span class="toc-text">下载 parallel-ssh 并安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_install"><span class="toc-number">3.2.</span> <span class="toc-text">安装 install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置待批量管理的服务器列表"><span class="toc-number">3.3.</span> <span class="toc-text">配置待批量管理的服务器列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#examples_:"><span class="toc-number">3.4.</span> <span class="toc-text">examples :</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pssh_to_execute_command"><span class="toc-number">3.4.1.</span> <span class="toc-text">pssh to execute command</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pscp_集中分到文件到_主机列表的机器"><span class="toc-number">3.4.2.</span> <span class="toc-text">pscp 集中分到文件到 主机列表的机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slurp_copy文件到管理机器"><span class="toc-number">3.4.3.</span> <span class="toc-text">slurp copy文件到管理机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pnuke"><span class="toc-number">3.4.4.</span> <span class="toc-text">pnuke</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
+		
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>5</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/ops/" style="font-size: 10.00px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 15.00px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 15.00px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		
+		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>
