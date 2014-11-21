@@ -86,7 +86,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-11-20T08:40:53.000Z" itemprop="datePublished">11月 20 2014</time>
-    更新日期:<time datetime="2014-11-20T09:11:13.000Z" itemprop="dateModified">11月 20 2014</time>
+    更新日期:<time datetime="2014-11-21T06:32:13.000Z" itemprop="dateModified">11月 21 2014</time>
     
   </p>
 </header>
@@ -95,7 +95,7 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行执行命令工具简介"><span class="toc-number">1.</span> <span class="toc-text">并行执行命令工具简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python并行执行命令工具"><span class="toc-number">1.1.</span> <span class="toc-text">python并行执行命令工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_官方介绍"><span class="toc-number">2.</span> <span class="toc-text">pssh 官方介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_安装部署"><span class="toc-number">3.</span> <span class="toc-text">pssh 安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载_parallel-ssh_并安装"><span class="toc-number">3.1.</span> <span class="toc-text">下载 parallel-ssh 并安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_install"><span class="toc-number">3.2.</span> <span class="toc-text">安装 install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置待批量管理的服务器列表"><span class="toc-number">3.3.</span> <span class="toc-text">配置待批量管理的服务器列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#examples_:"><span class="toc-number">3.4.</span> <span class="toc-text">examples :</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pssh_to_execute_command"><span class="toc-number">3.4.1.</span> <span class="toc-text">pssh to execute command</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pscp_集中分到文件到_主机列表的机器"><span class="toc-number">3.4.2.</span> <span class="toc-text">pscp 集中分到文件到 主机列表的机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slurp_copy文件到管理机器"><span class="toc-number">3.4.3.</span> <span class="toc-text">slurp copy文件到管理机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pnuke"><span class="toc-number">3.4.4.</span> <span class="toc-text">pnuke</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行执行命令工具简介"><span class="toc-number">1.</span> <span class="toc-text">并行执行命令工具简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python并行执行命令工具"><span class="toc-number">1.1.</span> <span class="toc-text">python并行执行命令工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_官方介绍"><span class="toc-number">2.</span> <span class="toc-text">pssh 官方介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_安装部署"><span class="toc-number">3.</span> <span class="toc-text">pssh 安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载_parallel-ssh_并安装"><span class="toc-number">3.1.</span> <span class="toc-text">下载 parallel-ssh 并安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_install"><span class="toc-number">3.2.</span> <span class="toc-text">安装 install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置待批量管理的服务器列表"><span class="toc-number">3.3.</span> <span class="toc-text">配置待批量管理的服务器列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#examples_:"><span class="toc-number">3.4.</span> <span class="toc-text">examples :</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pssh_to_execute_command"><span class="toc-number">3.4.1.</span> <span class="toc-text">pssh to execute command</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pscp_集中分到文件到_主机列表的机器"><span class="toc-number">3.4.2.</span> <span class="toc-text">pscp 集中分到文件到 主机列表的机器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#将文件_collect-mysql-py_分发到机器列表对应目录"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">将文件 collect-mysql.py 分发到机器列表对应目录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#如果是包含文件夹_，请使用_如下命令"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">如果是包含文件夹 ，请使用 如下命令</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slurp_copy文件到管理机器"><span class="toc-number">3.4.3.</span> <span class="toc-text">slurp copy文件到管理机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pnuke"><span class="toc-number">3.4.4.</span> <span class="toc-text">pnuke</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hostgroup_单独测试"><span class="toc-number">3.5.</span> <span class="toc-text">hostgroup 单独测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 		</div>
 		
 		<h2 id="并行执行命令工具简介">并行执行命令工具简介</h2>
@@ -103,6 +103,7 @@
 <p>作为运维工程师来讲，机器数量到一定级别的时候，批量运维和管理机器就是一件费神<br>的事情，还好有很多可以批量并行执行命令的工具，比如 pssh  , python fabric<br>taobao 有在pssh基础之上改造的pgm. 这几个工具都可以帮助我们批量运行命令。当然<br>随着 puppet, ansible等工具的流行这些并行工具变的弱化了，不过依然还是很有用,今天我们来讲述一下 pssh 的使用方式</p>
 </blockquote>
 <h3 id="python并行执行命令工具">python并行执行命令工具</h3>
+<p>之前在阿里工作的时候，并行工具是pgm , 目前可以选择的工具如下 </p>
 <pre><code><span class="title">fabric</span> pssh pgm 
 </code></pre><h2 id="pssh_官方介绍">pssh 官方介绍</h2>
 <blockquote>
@@ -116,9 +117,14 @@
 <pre><code><span class="keyword">cd</span> pssh/
 <span class="keyword">python</span> setup.<span class="keyword">py</span> install 
 </code></pre><h3 id="配置待批量管理的服务器列表">配置待批量管理的服务器列表</h3>
-<p>like this ： pssh_config</p>
+<p>host configuration like this ： pssh_config</p>
 <pre><code>192<span class="class">.168</span><span class="class">.102</span><span class="class">.81</span><span class="pseudo">:10000</span>
 192<span class="class">.168</span><span class="class">.8</span><span class="class">.183</span><span class="pseudo">:10000</span>
+</code></pre><p>pssh 也可以配置成为不同的 group ,可以根据不同的组做对应的操作，比如说不同的集群，不同的角色都是可以的。后面有简单的测试。</p>
+<p>hostgroups  configuration like this  ：</p>
+<pre><code>root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>~<span class="regexp">/batch# cat /etc</span><span class="regexp">/pssh/hostgroups</span> 
+<span class="symbol">master:</span> <span class="number">192.168</span>.<span class="number">19.132</span>,<span class="number">192.168</span>.<span class="number">19.135</span>
+<span class="symbol">slave:</span> <span class="number">192.168</span>.<span class="number">19.134</span> 
 </code></pre><blockquote>
 <p>为了管理方便,需要打通管理机器（有些公司叫做跳板机，也有叫做堡垒机）到各个主<br>机的信任通道，这样会避免每次ssh操作都需要输入密码，机器多的时候会真的疯掉的</p>
 </blockquote>
@@ -210,14 +216,16 @@ tmp
 <span class="comment"># 关闭selinux</span>
 pssh -h servers.txt -l root -P <span class="string">"sed -i '/SELINUX=enforcing/s/SELINUX=enforcing/SELINUX=disabled/'/etc/sysconfig/selinux"</span>
 </code></pre><h4 id="pscp_集中分到文件到_主机列表的机器">pscp 集中分到文件到 主机列表的机器</h4>
-<pre><code>#将文件 <span class="keyword">collect</span>-mysql.py 分发到机器列表对应目录
-pscp -h pssh_config  <span class="keyword">collect</span>-mysql.py   <span class="regexp">/root/</span>works<span class="regexp">/tmp/</span>
+<h5 id="将文件_collect-mysql-py_分发到机器列表对应目录">将文件 collect-mysql.py 分发到机器列表对应目录</h5>
+<pre><code>pscp -h pssh_config  <span class="keyword">collect</span>-mysql.py   <span class="regexp">/root/</span>works<span class="regexp">/tmp/</span>
 #check 执行结果
 pssh -h pssh_config -l root -i <span class="string">'cd  /root/works/tmp ; ls '</span>
 [<span class="number">1</span>] <span class="number">14</span>:<span class="number">18</span>:<span class="number">09</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">102.81</span>:<span class="number">10000</span>
 <span class="keyword">collect</span>-mysql.py
 [<span class="number">2</span>] <span class="number">14</span>:<span class="number">18</span>:<span class="number">09</span> [SUCCESS] <span class="number">192.168</span>.<span class="number">8.183</span>:<span class="number">10000</span>
 <span class="keyword">collect</span>-mysql.py
+</code></pre><h5 id="如果是包含文件夹_，请使用_如下命令">如果是包含文件夹 ，请使用 如下命令</h5>
+<pre><code>  pscp -h pssh_config  -l root  -r  <span class="regexp">/root/bin/</span>*   <span class="regexp">/root/bin/</span>     
 </code></pre><h4 id="slurp_copy文件到管理机器">slurp copy文件到管理机器</h4>
 <pre><code><span class="title">pslurp</span> -L /root/works/testlurp/ -h ../pssh_config  /root/works/tmp/collect-mysql.py  mysql.py
 <span class="comment">#</span>
@@ -235,6 +243,63 @@ pssh -h pssh_config -l root -i <span class="string">'cd  /root/works/tmp ; ls '<
  <span class="title">Success</span> <span class="built_in">on</span> <span class="number">128.112.152.122:22</span>
  Success <span class="built_in">on</span> <span class="number">18.31.0.190:22</span>
  Success <span class="built_in">on</span> <span class="number">128.232.103.201:22</span>
+</code></pre><h3 id="hostgroup_单独测试">hostgroup 单独测试</h3>
+<blockquote>
+<p>配置 /etc/pssh/hostgroups</p>
+</blockquote>
+<pre><code>root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>~<span class="regexp">/batch# cat /etc</span><span class="regexp">/pssh/hostgroups</span> 
+<span class="symbol">master:</span> <span class="number">192.168</span>.<span class="number">19.132</span>,<span class="number">192.168</span>.<span class="number">19.135</span>
+<span class="symbol">slave:</span> <span class="number">192.168</span>.<span class="number">19.134</span>
+</code></pre><blockquote>
+<p>pssh : </p>
+</blockquote>
+<pre><code>root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>/etc/pssh<span class="comment"># pssh -g master  -i hostname  </span>
+[<span class="number">1</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">:</span><span class="number">06</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.132</span>
+mytestdb02
+[<span class="number">2</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">:</span><span class="number">06</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.135</span>
+mytestdb01
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>/etc/pssh<span class="comment"># pssh -g master  -i 'ifconfig |grep inet | grep -v  127 ' </span>
+[<span class="number">1</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">:</span><span class="number">35</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.135</span>
+          inet <span class="symbol">addr:</span><span class="number">192.168</span>.<span class="number">19.135</span>  <span class="constant">Bcast</span><span class="symbol">:</span><span class="number">192.168</span>.<span class="number">19.255</span>  <span class="constant">Mask</span><span class="symbol">:</span><span class="number">255.255</span>.<span class="number">255.0</span>
+          inet6 <span class="symbol">addr:</span> <span class="symbol">fe80:</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">c:</span><span class="number">29</span><span class="symbol">ff:</span><span class="symbol">fe2a:</span>d6db/<span class="number">64</span> <span class="constant">Scope</span><span class="symbol">:Link</span>
+          inet6 <span class="symbol">addr:</span> <span class="symbol">:</span><span class="symbol">:</span><span class="number">1</span>/<span class="number">128</span> <span class="constant">Scope</span><span class="symbol">:Host</span>
+[<span class="number">2</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">:</span><span class="number">35</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.132</span>
+          inet <span class="symbol">addr:</span><span class="number">192.168</span>.<span class="number">19.132</span>  <span class="constant">Bcast</span><span class="symbol">:</span><span class="number">192.168</span>.<span class="number">19.255</span>  <span class="constant">Mask</span><span class="symbol">:</span><span class="number">255.255</span>.<span class="number">255.0</span>
+          inet6 <span class="symbol">addr:</span> <span class="symbol">fe80:</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">c:</span><span class="number">29</span><span class="symbol">ff:</span><span class="symbol">fe78:</span>dfd8/<span class="number">64</span> <span class="constant">Scope</span><span class="symbol">:Link</span>
+          inet6 <span class="symbol">addr:</span> <span class="symbol">:</span><span class="symbol">:</span><span class="number">1</span>/<span class="number">128</span> <span class="constant">Scope</span><span class="symbol">:Host</span>
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>/etc/pssh<span class="comment"># </span>
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>/etc/pssh<span class="comment"># </span>
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>/etc/pssh<span class="comment"># pssh -g slave   -i hostname          </span>
+[<span class="number">1</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">20</span><span class="symbol">:</span><span class="number">50</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.134</span>
+mytaskdb
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>/etc/pssh<span class="comment"># </span>
+</code></pre><blockquote>
+<p>pscp : </p>
+</blockquote>
+<p>本地create 两个file 用于测试： </p>
+<pre><code>root@ruiaylin-<span class="keyword">virtual</span>-machine:~/batch<span class="preprocessor"># ls file1 file2 </span>
+file1  file2
+root@ruiaylin-<span class="keyword">virtual</span>-machine:~/batch<span class="preprocessor"># cat file1 file2 </span>
+test master 
+test slave 
+root@ruiaylin-<span class="keyword">virtual</span>-machine:~/batch<span class="preprocessor">#</span>
+</code></pre><p>执行</p>
+<pre><code>root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>~<span class="regexp">/batch# pscp -g slave  file2  /root</span><span class="regexp">/bin/filetest</span>
+[<span class="number">1</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">22</span><span class="symbol">:</span><span class="number">28</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.134</span>
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>~<span class="regexp">/batch# pscp -g master   file1  /root</span><span class="regexp">/bin/filetest</span>      
+[<span class="number">1</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">22</span><span class="symbol">:</span><span class="number">36</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.132</span>
+[<span class="number">2</span>] <span class="number">14</span><span class="symbol">:</span><span class="number">22</span><span class="symbol">:</span><span class="number">36</span> [<span class="constant">SUCCESS</span>] <span class="number">192.168</span>.<span class="number">19.135</span>
+root<span class="variable">@ruiaylin</span>-virtual-<span class="symbol">machine:</span>~<span class="regexp">/batch# </span>
+</code></pre><p>结果</p>
+<pre><code>root@ruiaylin-<span class="keyword">virtual</span>-machine:~/batch<span class="preprocessor"># pssh -g master -i 'cat /root/bin/filetest ' </span>
+[<span class="number">1</span>] <span class="number">14</span>:<span class="number">23</span>:<span class="number">02</span> [SUCCESS] <span class="number">192.168</span><span class="number">.19</span><span class="number">.132</span>
+test master 
+[<span class="number">2</span>] <span class="number">14</span>:<span class="number">23</span>:<span class="number">02</span> [SUCCESS] <span class="number">192.168</span><span class="number">.19</span><span class="number">.135</span>
+test master 
+root@ruiaylin-<span class="keyword">virtual</span>-machine:~/batch<span class="preprocessor"># pssh -g slave  -i 'cat /root/bin/filetest '       </span>
+[<span class="number">1</span>] <span class="number">14</span>:<span class="number">23</span>:<span class="number">10</span> [SUCCESS] <span class="number">192.168</span><span class="number">.19</span><span class="number">.134</span>
+test slave 
+root@ruiaylin-<span class="keyword">virtual</span>-machine:~/batch<span class="preprocessor"># </span>
 </code></pre><h2 id="总结">总结</h2>
 <p>  pssh 是基于python的一个batch 管理主机的工具, 现在也有 python 的 fabric 模块，也可以完成这类似的工具， 后面有时间可以总结一下。</p>
   
@@ -277,7 +342,7 @@ pssh -h pssh_config -l root -i <span class="string">'cd  /root/works/tmp ; ls '<
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行执行命令工具简介"><span class="toc-number">1.</span> <span class="toc-text">并行执行命令工具简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python并行执行命令工具"><span class="toc-number">1.1.</span> <span class="toc-text">python并行执行命令工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_官方介绍"><span class="toc-number">2.</span> <span class="toc-text">pssh 官方介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_安装部署"><span class="toc-number">3.</span> <span class="toc-text">pssh 安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载_parallel-ssh_并安装"><span class="toc-number">3.1.</span> <span class="toc-text">下载 parallel-ssh 并安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_install"><span class="toc-number">3.2.</span> <span class="toc-text">安装 install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置待批量管理的服务器列表"><span class="toc-number">3.3.</span> <span class="toc-text">配置待批量管理的服务器列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#examples_:"><span class="toc-number">3.4.</span> <span class="toc-text">examples :</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pssh_to_execute_command"><span class="toc-number">3.4.1.</span> <span class="toc-text">pssh to execute command</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pscp_集中分到文件到_主机列表的机器"><span class="toc-number">3.4.2.</span> <span class="toc-text">pscp 集中分到文件到 主机列表的机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slurp_copy文件到管理机器"><span class="toc-number">3.4.3.</span> <span class="toc-text">slurp copy文件到管理机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pnuke"><span class="toc-number">3.4.4.</span> <span class="toc-text">pnuke</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#并行执行命令工具简介"><span class="toc-number">1.</span> <span class="toc-text">并行执行命令工具简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python并行执行命令工具"><span class="toc-number">1.1.</span> <span class="toc-text">python并行执行命令工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_官方介绍"><span class="toc-number">2.</span> <span class="toc-text">pssh 官方介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pssh_安装部署"><span class="toc-number">3.</span> <span class="toc-text">pssh 安装部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#下载_parallel-ssh_并安装"><span class="toc-number">3.1.</span> <span class="toc-text">下载 parallel-ssh 并安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_install"><span class="toc-number">3.2.</span> <span class="toc-text">安装 install</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#配置待批量管理的服务器列表"><span class="toc-number">3.3.</span> <span class="toc-text">配置待批量管理的服务器列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#examples_:"><span class="toc-number">3.4.</span> <span class="toc-text">examples :</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#pssh_to_execute_command"><span class="toc-number">3.4.1.</span> <span class="toc-text">pssh to execute command</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pscp_集中分到文件到_主机列表的机器"><span class="toc-number">3.4.2.</span> <span class="toc-text">pscp 集中分到文件到 主机列表的机器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#将文件_collect-mysql-py_分发到机器列表对应目录"><span class="toc-number">3.4.2.1.</span> <span class="toc-text">将文件 collect-mysql.py 分发到机器列表对应目录</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#如果是包含文件夹_，请使用_如下命令"><span class="toc-number">3.4.2.2.</span> <span class="toc-text">如果是包含文件夹 ，请使用 如下命令</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#slurp_copy文件到管理机器"><span class="toc-number">3.4.3.</span> <span class="toc-text">slurp copy文件到管理机器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#pnuke"><span class="toc-number">3.4.4.</span> <span class="toc-text">pnuke</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hostgroup_单独测试"><span class="toc-number">3.5.</span> <span class="toc-text">hostgroup 单独测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
