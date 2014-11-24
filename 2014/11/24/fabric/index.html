@@ -88,7 +88,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-11-24T08:50:53.000Z" itemprop="datePublished">11月 24 2014</time>
-    更新日期:<time datetime="2014-11-24T10:09:48.000Z" itemprop="dateModified">11月 24 2014</time>
+    更新日期:<time datetime="2014-11-24T10:17:13.000Z" itemprop="dateModified">11月 24 2014</time>
     
   </p>
 </header>
@@ -107,10 +107,13 @@
 <p>自动化，批量化是作为管理员，或者运维人员必须面临的问题。自动化和批量化也有很多方式，可以用单一工具也可以自己写shell脚本，甚至可以开发出来一套完备的任务管理系统。其实我们大多时候可以在一台主机上面通过ssh来控制所有机器，来完成我们的任务工作。是否有这样的工具来支持我们呢？ 答案是肯定的。<br>下面就切入今天的主题 FABRIC</p>
 <h2 id="fabric的官方介绍：">fabric的官方介绍：</h2>
 <p>看一下官方介绍，来一个清晰的认识 </p>
-<pre><code>Fabric <span class="keyword">is</span> <span class="keyword">a</span> Python (<span class="number">2.5</span>-<span class="number">2.7</span>) library <span class="built_in">and</span> <span class="keyword">command</span>-<span class="built_in">line</span> tool <span class="keyword">for</span> streamlining the use of SSH <span class="keyword">for</span> application deployment <span class="built_in">or</span> systems administration tasks.
-More specifically, Fabric <span class="keyword">i</span><span class="variable">s:</span>
-A tool that lets you <span class="keyword">execute</span> arbitrary Python functions via the <span class="keyword">command</span> <span class="built_in">line</span>;A library of subroutines (built <span class="keyword">on</span> top of <span class="keyword">a</span> lower-level library) <span class="keyword">to</span> <span class="keyword">make</span> executing <span class="keyword">shell</span> commands over SSH easy <span class="built_in">and</span> Pythonic.
-Naturally, most users combine these two things, using Fabric <span class="keyword">to</span> <span class="keyword">write</span> <span class="built_in">and</span> <span class="keyword">execute</span> Python functions, <span class="built_in">or</span> tasks, <span class="keyword">to</span> automate interactions with remote servers. 
+<pre><code>Fabric <span class="keyword">is</span> <span class="keyword">a</span> Python (<span class="number">2.5</span>-<span class="number">2.7</span>) library <span class="built_in">and</span> <span class="keyword">command</span>-<span class="built_in">line</span> tool <span class="keyword">for</span> streamlining the use of SSH 
+<span class="keyword">for</span> application deployment <span class="built_in">or</span> systems administration tasks.
+    More specifically, Fabric <span class="keyword">i</span><span class="variable">s:</span> A tool that lets you <span class="keyword">execute</span> arbitrary Python functions via 
+the <span class="keyword">command</span> <span class="built_in">line</span>;A library of subroutines (built <span class="keyword">on</span> top of <span class="keyword">a</span> lower-level library) <span class="keyword">to</span> <span class="keyword">make</span> 
+executing <span class="keyword">shell</span> commands over SSH easy <span class="built_in">and</span> Pythonic. Naturally, most users combine these 
+two things, using Fabric <span class="keyword">to</span> <span class="keyword">write</span> <span class="built_in">and</span> <span class="keyword">execute</span> Python functions, <span class="built_in">or</span> tasks, <span class="keyword">to</span> automate
+interactions with remote servers. 
 </code></pre><h4 id="fabric_可以为哪些人服务">fabric 可以为哪些人服务</h4>
 <pre><code>Python 开发者
 系统管理员 [ SA , ASA, DBA <span class="keyword">...</span>]
