@@ -88,7 +88,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-11-24T08:50:53.000Z" itemprop="datePublished">11月 24 2014</time>
-    更新日期:<time datetime="2014-11-25T05:29:20.000Z" itemprop="dateModified">11月 25 2014</time>
+    更新日期:<time datetime="2014-11-25T05:32:51.000Z" itemprop="dateModified">11月 25 2014</time>
     
   </p>
 </header>
@@ -211,7 +211,7 @@ start :  zz =  /Users/ruiaylin/Documents/workpython/fabric  : ::   <span class="
 <p>如下例子： </p>
 <pre><code>upload = <span class="keyword">put</span>(<span class="string">"requirements.txt"</span>, <span class="string">"requirements.txt"</span>, <span class="built_in">mode</span>=<span class="number">664</span>)
 </code></pre><h5 id="并行执行">并行执行</h5>
-<p>目前官方来看 1.X 版本的fabric 并行执行的时候不是thread safe的。如果<br>需要并行执行task。需要在方法上面使用注解 @parallel 为了防止<br>管控机器上面过多的并发任务可以通过 @parallel(pool_size=5)来设置.<br>并行的执行输出都会输出到一个终端上面，比较混乱。最好是写到日志，以<br>task为维度。跟下面的代码类似。</p>
+<p>   目前官方来看 1.X 版本的fabric 并行执行的时候不是thread safe的。如果需要并行执行task。需要在方法上面使用注解 @parallel 为了防止管控机器上面过多的并发任务可以通过 @parallel(pool_size=5)来设置. 并行的执行输出都会输出到一个终端上面，比较混乱。最好是写到日志，以task为维度。跟下面的代码类似。</p>
 <blockquote>
 <p>还有几个接口大家可以查阅fabric 文档 ： </p>
 </blockquote>
