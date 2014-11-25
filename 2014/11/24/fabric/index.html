@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>批量管理主机之 - [fabric] | ruiaylin&#39;s Blog</title>
+    <title>批量管理主机之 - [fabric1] | ruiaylin&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="ruichao.lin">
@@ -19,7 +19,7 @@
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="ruiaylin" />
-    <meta name="twitter:title" content="批量管理主机之 - [fabric] | ruiaylin&#39;s Blog" />
+    <meta name="twitter:title" content="批量管理主机之 - [fabric1] | ruiaylin&#39;s Blog" />
       
     
     
@@ -80,7 +80,7 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/11/24/fabric/" title="批量管理主机之 - [fabric]" itemprop="url">批量管理主机之 - [fabric]</a>
+      <a href="/2014/11/24/fabric/" title="批量管理主机之 - [fabric1]" itemprop="url">批量管理主机之 - [fabric1]</a>
   </h1>
   <p class="article-author">By
     
@@ -88,7 +88,7 @@
     </p>
   <p class="article-time">
     <time datetime="2014-11-24T08:50:53.000Z" itemprop="datePublished">11月 24 2014</time>
-    更新日期:<time datetime="2014-11-24T10:17:13.000Z" itemprop="dateModified">11月 24 2014</time>
+    更新日期:<time datetime="2014-11-25T05:29:20.000Z" itemprop="dateModified">11月 25 2014</time>
     
   </p>
 </header>
@@ -97,7 +97,7 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用fabric_自动化日常管理任务和部署"><span class="toc-number">1.</span> <span class="toc-text">如何使用fabric 自动化日常管理任务和部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fabric的官方介绍："><span class="toc-number">2.</span> <span class="toc-text">fabric的官方介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_可以为哪些人服务"><span class="toc-number">2.0.1.</span> <span class="toc-text">fabric 可以为哪些人服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_常用接口"><span class="toc-number">2.0.2.</span> <span class="toc-text">fabric 常用接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_还提供了上下文管理器"><span class="toc-number">2.0.3.</span> <span class="toc-text">fabric 还提供了上下文管理器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_安装"><span class="toc-number">2.1.</span> <span class="toc-text">fabric 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_编程模型介绍"><span class="toc-number">2.2.</span> <span class="toc-text">fabric 编程模型介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric主要接口方法"><span class="toc-number">2.2.1.</span> <span class="toc-text">fabric主要接口方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#run_(fabric-operations-run)"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">run (fabric.operations.run)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sudo_(fabric-operations-sudo)"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">sudo (fabric.operations.sudo)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#local_(fabric-operations-local)"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">local (fabric.operations.local)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get_(fabric-operations-get)"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">get (fabric.operations.get)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#put_(fabric-operations-put)"><span class="toc-number">2.2.1.5.</span> <span class="toc-text">put (fabric.operations.put)</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL_安装实例"><span class="toc-number">3.</span> <span class="toc-text">MySQL 安装实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用fabric_自动化日常管理任务和部署"><span class="toc-number">1.</span> <span class="toc-text">如何使用fabric 自动化日常管理任务和部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fabric的官方介绍："><span class="toc-number">2.</span> <span class="toc-text">fabric的官方介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_可以为哪些人服务"><span class="toc-number">2.0.1.</span> <span class="toc-text">fabric 可以为哪些人服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_常用接口"><span class="toc-number">2.0.2.</span> <span class="toc-text">fabric 常用接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_还提供了上下文管理器"><span class="toc-number">2.0.3.</span> <span class="toc-text">fabric 还提供了上下文管理器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_安装"><span class="toc-number">2.1.</span> <span class="toc-text">fabric 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_编程模型介绍"><span class="toc-number">2.2.</span> <span class="toc-text">fabric 编程模型介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric主要接口方法"><span class="toc-number">2.2.1.</span> <span class="toc-text">fabric主要接口方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#run_(fabric-operations-run)"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">run (fabric.operations.run)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sudo_(fabric-operations-sudo)"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">sudo (fabric.operations.sudo)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#local_(fabric-operations-local)"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">local (fabric.operations.local)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get_(fabric-operations-get)"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">get (fabric.operations.get)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#put_(fabric-operations-put)"><span class="toc-number">2.2.1.5.</span> <span class="toc-text">put (fabric.operations.put)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#并行执行"><span class="toc-number">2.2.1.6.</span> <span class="toc-text">并行执行</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL_安装实例"><span class="toc-number">3.</span> <span class="toc-text">MySQL 安装实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
 		</div>
 		
 		<h2 id="如何使用fabric_自动化日常管理任务和部署">如何使用fabric 自动化日常管理任务和部署</h2>
@@ -210,7 +210,9 @@ start :  zz =  /Users/ruiaylin/Documents/workpython/fabric  : ::   <span class="
 </ul>
 <p>如下例子： </p>
 <pre><code>upload = <span class="keyword">put</span>(<span class="string">"requirements.txt"</span>, <span class="string">"requirements.txt"</span>, <span class="built_in">mode</span>=<span class="number">664</span>)
-</code></pre><blockquote>
+</code></pre><h5 id="并行执行">并行执行</h5>
+<p>目前官方来看 1.X 版本的fabric 并行执行的时候不是thread safe的。如果<br>需要并行执行task。需要在方法上面使用注解 @parallel 为了防止<br>管控机器上面过多的并发任务可以通过 @parallel(pool_size=5)来设置.<br>并行的执行输出都会输出到一个终端上面，比较混乱。最好是写到日志，以<br>task为维度。跟下面的代码类似。</p>
+<blockquote>
 <p>还有几个接口大家可以查阅fabric 文档 ： </p>
 </blockquote>
 <h2 id="MySQL_安装实例">MySQL 安装实例</h2>
@@ -473,7 +475,7 @@ def <span class="function">install_mysql</span>(port)<span class="value">:
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/11/24/fabric/" data-title="批量管理主机之 - [fabric] | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2014/11/24/fabric/" data-title="批量管理主机之 - [fabric1] | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -499,7 +501,7 @@ def <span class="function">install_mysql</span>(port)<span class="value">:
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用fabric_自动化日常管理任务和部署"><span class="toc-number">1.</span> <span class="toc-text">如何使用fabric 自动化日常管理任务和部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fabric的官方介绍："><span class="toc-number">2.</span> <span class="toc-text">fabric的官方介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_可以为哪些人服务"><span class="toc-number">2.0.1.</span> <span class="toc-text">fabric 可以为哪些人服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_常用接口"><span class="toc-number">2.0.2.</span> <span class="toc-text">fabric 常用接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_还提供了上下文管理器"><span class="toc-number">2.0.3.</span> <span class="toc-text">fabric 还提供了上下文管理器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_安装"><span class="toc-number">2.1.</span> <span class="toc-text">fabric 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_编程模型介绍"><span class="toc-number">2.2.</span> <span class="toc-text">fabric 编程模型介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric主要接口方法"><span class="toc-number">2.2.1.</span> <span class="toc-text">fabric主要接口方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#run_(fabric-operations-run)"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">run (fabric.operations.run)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sudo_(fabric-operations-sudo)"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">sudo (fabric.operations.sudo)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#local_(fabric-operations-local)"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">local (fabric.operations.local)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get_(fabric-operations-get)"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">get (fabric.operations.get)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#put_(fabric-operations-put)"><span class="toc-number">2.2.1.5.</span> <span class="toc-text">put (fabric.operations.put)</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL_安装实例"><span class="toc-number">3.</span> <span class="toc-text">MySQL 安装实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何使用fabric_自动化日常管理任务和部署"><span class="toc-number">1.</span> <span class="toc-text">如何使用fabric 自动化日常管理任务和部署</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#fabric的官方介绍："><span class="toc-number">2.</span> <span class="toc-text">fabric的官方介绍：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_可以为哪些人服务"><span class="toc-number">2.0.1.</span> <span class="toc-text">fabric 可以为哪些人服务</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_常用接口"><span class="toc-number">2.0.2.</span> <span class="toc-text">fabric 常用接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric_还提供了上下文管理器"><span class="toc-number">2.0.3.</span> <span class="toc-text">fabric 还提供了上下文管理器</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_安装"><span class="toc-number">2.1.</span> <span class="toc-text">fabric 安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#fabric_编程模型介绍"><span class="toc-number">2.2.</span> <span class="toc-text">fabric 编程模型介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#fabric主要接口方法"><span class="toc-number">2.2.1.</span> <span class="toc-text">fabric主要接口方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#run_(fabric-operations-run)"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">run (fabric.operations.run)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#sudo_(fabric-operations-sudo)"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">sudo (fabric.operations.sudo)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#local_(fabric-operations-local)"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">local (fabric.operations.local)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#get_(fabric-operations-get)"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">get (fabric.operations.get)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#put_(fabric-operations-put)"><span class="toc-number">2.2.1.5.</span> <span class="toc-text">put (fabric.operations.put)</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#并行执行"><span class="toc-number">2.2.1.6.</span> <span class="toc-text">并行执行</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL_安装实例"><span class="toc-number">3.</span> <span class="toc-text">MySQL 安装实例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
