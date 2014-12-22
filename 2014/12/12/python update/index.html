@@ -90,7 +90,7 @@ CentOS 6.X 自带的python版本是 2.6 , 由于工作需要，很多时候需�
     </p>
   <p class="article-time">
     <time datetime="2014-12-12T08:50:53.000Z" itemprop="datePublished">12月 12 2014</time>
-    更新日期:<time datetime="2014-12-22T07:59:12.000Z" itemprop="dateModified">12月 22 2014</time>
+    更新日期:<time datetime="2014-12-22T08:19:16.000Z" itemprop="dateModified">12月 22 2014</time>
     
   </p>
 </header>
@@ -129,7 +129,7 @@ cd Python-<span class="number">2.7</span><span class="number">.8</span>
 make
 make altinstall
 <span class="preprocessor"># 检查 Python 版本:</span>
-[root@dbtaskm ~]# python2<span class="number">.7</span> -V
+[root@dbmasterxxx ~]# python2<span class="number">.7</span> -V
 Python <span class="number">2.7</span><span class="number">.8</span>
 </code></pre><h4 id="设置_PATH">设置 PATH</h4>
 <p>为了我们能够方便的使用Python，我们需要设置系统变量或者建立 软连接将新版本的 Python<br>加入到 path 对应的目录 ： </p>
@@ -137,9 +137,9 @@ Python <span class="number">2.7</span><span class="number">.8</span>
 <span class="keyword">or</span> 
 ln -<span class="keyword">s</span> /usr/<span class="keyword">local</span>/bin/python2.<span class="number">7</span>  /usr/bin/python
 <span class="comment"># 检查</span>
-[root<span class="variable">@dbtaskm</span> ~]<span class="comment"># python -V</span>
+[root<span class="variable">@dbmasterxxx</span> ~]<span class="comment"># python -V</span>
 Python <span class="number">2.7</span>.<span class="number">8</span>
-[root<span class="variable">@dbtaskm</span> ~]<span class="comment"># which python </span>
+[root<span class="variable">@dbmasterxxx</span> ~]<span class="comment"># which python </span>
 /usr/bin/python
 </code></pre><h4 id="安装_setuptools">安装 setuptools</h4>
 <pre><code><span class="preprocessor">#获取软件包</span>
@@ -153,13 +153,13 @@ python2<span class="number">.7</span> setup.py install
 <pre><code>curl http<span class="variable">s:</span>//raw.githubusercontent.<span class="keyword">com</span>/pypa/pip/master/contrib/<span class="built_in">get</span>-pip.<span class="keyword">py</span> | python2.<span class="number">7</span> -
 </code></pre><h3 id="修复_yum_工具">修复 yum 工具</h3>
 <p>此时yum应该是失效的，因为此时默认python版本已经是2.7了。而yum需要的是2.6 所以：</p>
-<pre><code>[root<span class="variable">@dbtaskm</span> ~]<span class="comment"># which yum </span>
+<pre><code>[root<span class="variable">@dbmasterxxx</span> ~]<span class="comment"># which yum </span>
 /usr/bin/yum
 <span class="comment">#修改 yum中的python </span>
 将第一行  <span class="comment">#!/usr/bin/python  改为 #!/usr/bin/python2.6</span>
 此时yum就ok啦
 </code></pre><h2 id="总结">总结</h2>
-<pre><code><span class="keyword">python</span> 版本升级过很多遍，每次都有问题，此方法来自互联网，经过使用，没有问题，特此总结一下
+<pre><code><span class="title">Python</span> 版本升级过很多遍，每次都有问题，此方法来自互联网，经过使用，没有问题，特此总结一下
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
