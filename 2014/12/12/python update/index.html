@@ -4,23 +4,24 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>oracle-colquery | ruiaylin&#39;s Blog</title>
+    <title>CentOs 6.x 升级 Python 版本 | ruiaylin&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="ruichao.lin">
     
-    <meta name="description" content="写了一个小工具，oracle 查询结果列展示，就像mysql的select 之后 添加 \G
+    <meta name="description" content="在CentOS 6.X 上面安装 Python 2.7.X
 
-# author        : ruichao.lin(baiqiao) 
-# lang          : python 
-# version       : python 2.7
-# date ">
+CentOS 6.X 自带的python版本是 2.6 , 由于工作需要，很多时候需要2.7版本。所以需要进行版本升级。由于一些系统工具和服务是对 Python 有依赖的，所以升级 Python 版本需要注意。
+
+升级步骤
+
+如何欢乐的，">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="ruiaylin" />
-    <meta name="twitter:title" content="oracle-colquery | ruiaylin&#39;s Blog" />
+    <meta name="twitter:title" content="CentOs 6.x 升级 Python 版本 | ruiaylin&#39;s Blog" />
       
     
     
@@ -81,15 +82,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/03/15/oracle-colquery/" title="oracle-colquery" itemprop="url">oracle-colquery</a>
+      <a href="/2014/12/12/python update/" title="CentOs 6.x 升级 Python 版本" itemprop="url">CentOs 6.x 升级 Python 版本</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-14T22:40:33.000Z" itemprop="datePublished">3月 15 2014</time>
-    更新日期:<time datetime="2014-11-08T06:22:36.000Z" itemprop="dateModified">11月 8 2014</time>
+    <time datetime="2014-12-12T08:50:53.000Z" itemprop="datePublished">12月 12 2014</time>
+    更新日期:<time datetime="2014-12-22T07:59:12.000Z" itemprop="dateModified">12月 22 2014</time>
     
   </p>
 </header>
@@ -98,167 +99,74 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在CentOS_6-X_上面安装_Python_2-7-X"><span class="toc-number">1.</span> <span class="toc-text">在CentOS 6.X 上面安装 Python 2.7.X</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#升级步骤"><span class="toc-number">2.</span> <span class="toc-text">升级步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#更新系统和开发工具集"><span class="toc-number">2.1.</span> <span class="toc-text">更新系统和开发工具集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#源码安装Python_2-7-x"><span class="toc-number">2.2.</span> <span class="toc-text">源码安装Python 2.7.x</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装详情："><span class="toc-number">2.2.1.</span> <span class="toc-text">安装详情：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置_PATH"><span class="toc-number">2.2.2.</span> <span class="toc-text">设置 PATH</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_setuptools"><span class="toc-number">2.2.3.</span> <span class="toc-text">安装 setuptools</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_PIP"><span class="toc-number">2.3.</span> <span class="toc-text">安装 PIP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复_yum_工具"><span class="toc-number">2.4.</span> <span class="toc-text">修复 yum 工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
 		</div>
 		
-		<blockquote>
-<p>写了一个小工具，oracle 查询结果列展示，就像mysql的select 之后 添加 \G</p>
+		<h2 id="在CentOS_6-X_上面安装_Python_2-7-X">在CentOS 6.X 上面安装 Python 2.7.X</h2>
+<blockquote>
+<p>CentOS 6.X 自带的python版本是 2.6 , 由于工作需要，很多时候需要2.7版本。所以需要进行版本升级。由于一些系统工具和服务是对 Python 有依赖的，所以升级 Python 版本需要注意。</p>
 </blockquote>
-<pre><code><span class="comment"># author        : ruichao.lin(baiqiao) </span>
-<span class="comment"># lang          : python </span>
-<span class="comment"># version       : python 2.7</span>
-<span class="comment"># date          : 2013-10-10</span>
-<span class="comment"># for           : GNU - linux </span>
-<span class="comment"># encoding      : UTF-8</span>
-<span class="comment">#!/home/oracle/dbapython/bin/python</span>
-<span class="comment"># -*- coding: utf-8 -*- </span>
-<span class="keyword">import</span> re
-<span class="keyword">import</span> sys,os
-<span class="keyword">import</span> math
-<span class="keyword">import</span> time
-<span class="keyword">import</span> commands,string
-<span class="keyword">from</span> signal <span class="keyword">import</span> SIGTERM
-<span class="keyword">import</span> cx_Oracle
-<span class="keyword">from</span> optparse <span class="keyword">import</span> OptionParser
-<span class="keyword">import</span> ConfigParser
-<span class="keyword">from</span> termcolor <span class="keyword">import</span> colored   
-<span class="function"><span class="keyword">def</span> <span class="title">getOraConnTns</span><span class="params">(tns)</span>:</span>
-    <span class="comment">#conn = cx_Oracle.connect('devdba','devdba',tns,threaded = True)</span>
-    conn = cx_Oracle.connect(<span class="string">'/'</span>, mode=cx_Oracle.SYSDBA)
-    <span class="keyword">return</span> conn   
-<span class="function"><span class="keyword">def</span> <span class="title">getowner</span><span class="params">(cur3,mtable)</span>:</span>
-    sql = <span class="string">'''
-    select owner  from dba_tables where table_name = upper('%s') 
-    '''</span>
-    <span class="keyword">try</span>:
-        cur3.execute(sql%mtable)
-        rs3 = cur3.fetchall()
-        owner = rs3[<span class="number">0</span>][<span class="number">0</span>]
-        <span class="keyword">return</span> owner 
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">raise</span> e
-    <span class="keyword">finally</span>:
-        cur3.close()    
-<span class="function"><span class="keyword">def</span> <span class="title">getcolumns</span><span class="params">(cur1 , mtable )</span>:</span>
-    colist=[]
-    sql1 = <span class="string">'''
-    select COLUMN_NAME  from dba_tab_columns  where TABLE_NAME = upper('%s')  order by COLUMN_ID  '''</span>
-    <span class="keyword">try</span>: 
-        cur1.execute(sql1%(mtable))
-        rs1 = cur1.fetchall()
-        <span class="keyword">for</span> col <span class="keyword">in</span> rs1: 
-            colist.append(col[<span class="number">0</span>])
-        <span class="keyword">return</span> colist
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">raise</span> e
-    <span class="keyword">finally</span>:
-        cur1.close()    
-<span class="function"><span class="keyword">def</span> <span class="title">doexecute</span><span class="params">(cur,sql,colist)</span> :</span>
-    <span class="keyword">try</span>:
-        cur.execute(sql)
-        rs=cur.fetchall()
-        lens = len(colist)
-        <span class="keyword">for</span> x <span class="keyword">in</span> rs : 
-            <span class="keyword">print</span> <span class="string">'---------------------------- column ------------------------'</span>
-            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(lens): 
-                <span class="keyword">print</span>   <span class="string">' ::--&gt; '</span> ,colist[i].ljust(<span class="number">32</span>),<span class="string">'  :  '</span>, x[i] 
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">raise</span> e
-    <span class="keyword">finally</span>:
-        cur.close()   
-<span class="function"><span class="keyword">def</span> <span class="title">help</span><span class="params">()</span>:</span>
-    help_str = <span class="string">''' 
-Usage:
-    process the query result : row --- to -----&gt; column 
-For example:
-    colquery.py -t table_name -p pridicatexxx -c cloumns
-    colquery.py -t table_name -p pridicatexxx
-Options include:
-  --t       : the table_name
-  --p       : the where clouse like "a = 'xxx' and b = 'xxx' ... "
-  --c       : the cloumns  "aa,bb,cc" '''</span>   
-    <span class="keyword">return</span> help_str   
-<span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span>
-    leng = len(sys.argv)
-    mtable = <span class="string">''</span>
-    icol = <span class="string">''</span>
-    pridicate=<span class="string">''</span>
-    <span class="keyword">if</span> leng == <span class="number">5</span>:
-         <span class="keyword">if</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()      
-         <span class="keyword">if</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()    
-    <span class="keyword">elif</span> leng == <span class="number">7</span>:
-         <span class="keyword">if</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()  
-         <span class="keyword">if</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()   
-         <span class="keyword">if</span> sys.argv[<span class="number">5</span>].strip() == <span class="string">'-c'</span> : 
-            icol = sys.argv[<span class="number">6</span>].strip()   
-    <span class="keyword">else</span> : 
-        <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-        <span class="keyword">print</span> help()
-        sys.exit() 
-    <span class="keyword">print</span>  <span class="string">'--- : '</span> ,icol,<span class="string">' ==== : '</span>,mtable,<span class="string">' =====: '</span>,pridicate 
-    <span class="keyword">try</span>:
-        conn = getOraConnTns(<span class="string">'tradehis_pri'</span>)
-        cur = conn.cursor() 
-        cur1 = conn.cursor()
-        cur2 = conn.cursor()
-        owner = getowner(cur2,mtable)
-        <span class="comment">#construct sql</span>
-        cols = <span class="string">''</span>
-        <span class="keyword">if</span> len(icol)  &lt;= <span class="number">1</span> :
-            colist= getcolumns(cur1,mtable)
-            <span class="keyword">for</span> x <span class="keyword">in</span> colist :
-                    cols = cols + x +<span class="string">','</span>
-            cols = cols[:-<span class="number">1</span>]
-        <span class="keyword">else</span> : 
-            cols = icol
-        clist = cols.split(<span class="string">','</span>) 
-        sql2 = <span class="string">''' 
-            select %s from %s where  %s
-            '''</span>
-        tbs = str(owner) +<span class="string">'.'</span>+ str(mtable)
-        sql  = sql2%(cols,tbs,pridicate)
-        doexecute(cur,sql,clist)
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">print</span> <span class="string">'ERROR : &gt;&gt;&gt; : '</span>, e
-    <span class="keyword">finally</span>:
-        conn.close()
-
-    main()         
+<h2 id="升级步骤">升级步骤</h2>
+<blockquote>
+<p>如何欢乐的，没有痛苦的升级python版本 ，往下看 … </p>
+</blockquote>
+<h3 id="更新系统和开发工具集">更新系统和开发工具集</h3>
+<p>更新指令</p>
+<pre><code>yum -<span class="keyword">y</span> <span class="keyword">update</span>
+yum groupinstall -<span class="keyword">y</span> <span class="string">'development tools'</span>
+</code></pre><p>另外还需要安装 python 工具需要的额外软件包 SSL, bz2, zlib</p>
+<pre><code>yum <span class="operator"><span class="keyword">install</span> -y zlib-devel bzip2-devel openssl-devel xz-libs wget</span>
+</code></pre><h3 id="源码安装Python_2-7-x">源码安装Python 2.7.x</h3>
+<pre><code>wget <span class="symbol">http:</span>/<span class="regexp">/www.python.org/ftp</span><span class="regexp">/python/</span><span class="number">2.7</span>.<span class="number">8</span>/<span class="constant">Python</span>-<span class="number">2.7</span>.<span class="number">8</span>.tar.xz
+xz -d <span class="constant">Python</span>-<span class="number">2.7</span>.<span class="number">8</span>.tar.xz
+tar -xvf <span class="constant">Python</span>-<span class="number">2.7</span>.<span class="number">8</span>.tar
+</code></pre><h4 id="安装详情：">安装详情：</h4>
+<pre><code><span class="preprocessor"># 进入目录:</span>
+cd Python-<span class="number">2.7</span><span class="number">.8</span>
+<span class="preprocessor"># 运行配置 configure:</span>
+./configure --prefix=/usr/local
+<span class="preprocessor"># 编译安装:</span>
+make
+make altinstall
+<span class="preprocessor"># 检查 Python 版本:</span>
+[root@dbtaskm ~]# python2<span class="number">.7</span> -V
+Python <span class="number">2.7</span><span class="number">.8</span>
+</code></pre><h4 id="设置_PATH">设置 PATH</h4>
+<p>为了我们能够方便的使用Python，我们需要设置系统变量或者建立 软连接将新版本的 Python<br>加入到 path 对应的目录 ： </p>
+<pre><code>export PATH=<span class="string">"/usr/local/bin:<span class="variable">$PATH</span>"</span>
+<span class="keyword">or</span> 
+ln -<span class="keyword">s</span> /usr/<span class="keyword">local</span>/bin/python2.<span class="number">7</span>  /usr/bin/python
+<span class="comment"># 检查</span>
+[root<span class="variable">@dbtaskm</span> ~]<span class="comment"># python -V</span>
+Python <span class="number">2.7</span>.<span class="number">8</span>
+[root<span class="variable">@dbtaskm</span> ~]<span class="comment"># which python </span>
+/usr/bin/python
+</code></pre><h4 id="安装_setuptools">安装 setuptools</h4>
+<pre><code><span class="preprocessor">#获取软件包</span>
+wget --no-check-certificate https:<span class="comment">//pypi.python.org/packages/source/s/setuptools/setuptools-1.4.2.tar.gz</span>
+<span class="preprocessor"># 解压:</span>
+tar -xvf setuptools-<span class="number">1.4</span><span class="number">.2</span>.tar.gz
+cd setuptools-<span class="number">1.4</span><span class="number">.2</span>
+<span class="preprocessor"># 使用 Python 2.7.8 安装 setuptools</span>
+python2<span class="number">.7</span> setup.py install
+</code></pre><h3 id="安装_PIP">安装 PIP</h3>
+<pre><code>curl http<span class="variable">s:</span>//raw.githubusercontent.<span class="keyword">com</span>/pypa/pip/master/contrib/<span class="built_in">get</span>-pip.<span class="keyword">py</span> | python2.<span class="number">7</span> -
+</code></pre><h3 id="修复_yum_工具">修复 yum 工具</h3>
+<p>此时yum应该是失效的，因为此时默认python版本已经是2.7了。而yum需要的是2.6 所以：</p>
+<pre><code>[root<span class="variable">@dbtaskm</span> ~]<span class="comment"># which yum </span>
+/usr/bin/yum
+<span class="comment">#修改 yum中的python </span>
+将第一行  <span class="comment">#!/usr/bin/python  改为 #!/usr/bin/python2.6</span>
+此时yum就ok啦
+</code></pre><h2 id="总结">总结</h2>
+<pre><code><span class="keyword">python</span> 版本升级过很多遍，每次都有问题，此方法来自互联网，经过使用，没有问题，特此总结一下
 </code></pre>  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/tools/">tools</a>
+  <span></span> <a href="/tags/ops/">ops</a><a href="/tags/python/">python</a>
   </div>
 
 
@@ -271,7 +179,7 @@ Options include:
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/03/15/oracle-colquery/" data-title="oracle-colquery | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2014/12/12/python update/" data-title="CentOs 6.x 升级 Python 版本 | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -280,19 +188,11 @@ Options include:
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2014/03/22/oracle-plan-stablilty/" title="oracle-plan-stablilty">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  oracle-plan-stablilty</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2014/03/01/python-multi-threading/"  title="python-multi-threading">
+<a href="/2014/11/24/fabric/"  title="批量部署 自动化之 - [fabric]">
  <strong>NEXT:</strong><br/> 
- <span>python-multi-threading
+ <span>批量部署 自动化之 - [fabric]
 </span>
 </a>
 </div>
@@ -305,7 +205,7 @@ Options include:
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#在CentOS_6-X_上面安装_Python_2-7-X"><span class="toc-number">1.</span> <span class="toc-text">在CentOS 6.X 上面安装 Python 2.7.X</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#升级步骤"><span class="toc-number">2.</span> <span class="toc-text">升级步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#更新系统和开发工具集"><span class="toc-number">2.1.</span> <span class="toc-text">更新系统和开发工具集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#源码安装Python_2-7-x"><span class="toc-number">2.2.</span> <span class="toc-text">源码安装Python 2.7.x</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装详情："><span class="toc-number">2.2.1.</span> <span class="toc-text">安装详情：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置_PATH"><span class="toc-number">2.2.2.</span> <span class="toc-text">设置 PATH</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_setuptools"><span class="toc-number">2.2.3.</span> <span class="toc-text">安装 setuptools</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装_PIP"><span class="toc-number">2.3.</span> <span class="toc-text">安装 PIP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修复_yum_工具"><span class="toc-number">2.4.</span> <span class="toc-text">修复 yum 工具</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
