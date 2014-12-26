@@ -75,6 +75,23 @@
 
   <section class="post" itemscope itemprop="blogPost">
   
+    <a href="/2014/05/13/XtraBackup-slave/" title="使用Percona XtraBackup热备搭建slave数据库" itemprop="url">
+  
+    <h1 itemprop="name">使用Percona XtraBackup热备搭建slave数据库</h1>
+    
+     
+           <p itemprop="description" >使用Percona XtraBackup热备搭建slave数据库
+下载安装XtraBackup
+1.在http://www.percona.com/downloads/XtraBackup/LATEST/   
+2.解压安装，并配置path路径 export PATH=$JAVA</p>
+        
+    
+    <time datetime="2014-05-12T20:55:27.000Z" itemprop="datePublished">5月 13 2014</time>
+  </a>
+</section>
+
+  <section class="post" itemscope itemprop="blogPost">
+  
     <a href="/2014/04/27/linux-shell/" title="shell脚本常用" itemprop="url">
   
     <h1 itemprop="name">shell脚本常用</h1>
@@ -188,26 +205,6 @@ Step 1: 使用 explain plan for 对sql文本进行p</p>
   </a>
 </section>
 
-  <section class="post" itemscope itemprop="blogPost">
-  
-    <a href="/2014/02/27/tips-ops-mysql/" title="mysql运维过程中的小tip [转载]" itemprop="url">
-  
-    <h1 itemprop="name">mysql运维过程中的小tip [转载]</h1>
-    
-     
-           <p itemprop="description" >mysql运维过程中的小 tips
-
-1.查询数据库不同引擎下表和索引的大小
-
-select engine,count(*) table_num, 
-concat(truncate(sum(DATA_LENGTH/1024/1024),2),&#39;MB&#39;) table_size,
-c</p>
-        
-    
-    <time datetime="2014-02-26T21:04:23.000Z" itemprop="datePublished">2月 27 2014</time>
-  </a>
-</section>
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/">Next &raquo;</a>
@@ -225,6 +222,8 @@ c</p>
 	<p class="asidetitle">分类</p>
 		<ul>
 		
+			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
+		
 			<li><a href="/categories/linux/" title="linux">linux<sup>1</sup></a></li>
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>8</sup></a></li>
@@ -241,7 +240,7 @@ c</p>
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/ops/" style="font-size: 16.67px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 16.67px;">python</a><a href="/tags/sharding/" style="font-size: 13.33px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 13.33px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/docker/" style="font-size: 10.00px;">docker</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/mysql/" style="font-size: 10.00px;">mysql</a><a href="/tags/ops/" style="font-size: 16.67px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 16.67px;">python</a><a href="/tags/sharding/" style="font-size: 13.33px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 13.33px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
     </div>
   </div>
 
