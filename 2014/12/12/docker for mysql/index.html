@@ -86,7 +86,7 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
     </p>
   <p class="article-time">
     <time datetime="2014-12-12T08:50:53.000Z" itemprop="datePublished">12月 12 2014</time>
-    更新日期:<time datetime="2014-12-26T02:12:37.000Z" itemprop="dateModified">12月 26 2014</time>
+    更新日期:<time datetime="2014-12-26T02:17:18.000Z" itemprop="dateModified">12月 26 2014</time>
     
   </p>
 </header>
@@ -166,7 +166,7 @@ RUN mysqld  -V
 # python-setuptools 
 RUN /usr/sbin/mysqld &amp; \
     <span class="keyword">sleep</span> <span class="number">10</span>s &amp;&amp;\
-    echo <span class="string">" grant all privileges on *.* to dbadmin@'localhost' identified by 'qicheautohome' with grant option;grant all privileges on *.* to dbadmin@'127.0.0.1' identified by 'qicheautohome' with grant option;grant all privileges on *.* to opsdba@'%' identified by 'qicheautohome' ;grant REPLICATION SLAVE,REPLICATION CLIENT ON *.* TO 'repl'@'%' IDENTIFIED BY 'repl';grant SELECT,CREATE,DROP,PROCESS,FILE,INDEX,ALTER,SUPER,LOCK TABLES ON *.* TO 'maintain'@'%' IDENTIFIED BY '4kRefTKno5BN';  flush privileges;"</span> | mysql   
+    echo <span class="string">" grant all privileges on *.* to dbadmin@'localhost' identified by 'xxxx' with grant option;grant all privileges on *.* to dbadmin@'127.0.0.1' identified by 'xxxxx' with grant option;grant all privileges on *.* to opsdba@'%' identified by 'xxxx' ;grant REPLICATION SLAVE,REPLICATION CLIENT ON *.* TO 'repl'@'%' IDENTIFIED BY 'repl';grant SELECT,CREATE,DROP,PROCESS,FILE,INDEX,ALTER,SUPER,LOCK TABLES ON *.* TO 'maintain'@'%' IDENTIFIED BY 'xxxx';  flush privileges;"</span> | mysql   
 # expose mysqld port
 EXPOSE <span class="number">3306</span>  
 
