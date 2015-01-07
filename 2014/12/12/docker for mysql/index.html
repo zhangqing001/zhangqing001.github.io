@@ -86,7 +86,7 @@ Docker is an open platform for developers and sysadmins to build, ship, and run 
     </p>
   <p class="article-time">
     <time datetime="2014-12-12T08:50:53.000Z" itemprop="datePublished">12月 12 2014</time>
-    更新日期:<time datetime="2014-12-26T03:01:02.000Z" itemprop="dateModified">12月 26 2014</time>
+    更新日期:<time datetime="2015-01-07T03:35:37.000Z" itemprop="dateModified">1月 7 2015</time>
     
   </p>
 </header>
@@ -166,7 +166,7 @@ RUN mysqld  -V
 # python-setuptools 
 RUN /usr/sbin/mysqld &amp; \
     <span class="keyword">sleep</span> <span class="number">10</span>s &amp;&amp;\
-    echo <span class="string">" grant all privileges on *.* to dbadmin@'localhost' identified by 'xxxx' with grant option;grant all privileges on *.* to dbadmin@'127.0.0.1' identified by 'xxxxx' with grant option;grant all privileges on *.* to opsdba@'%' identified by 'xxxx' ;grant REPLICATION SLAVE,REPLICATION CLIENT ON *.* TO 'repl'@'%' IDENTIFIED BY 'repl';grant SELECT,CREATE,DROP,PROCESS,FILE,INDEX,ALTER,SUPER,LOCK TABLES ON *.* TO 'maintain'@'%' IDENTIFIED BY 'xxxx';  flush privileges;"</span> | mysql   
+    echo <span class="string">" grant all privileges on *.* to admin@'localhost' identified by 'studytest' with grant option;grant all privileges on *.* to admin@'127.0.0.1' identified by 'studytest' with grant option;grant all privileges on *.* to opsdba@'%' identified by 'studytest' ;grant REPLICATION SLAVE,REPLICATION CLIENT ON *.* TO 'replication'@'%' IDENTIFIED BY 'studytest';grant SELECT,CREATE,DROP,PROCESS,FILE,INDEX,ALTER,SUPER,LOCK TABLES ON *.* TO 'mtain'@'%' IDENTIFIED BY 'studytest';  flush privileges;"</span> | mysql   
 # expose mysqld port
 EXPOSE <span class="number">3306</span>  
 
@@ -266,11 +266,19 @@ ecb06307f126:172.17.0.7
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2014/12/12/python update/" title="CentOs 6.x 升级 Python 版本">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  CentOs 6.x 升级 Python 版本</span>
+</a>
+</div>
+
 
 <div class="next">
-<a href="/2014/12/12/python update/"  title="CentOs 6.x 升级 Python 版本">
+<a href="/2014/11/24/fabric/"  title="批量部署 自动化之 - [fabric]">
  <strong>NEXT:</strong><br/> 
- <span>CentOs 6.x 升级 Python 版本
+ <span>批量部署 自动化之 - [fabric]
 </span>
 </a>
 </div>
@@ -366,7 +374,7 @@ ecb06307f126:172.17.0.7
 		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2014 
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
 		
 		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
 		
