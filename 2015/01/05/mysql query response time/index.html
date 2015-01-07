@@ -1,0 +1,469 @@
+
+ <!DOCTYPE HTML>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  
+    <title>MySQL Response Time | ruiaylin&#39;s Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="ruichao.lin">
+    
+    <meta name="description" content="MySQL database response time
+
+MySQL数据库运维过程中，我们经常通过一些系统指标，DB指标来check数据库的运行状态。响应时间就是一个很重要的参数。但是响应时间一般都比较难抓取。特别是MySQL数据库。统计信息这块做的还是有很大的进步空间。不像Oracle可以通过统">
+    
+    
+    
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="ruiaylin" />
+    <meta name="twitter:title" content="MySQL Response Time | ruiaylin&#39;s Blog" />
+      
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="ruiaylin&#39;s Blog">ruiaylin&#39;s Blog</a></h1>
+				<h2 class="blog-motto">蹈之而弗悔 ,  慎思而笃行  ...</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜单">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">博客</a></li>
+					
+						<li><a href="/archives">归档</a></li>
+					
+						<li><a href="/labs">实验室</a></li>
+					
+						<li><a href="/about">关于</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/01/05/mysql query response time/" title="MySQL Response Time" itemprop="url">MySQL Response Time</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2015-01-05T08:50:53.000Z" itemprop="datePublished">1月 5 2015</time>
+    更新日期:<time datetime="2015-01-07T09:24:07.000Z" itemprop="dateModified">1月 7 2015</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目录</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL_database_response_time"><span class="toc-number">1.</span> <span class="toc-text">MySQL database response time</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下面分别介绍一下两种方法"><span class="toc-number">2.</span> <span class="toc-text">下面分别介绍一下两种方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用tcprstat_？"><span class="toc-number">2.1.</span> <span class="toc-text">如何使用tcprstat ？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#how_percona_server_does?"><span class="toc-number">2.2.</span> <span class="toc-text">how percona server does?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装插件"><span class="toc-number">2.2.1.</span> <span class="toc-text">安装插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#检查"><span class="toc-number">2.2.2.</span> <span class="toc-text">检查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置参数"><span class="toc-number">2.2.3.</span> <span class="toc-text">设置参数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+		</div>
+		
+		<h2 id="MySQL_database_response_time">MySQL database response time</h2>
+<blockquote>
+<p>MySQL数据库运维过程中，我们经常通过一些系统指标，DB指标来check数据库的运行状态。响应时间就是一个很重要的参数。但是响应时间一般都比较难抓取。特别是MySQL数据库。统计信息这块做的还是有很大的进步空间。不像Oracle可以通过统计信息来计算响应时间。</p>
+</blockquote>
+<p>今天大致整理了一下，MySQL数据库的响应时间的收集方法。目前业界主要有两种方式： </p>
+<pre><code><span class="bullet">1. </span>通过tcpdump 抓网络包，来进行分析。对应的工具 tcprstat
+<span class="bullet">2. </span>原理和1类似，只不过是集成到了数据库中【Percona Server &amp; MariaDB】
+</code></pre><h2 id="下面分别介绍一下两种方法">下面分别介绍一下两种方法</h2>
+<h3 id="如何使用tcprstat_？">如何使用tcprstat ？</h3>
+<p>安装：</p>
+<pre><code>从 http:<span class="comment">//github.com/downloads/Lowercases/tcprstat/tcprstat-static.v0.3.1.x86_64 下载</span>
+放到 PATH 路径下 , 比如 ： <span class="regexp">/usr/</span>bin
+重命名为 tcprstat
+添加可执行权限：　chmod +x
+</code></pre><p>运行：</p>
+<pre><code>[root@xxx ~]# /home/mysql/bin/tcprstat -p 3306 -t 1 -n 0 -l <span class="smartquote">`/sbin/ifconfig | grep '</span>addr:[^ ]\+' -o | cut -f 2 -d : | xargs echo | sed -e <span class="emphasis">'s/ /,/g'</span>` 
+timestamp       count   max     min     avg     med     stddev  95<span class="emphasis">_max  95_</span>avg  95<span class="emphasis">_std  99_</span>max  99<span class="emphasis">_avg  99_</span>std
+1420614369      728     84075   76      868     244     6273    420     211     105     14159   247     551
+1420614370      724     63779   77      701     248     4770    403     218     106     3308    232     165
+1420614371      724     44319   73      469     248     2843    407     217     112     653     227     122
+1420614372      682     87216   75      864     242     6189    430     218     117     15382   280     826
+1420614373      650     73711   78      793     256     5483    427     219     116     13176   253     535
+1420614374      617     85264   77      978     254     6715    408     218     115     24093   293     1128
+1420614375      730     96018   75      905     244     6737    418     214     113     13574   248     527
+1420614376      686     106426  78      1094    242     7984    415     212     111     34149   331     1681
+1420614377      683     83807   74      886     245     6270    410     209     112     23873   279     1061
+1420614378      727     93795   77      925     239     6682    409     208     112     23836   269     1018
+1420614379      730     84769   77      805     241     5772    422     209     115     13808   243     535
+1420614380      748     93895   75      977     234     7214    397     202     109     24140   266     1031
+1420614381      753     87112   78      825     238     6027    404     205     109     14669   240     562
+1420614382      727     878833  75      2105    241     33216   417     210     118     24386   277     1052
+1420614383      671     88954   74      841     237     6269    408     207     115     13867   241     558 
+</code></pre><blockquote>
+<p>注意： 一般参考 95_avg 的值</p>
+</blockquote>
+<p>输出格式： </p>
+<pre><code>Format Code Header  Default?    Meaning
+<span class="tag">%<span class="title">n</span></span>      count       y   Count of requests that completed during this iteration
+<span class="tag">%<span class="title">a</span></span>      avg         y   Average response time
+<span class="tag">%<span class="title">s</span></span>      sum         y   Sum of response times
+<span class="tag">%<span class="title">x</span></span>      sqs             Sum of squares of response times
+<span class="tag">%<span class="title">m</span></span>      min         y   Minimum response time
+<span class="tag">%<span class="title">M</span></span>      max         y   Maximum response time
+<span class="tag">%<span class="title">h</span></span>      med         y   Median response time
+<span class="tag">%<span class="title">S</span></span>      stddev      y   Standard deviation of response times
+<span class="tag">%<span class="title">v</span></span>      var             Variance of response times
+<span class="tag">%<span class="title">I</span></span>      iter#           Iteration number
+<span class="tag">%<span class="title">t</span></span>      elapsed         Seconds elapsed since the first iteration
+<span class="tag">%<span class="title">T</span></span>      timestamp   y   Unix timestamp
+<span class="tag">%</span>%                       A literal %
+\t                      A tab character
+\n                      A newline character
+95,99  Adds a prefix    y   A percentile indicator;  
+</code></pre><h3 id="how_percona_server_does?">how percona server does?</h3>
+<blockquote>
+<p>percona server 实现了一个叫做 响应时间区间 的特性 ，5.6 之后开始以Plugin的方式提供。需要单独安装。 </p>
+</blockquote>
+<h4 id="安装插件">安装插件</h4>
+<pre><code><span class="input"><span class="prompt">mysql&gt;</span> <span class="constant">INSTALL</span> <span class="constant">PLUGIN</span> <span class="constant">QUERY_RESPONSE_TIME_AUDIT</span> <span class="constant">SONAME</span> <span class="string">'query_response_time.so'</span>;
+mysql&gt; <span class="constant">INSTALL</span> <span class="constant">PLUGIN</span> <span class="constant">QUERY_RESPONSE_TIME</span> <span class="constant">SONAME</span> <span class="string">'query_response_time.so'</span>;</span>
+</code></pre><h4 id="检查">检查</h4>
+<pre><code>SHOW PLUGINS;
+．．．．
+<span class="string">| partition                   | ACTIVE   | STORAGE ENGINE     | NULL                   | GPL     |</span>
+<span class="string">| QUERY_RESPONSE_TIME_AUDIT   | ACTIVE   | AUDIT              | query_response_time.so | GPL     |</span>
+<span class="string">| QUERY_RESPONSE_TIME         | ACTIVE   | INFORMATION SCHEMA | query_response_time.so | GPL     |</span>
++-----------------------------+----------+--------------------+------------------------+---------+
+</code></pre><h4 id="设置参数">设置参数</h4>
+<pre><code><span class="operator"><span class="keyword">SET</span> <span class="keyword">GLOBAL</span> query_response_time_stats = <span class="number">1</span> ;</span> # <span class="operator"><span class="keyword">start</span> stat collection
+<span class="keyword">SET</span> <span class="keyword">GLOBAL</span> query_response_time_flush=<span class="string">'ON'</span>;</span>  
+</code></pre><p>SELECT * from INFORMATION_SCHEMA.QUERY_RESPONSE_TIME ; </p>
+<pre><code><span class="header">dbadmin@(none) 04:45:06&gt; SELECT * from INFORMATION_SCHEMA.QUERY_RESPONSE_TIME ;
++----------------+-------+----------------+</span>
+<span class="header">| TIME           | COUNT | TOTAL          |
++----------------+-------+----------------+</span>
+|       0.000001 |     0 |       0.000000 |
+|       0.000010 |    92 |       0.000524 |
+|       0.000100 |    66 |       0.005463 |
+|       0.001000 |   112 |       0.064937 |
+|       0.010000 |    12 |       0.013653 |
+|       0.100000 |     0 |       0.000000 |
+|       1.000000 |     0 |       0.000000 |
+|      10.000000 |     0 |       0.000000 |
+|     100.000000 |     0 |       0.000000 |
+|    1000.000000 |     0 |       0.000000 |
+|   10000.000000 |     0 |       0.000000 |
+|  100000.000000 |     0 |       0.000000 |
+| 1000000.000000 |     0 |       0.000000 |
+<span class="header">| TOO LONG       |     0 | TOO LONG       |
++----------------+-------+----------------+</span>
+</code></pre><blockquote>
+<p>set GLOBAL query_response_time_flush = on : </p>
+</blockquote>
+<pre><code>Clears <span class="operator">the</span> collected times <span class="built_in">from</span> <span class="operator">the</span> QUERY_RESPONSE_TIME table ; 
+Reads <span class="operator">the</span> <span class="built_in">value</span> <span class="operator">of</span> query_response_time_range_base <span class="operator">and</span> uses <span class="keyword">it</span> <span class="built_in">to</span> <span class="built_in">set</span> <span class="operator">the</span> range base <span class="keyword">for</span> <span class="operator">the</span> table 
+</code></pre><h2 id="总结">总结</h2>
+<p>一般数据库监控项中，db响应时间对我们诊断问题，还是有很大的帮助的。我们可以参考以上两种方式来对mysql数据库的响应时间收集起来，可以绘制曲线。 </p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/mysql/">mysql</a>
+  </div>
+
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/mysql/">mysql</a>
+</div>
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2015/01/05/mysql query response time/" data-title="MySQL Response Time | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2014/12/12/docker for mysql/"  title="Docker for MySQL deployment">
+ <strong>NEXT:</strong><br/> 
+ <span>Docker for MySQL deployment
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目录</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL_database_response_time"><span class="toc-number">1.</span> <span class="toc-text">MySQL database response time</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#下面分别介绍一下两种方法"><span class="toc-number">2.</span> <span class="toc-text">下面分别介绍一下两种方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#如何使用tcprstat_？"><span class="toc-number">2.1.</span> <span class="toc-text">如何使用tcprstat ？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#how_percona_server_does?"><span class="toc-number">2.2.</span> <span class="toc-text">how percona server does?</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装插件"><span class="toc-number">2.2.1.</span> <span class="toc-text">安装插件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#检查"><span class="toc-number">2.2.2.</span> <span class="toc-text">检查</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#设置参数"><span class="toc-number">2.2.3.</span> <span class="toc-text">设置参数</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">3.</span> <span class="toc-text">总结</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隐藏侧边栏"></a></div>
+<aside class="clearfix">
+
+  
+<div class="categorieslist">
+	<p class="asidetitle">分类</p>
+		<ul>
+		
+			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
+		
+			<li><a href="/categories/linux/" title="linux">linux<sup>1</sup></a></li>
+		
+			<li><a href="/categories/mysql/" title="mysql">mysql<sup>9</sup></a></li>
+		
+			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
+		
+			<li><a href="/categories/python/" title="python">python<sup>8</sup></a></li>
+		
+		</ul>
+</div>
+
+
+  
+  <div class="tagcloudlist">
+    <p class="asidetitle">标签云</p>
+    <div class="tagcloudlist clearfix">
+       <a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/docker/" style="font-size: 10.00px;">docker</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/mysql/" style="font-size: 13.33px;">mysql</a><a href="/tags/ops/" style="font-size: 16.67px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 16.67px;">python</a><a href="/tags/sharding/" style="font-size: 13.33px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 13.33px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+    </div>
+  </div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情链接</p>
+    <ul>
+		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
+		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
+		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
+		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
+		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+    </ul>
+</div> 
+
+
+
+
+  <div class="rsspart">
+	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
+		
+		
+		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
+		
+		
+		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+		
+		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+  </body>
+</html>
