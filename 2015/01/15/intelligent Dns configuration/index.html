@@ -86,7 +86,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-01-15T08:50:53.000Z" itemprop="datePublished">1月 15 2015</time>
-    更新日期:<time datetime="2015-01-16T02:40:27.000Z" itemprop="dateModified">1月 16 2015</time>
+    更新日期:<time datetime="2015-01-16T02:56:41.000Z" itemprop="dateModified">1月 16 2015</time>
     
   </p>
 </header>
@@ -241,7 +241,7 @@ root     <span class="number">16479</span> <span class="number">16398</span>  <s
 <ol>
 <li>配置soa记录</li>
 <li>配置ns1 ns2</li>
-<li><p>配置dns记录</p>
+<li><p>配置dns记录<br>-SOA(起始授权机构)：此记录指定区域的起点。它所包含的信息有区域名、区域管理员电子邮件<br>地址，以及指示辅 DNS 服务器如何更新区域数据文件的设置等<br>-NS(名称服务器)：此记录指定负责给定区域的名称服务器<br>-A(主机)： 此记录列出特定主机名的 IP 地址。</p>
 <pre><code> <span class="operator"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="string">`dns_records`</span> (<span class="string">`zone`</span>,   <span class="string">`host`</span>,   <span class="string">`type`</span>,   <span class="string">`data`</span>,   <span class="string">`ttl`</span> , <span class="string">`mx_priority`</span>, <span class="string">`refresh`</span>, <span class="string">`retry`</span>, <span class="string">`expire`</span>, <span class="string">`minimum`</span>, <span class="string">`serial`</span>, <span class="string">`resp_person`</span>, <span class="string">`primary_ns`</span>, <span class="string">`data_count`</span>) <span class="keyword">VALUES</span>    
   (<span class="string">'opsdnstest.com'</span>, <span class="string">'@'</span>, <span class="string">'SOA'</span>, <span class="string">'ns1.opsdnstest.com.'</span>, <span class="number">10</span>,   <span class="literal">NULL</span>, <span class="number">3600</span>, <span class="number">3600</span>, <span class="number">86400</span>, <span class="number">10</span>, <span class="number">2008082700</span>, <span class="string">'root.opsdnstest.com.'</span>, <span class="string">'ns1.opsdnstest.com.'</span>, <span class="number">0</span>);</span>
  #<span class="comment">--@ NS</span>
