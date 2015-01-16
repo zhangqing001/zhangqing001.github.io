@@ -4,23 +4,21 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>oracle-colquery | ruiaylin&#39;s Blog</title>
+    <title>How To Install Discourse On CentOS 6.x | ruiaylin&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="ruichao.lin">
     
-    <meta name="description" content="写了一个小工具，oracle 查询结果列展示，就像mysql的select 之后 添加 \G
+    <meta name="description" content="NOTE: The Discourse team only officially supports running Discourse on Ubuntu with Docker, but we know some of you will want to run it on CentOS.
 
-# author        : ruichao.lin(baiqiao) 
-# lang          : python 
-# version       : python 2.7
-# date ">
+
+Ru">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="ruiaylin" />
-    <meta name="twitter:title" content="oracle-colquery | ruiaylin&#39;s Blog" />
+    <meta name="twitter:title" content="How To Install Discourse On CentOS 6.x | ruiaylin&#39;s Blog" />
       
     
     
@@ -81,15 +79,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2014/03/15/oracle-colquery/" title="oracle-colquery" itemprop="url">oracle-colquery</a>
+      <a href="/2015/01/05/deploy a forum using  discourse/" title="How To Install Discourse On CentOS 6.x" itemprop="url">How To Install Discourse On CentOS 6.x</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2014-03-14T22:40:33.000Z" itemprop="datePublished">3月 15 2014</time>
-    更新日期:<time datetime="2014-11-08T06:22:36.000Z" itemprop="dateModified">11月 8 2014</time>
+    <time datetime="2015-01-05T08:50:53.000Z" itemprop="datePublished">1月 5 2015</time>
+    更新日期:<time datetime="2015-01-16T02:48:06.000Z" itemprop="dateModified">1月 16 2015</time>
     
   </p>
 </header>
@@ -102,176 +100,63 @@
 		</div>
 		
 		<blockquote>
-<p>写了一个小工具，oracle 查询结果列展示，就像mysql的select 之后 添加 \G</p>
+<p>NOTE: The Discourse team only officially supports running Discourse on Ubuntu with Docker, but we know some of you will want to run it on CentOS.</p>
 </blockquote>
-<pre><code><span class="comment"># author        : ruichao.lin(baiqiao) </span>
-<span class="comment"># lang          : python </span>
-<span class="comment"># version       : python 2.7</span>
-<span class="comment"># date          : 2013-10-10</span>
-<span class="comment"># for           : GNU - linux </span>
-<span class="comment"># encoding      : UTF-8</span>
-<span class="comment">#!/home/oracle/dbapython/bin/python</span>
-<span class="comment"># -*- coding: utf-8 -*- </span>
-<span class="keyword">import</span> re
-<span class="keyword">import</span> sys,os
-<span class="keyword">import</span> math
-<span class="keyword">import</span> time
-<span class="keyword">import</span> commands,string
-<span class="keyword">from</span> signal <span class="keyword">import</span> SIGTERM
-<span class="keyword">import</span> cx_Oracle
-<span class="keyword">from</span> optparse <span class="keyword">import</span> OptionParser
-<span class="keyword">import</span> ConfigParser
-<span class="keyword">from</span> termcolor <span class="keyword">import</span> colored   
-<span class="function"><span class="keyword">def</span> <span class="title">getOraConnTns</span><span class="params">(tns)</span>:</span>
-    <span class="comment">#conn = cx_Oracle.connect('devdba','devdba',tns,threaded = True)</span>
-    conn = cx_Oracle.connect(<span class="string">'/'</span>, mode=cx_Oracle.SYSDBA)
-    <span class="keyword">return</span> conn   
-<span class="function"><span class="keyword">def</span> <span class="title">getowner</span><span class="params">(cur3,mtable)</span>:</span>
-    sql = <span class="string">'''
-    select owner  from dba_tables where table_name = upper('%s') 
-    '''</span>
-    <span class="keyword">try</span>:
-        cur3.execute(sql%mtable)
-        rs3 = cur3.fetchall()
-        owner = rs3[<span class="number">0</span>][<span class="number">0</span>]
-        <span class="keyword">return</span> owner 
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">raise</span> e
-    <span class="keyword">finally</span>:
-        cur3.close()    
-<span class="function"><span class="keyword">def</span> <span class="title">getcolumns</span><span class="params">(cur1 , mtable )</span>:</span>
-    colist=[]
-    sql1 = <span class="string">'''
-    select COLUMN_NAME  from dba_tab_columns  where TABLE_NAME = upper('%s')  order by COLUMN_ID  '''</span>
-    <span class="keyword">try</span>: 
-        cur1.execute(sql1%(mtable))
-        rs1 = cur1.fetchall()
-        <span class="keyword">for</span> col <span class="keyword">in</span> rs1: 
-            colist.append(col[<span class="number">0</span>])
-        <span class="keyword">return</span> colist
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">raise</span> e
-    <span class="keyword">finally</span>:
-        cur1.close()    
-<span class="function"><span class="keyword">def</span> <span class="title">doexecute</span><span class="params">(cur,sql,colist)</span> :</span>
-    <span class="keyword">try</span>:
-        cur.execute(sql)
-        rs=cur.fetchall()
-        lens = len(colist)
-        <span class="keyword">for</span> x <span class="keyword">in</span> rs : 
-            <span class="keyword">print</span> <span class="string">'---------------------------- column ------------------------'</span>
-            <span class="keyword">for</span> i <span class="keyword">in</span> xrange(lens): 
-                <span class="keyword">print</span>   <span class="string">' ::--&gt; '</span> ,colist[i].ljust(<span class="number">32</span>),<span class="string">'  :  '</span>, x[i] 
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">raise</span> e
-    <span class="keyword">finally</span>:
-        cur.close()   
-<span class="function"><span class="keyword">def</span> <span class="title">help</span><span class="params">()</span>:</span>
-    help_str = <span class="string">''' 
-Usage:
-    process the query result : row --- to -----&gt; column 
-For example:
-    colquery.py -t table_name -p pridicatexxx -c cloumns
-    colquery.py -t table_name -p pridicatexxx
-Options include:
-  --t       : the table_name
-  --p       : the where clouse like "a = 'xxx' and b = 'xxx' ... "
-  --c       : the cloumns  "aa,bb,cc" '''</span>   
-    <span class="keyword">return</span> help_str   
-<span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span>
-    leng = len(sys.argv)
-    mtable = <span class="string">''</span>
-    icol = <span class="string">''</span>
-    pridicate=<span class="string">''</span>
-    <span class="keyword">if</span> leng == <span class="number">5</span>:
-         <span class="keyword">if</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()      
-         <span class="keyword">if</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()    
-    <span class="keyword">elif</span> leng == <span class="number">7</span>:
-         <span class="keyword">if</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">1</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">2</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()  
-         <span class="keyword">if</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-t'</span> : 
-              mtable  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">elif</span> sys.argv[<span class="number">3</span>].strip() == <span class="string">'-p'</span> : 
-              pridicate  = sys.argv[<span class="number">4</span>].strip()
-         <span class="keyword">else</span> : 
-            <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-            <span class="keyword">print</span> help()
-            sys.exit()   
-         <span class="keyword">if</span> sys.argv[<span class="number">5</span>].strip() == <span class="string">'-c'</span> : 
-            icol = sys.argv[<span class="number">6</span>].strip()   
-    <span class="keyword">else</span> : 
-        <span class="keyword">print</span> <span class="string">'[ERROR] Invalid option. Exit.'</span>
-        <span class="keyword">print</span> help()
-        sys.exit() 
-    <span class="keyword">print</span>  <span class="string">'--- : '</span> ,icol,<span class="string">' ==== : '</span>,mtable,<span class="string">' =====: '</span>,pridicate 
-    <span class="keyword">try</span>:
-        conn = getOraConnTns(<span class="string">'tradehis_pri'</span>)
-        cur = conn.cursor() 
-        cur1 = conn.cursor()
-        cur2 = conn.cursor()
-        owner = getowner(cur2,mtable)
-        <span class="comment">#construct sql</span>
-        cols = <span class="string">''</span>
-        <span class="keyword">if</span> len(icol)  &lt;= <span class="number">1</span> :
-            colist= getcolumns(cur1,mtable)
-            <span class="keyword">for</span> x <span class="keyword">in</span> colist :
-                    cols = cols + x +<span class="string">','</span>
-            cols = cols[:-<span class="number">1</span>]
-        <span class="keyword">else</span> : 
-            cols = icol
-        clist = cols.split(<span class="string">','</span>) 
-        sql2 = <span class="string">''' 
-            select %s from %s where  %s
-            '''</span>
-        tbs = str(owner) +<span class="string">'.'</span>+ str(mtable)
-        sql  = sql2%(cols,tbs,pridicate)
-        doexecute(cur,sql,clist)
-    <span class="keyword">except</span> Exception, e:
-        <span class="keyword">print</span> <span class="string">'ERROR : &gt;&gt;&gt; : '</span>, e
-    <span class="keyword">finally</span>:
-        conn.close()
-
-    main()         
-</code></pre>  
+<ol>
+<li><p>Run software updates:</p>
+<pre><code> <span class="built_in">sudo</span> <span class="operator">-s</span>
+ yum update -y
+ yum install -y wget git
+</code></pre></li>
+<li><p>Enable EPEL repository so you can install some extra packages:</p>
+<pre><code> <span class="title">cd</span> /tmp
+ wget <span class="url">http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm</span>
+ sudo rpm -Uvh epel-release-<span class="number">6</span><span class="regexp">*.rpm</span>
+</code></pre></li>
+<li><p>Install Docker</p>
+<pre><code> <span class="built_in">sudo</span> yum -y install docker-io
+</code></pre></li>
+<li><p>Start Docker as service</p>
+<pre><code> <span class="built_in">sudo</span> service docker start
+</code></pre></li>
+<li><p>Configure Docker to start on startup</p>
+<pre><code> sudo chkconfig docker <span class="command"><span class="keyword">on</span></span>
+</code></pre></li>
+<li><p>Install Discourse</p>
+<pre><code> install -g docker -m <span class="number">2775</span> -d /<span class="keyword">var</span>/docker
+ git <span class="keyword">clone</span> https:<span class="comment">//github.com/discourse/discourse_docker.git /var/docker</span>
+ cd /<span class="keyword">var</span>/docker/
+ cp samples/standalone.yml containers/app.yml
+ /<span class="keyword">var</span>/docker/launcher bootstrap app
+</code></pre></li>
+<li><p>Start Discourse</p>
+<pre><code> /<span class="keyword">var</span>/docker/launcher start app
+</code></pre></li>
+<li><p>In a Browser, go to: [Your IP Address]:80</p>
+<pre><code> <span class="title">For</span> example: <span class="number">192.168.0.10:80</span>
+</code></pre></li>
+</ol>
+<p>end </p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/tools/">tools</a>
+  <span></span> <a href="/tags/ops/">ops</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/python/">python</a>
+  <a class="article-category-link" href="/categories/ops/">ops</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2014/03/15/oracle-colquery/" data-title="oracle-colquery | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/01/05/deploy a forum using  discourse/" data-title="How To Install Discourse On CentOS 6.x | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -281,18 +166,18 @@ Options include:
 <nav class="article-nav clearfix">
  
  <div class="prev" >
- <a href="/2014/03/22/oracle-plan-stablilty/" title="oracle-plan-stablilty">
+ <a href="/2015/01/15/intelligent Dns configuration/" title="Build BIND DLZ Nameserver with MySQL Replication">
   <strong>PREVIOUS:</strong><br/>
   <span>
-  oracle-plan-stablilty</span>
+  Build BIND DLZ Nameserver with MySQL Replication</span>
 </a>
 </div>
 
 
 <div class="next">
-<a href="/2014/03/01/python-multi-threading/"  title="python-multi-threading">
+<a href="/2015/01/05/mysql query response time/"  title="MySQL Response Time">
  <strong>NEXT:</strong><br/> 
- <span>python-multi-threading
+ <span>MySQL Response Time
 </span>
 </a>
 </div>
