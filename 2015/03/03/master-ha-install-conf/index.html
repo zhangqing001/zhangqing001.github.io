@@ -86,7 +86,7 @@ MHA performs automating master failover and slave promotion with minimal downtim
     </p>
   <p class="article-time">
     <time datetime="2015-03-03T05:50:53.000Z" itemprop="datePublished">3月 3 2015</time>
-    更新日期:<time datetime="2015-03-04T02:21:45.000Z" itemprop="dateModified">3月 4 2015</time>
+    更新日期:<time datetime="2015-03-04T03:06:18.000Z" itemprop="dateModified">3月 4 2015</time>
     
   </p>
 </header>
@@ -95,7 +95,7 @@ MHA performs automating master failover and slave promotion with minimal downtim
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MHA_Overview"><span class="toc-number">1.</span> <span class="toc-text">MHA Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#INSTALLATION"><span class="toc-number">1.1.</span> <span class="toc-text">INSTALLATION</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#INIT_ENV"><span class="toc-number">1.1.1.</span> <span class="toc-text">INIT ENV</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INSTALL_MHA"><span class="toc-number">1.1.2.</span> <span class="toc-text">INSTALL MHA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CONFIGURE_MHA"><span class="toc-number">1.2.</span> <span class="toc-text">CONFIGURE MHA</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure_file"><span class="toc-number">1.2.1.</span> <span class="toc-text">configure file</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置多个HA组"><span class="toc-number">1.2.2.</span> <span class="toc-text">配置多个HA组</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#配置一个全局的配置文件"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">配置一个全局的配置文件</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#验证MHA"><span class="toc-number">1.2.3.</span> <span class="toc-text">验证MHA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题和总结"><span class="toc-number">1.3.</span> <span class="toc-text">问题和总结</span></a></li></ol></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MHA_Overview"><span class="toc-number">1.</span> <span class="toc-text">MHA Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#INSTALLATION"><span class="toc-number">1.1.</span> <span class="toc-text">INSTALLATION</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#INIT_ENV"><span class="toc-number">1.1.1.</span> <span class="toc-text">INIT ENV</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INSTALL_MHA"><span class="toc-number">1.1.2.</span> <span class="toc-text">INSTALL MHA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CONFIGURE_MHA"><span class="toc-number">1.2.</span> <span class="toc-text">CONFIGURE MHA</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure_file"><span class="toc-number">1.2.1.</span> <span class="toc-text">configure file</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置多个HA组"><span class="toc-number">1.2.2.</span> <span class="toc-text">配置多个HA组</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#配置一个全局的配置文件"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">配置一个全局的配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HA_group_1:"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">HA group 1:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HA_group_2_:"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">HA group 2 :</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证MHA"><span class="toc-number">1.3.</span> <span class="toc-text">验证MHA</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CHECK_SSH"><span class="toc-number">1.3.1.</span> <span class="toc-text">CHECK SSH</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CHECK_REPL"><span class="toc-number">1.3.2.</span> <span class="toc-text">CHECK REPL</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题和总结"><span class="toc-number">1.4.</span> <span class="toc-text">问题和总结</span></a></li></ol></li></ol>
 		</div>
 		
 		<h2 id="MHA_Overview">MHA Overview</h2>
@@ -194,8 +194,9 @@ yum install <span class="keyword">perl</span>-ExtUtils-CBuilder <span class="key
 <span class="setting">master_ip_failover_script=<span class="value">/script/masterha/master_ip_failover</span></span>
 <span class="setting">shutdown_script= <span class="value">/script/masterha/power_manager</span></span>
 <span class="setting">report_script= <span class="value">/script/masterha/send_master_failover_mail</span></span>
-</code></pre><blockquote>
-<p>HA group 1:<br>cat /etc/app1.cnf</p>
+</code></pre><h5 id="HA_group_1:">HA group 1:</h5>
+<blockquote>
+<p>cat /etc/app1.cnf</p>
 </blockquote>
 <pre><code><span class="title">[server default]</span>
 <span class="setting">manager_workdir=<span class="value">/var/log/masterha/app1</span></span>
@@ -208,9 +209,8 @@ yum install <span class="keyword">perl</span>-ExtUtils-CBuilder <span class="key
 <span class="setting">candidate_master=<span class="value"><span class="number">1</span></span></span>
 <span class="title">[server3]</span>
 <span class="setting">hostname=<span class="value">host3 </span></span>
-</code></pre><blockquote>
-<p>HA group 2 :<br>cat /etc/app2.cnf</p>
-</blockquote>
+</code></pre><h5 id="HA_group_2_:">HA group 2 :</h5>
+<p>cat /etc/app2.cnf</p>
 <pre><code><span class="title">[server default]</span>
 <span class="setting">manager_workdir=<span class="value">/var/log/masterha/app2</span></span>
 <span class="setting">manager_log=<span class="value">/var/log/masterha/app2/app2.log</span></span>
@@ -225,14 +225,15 @@ yum install <span class="keyword">perl</span>-ExtUtils-CBuilder <span class="key
 <span class="title">[server4]</span>
 <span class="setting">hostname=<span class="value">host14</span></span>
 <span class="setting">no_master=<span class="value"><span class="number">1</span></span></span>
-</code></pre><h4 id="验证MHA">验证MHA</h4>
+</code></pre><h3 id="验证MHA">验证MHA</h3>
 <blockquote>
 <p>使用以下命令来进行验证： </p>
 </blockquote>
 <pre><code>masterha_check_ssh  --<span class="keyword">conf</span>=/root/mhatest/app1.<span class="keyword">cnf</span>
 masterha_check_repl --<span class="keyword">conf</span>=/root/mhatest/app1.<span class="keyword">cnf</span>
 masterha_manager    --<span class="keyword">conf</span>=/root/mhatest/app1.<span class="keyword">cnf</span>
-</code></pre><blockquote>
+</code></pre><h4 id="CHECK_SSH">CHECK SSH</h4>
+<blockquote>
 <p>  masterha_check_ssh  —conf=/root/mhatest/app1.cnf  </p>
 </blockquote>
 <pre><code>[root@masterham mhatest]<span class="comment"># masterha_check_ssh  --conf=/root/mhatest/app1.cnf  </span>
@@ -256,7 +257,8 @@ Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span clas
 Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span class="number">12</span>:<span class="number">49</span> <span class="number">2015</span> - [debug]  Connecting via SSH <span class="keyword">from</span> root<span class="number">@192</span>.<span class="number">168.19</span>.<span class="number">136</span>(<span class="number">192.168</span>.<span class="number">19.136</span>:<span class="number">22</span>) to root<span class="number">@192</span>.<span class="number">168.19</span>.<span class="number">135</span>(<span class="number">192.168</span>.<span class="number">19.135</span>:<span class="number">22</span>)..
 Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span class="number">12</span>:<span class="number">50</span> <span class="number">2015</span> - [debug]   ok.
 Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span class="number">12</span>:<span class="number">50</span> <span class="number">2015</span> - [info] All SSH connection tests passed successfully.
-</code></pre><blockquote>
+</code></pre><h4 id="CHECK_REPL">CHECK REPL</h4>
+<blockquote>
 <p> masterha_check_repl —conf=/root/mhatest/app1.cnf</p>
 </blockquote>
 <pre><code>[root@masterham mhatest]# masterha_check_repl <span class="comment">--conf=/root/mhatest/app1.cnf</span>
@@ -429,6 +431,14 @@ Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span clas
 	
 <nav class="article-nav clearfix">
  
+ <div class="prev" >
+ <a href="/2015/03/30/Put-PowerDNS-to-use/" title="Put PowerDNS to Practice">
+  <strong>PREVIOUS:</strong><br/>
+  <span>
+  Put PowerDNS to Practice</span>
+</a>
+</div>
+
 
 <div class="next">
 <a href="/2015/01/15/intelligent Dns configuration/"  title="Build BIND DLZ Nameserver with MySQL Replication">
@@ -446,7 +456,7 @@ Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span clas
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MHA_Overview"><span class="toc-number">1.</span> <span class="toc-text">MHA Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#INSTALLATION"><span class="toc-number">1.1.</span> <span class="toc-text">INSTALLATION</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#INIT_ENV"><span class="toc-number">1.1.1.</span> <span class="toc-text">INIT ENV</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INSTALL_MHA"><span class="toc-number">1.1.2.</span> <span class="toc-text">INSTALL MHA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CONFIGURE_MHA"><span class="toc-number">1.2.</span> <span class="toc-text">CONFIGURE MHA</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure_file"><span class="toc-number">1.2.1.</span> <span class="toc-text">configure file</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置多个HA组"><span class="toc-number">1.2.2.</span> <span class="toc-text">配置多个HA组</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#配置一个全局的配置文件"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">配置一个全局的配置文件</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#验证MHA"><span class="toc-number">1.2.3.</span> <span class="toc-text">验证MHA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题和总结"><span class="toc-number">1.3.</span> <span class="toc-text">问题和总结</span></a></li></ol></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MHA_Overview"><span class="toc-number">1.</span> <span class="toc-text">MHA Overview</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#INSTALLATION"><span class="toc-number">1.1.</span> <span class="toc-text">INSTALLATION</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#INIT_ENV"><span class="toc-number">1.1.1.</span> <span class="toc-text">INIT ENV</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#INSTALL_MHA"><span class="toc-number">1.1.2.</span> <span class="toc-text">INSTALL MHA</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CONFIGURE_MHA"><span class="toc-number">1.2.</span> <span class="toc-text">CONFIGURE MHA</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#configure_file"><span class="toc-number">1.2.1.</span> <span class="toc-text">configure file</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#配置多个HA组"><span class="toc-number">1.2.2.</span> <span class="toc-text">配置多个HA组</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#配置一个全局的配置文件"><span class="toc-number">1.2.2.1.</span> <span class="toc-text">配置一个全局的配置文件</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HA_group_1:"><span class="toc-number">1.2.2.2.</span> <span class="toc-text">HA group 1:</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#HA_group_2_:"><span class="toc-number">1.2.2.3.</span> <span class="toc-text">HA group 2 :</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#验证MHA"><span class="toc-number">1.3.</span> <span class="toc-text">验证MHA</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#CHECK_SSH"><span class="toc-number">1.3.1.</span> <span class="toc-text">CHECK SSH</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#CHECK_REPL"><span class="toc-number">1.3.2.</span> <span class="toc-text">CHECK REPL</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#问题和总结"><span class="toc-number">1.4.</span> <span class="toc-text">问题和总结</span></a></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
@@ -460,7 +470,7 @@ Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span clas
 		
 			<li><a href="/categories/docker/" title="docker">docker<sup>1</sup></a></li>
 		
-			<li><a href="/categories/linux/" title="linux">linux<sup>2</sup></a></li>
+			<li><a href="/categories/linux/" title="linux">linux<sup>3</sup></a></li>
 		
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>10</sup></a></li>
 		
@@ -478,7 +488,7 @@ Wed Mar  <span class="number">4</span> <span class="number">09</span>:<span clas
   <div class="tagcloudlist">
     <p class="asidetitle">标签云</p>
     <div class="tagcloudlist clearfix">
-       <a href="/tags/BIND/" style="font-size: 10.00px;">BIND</a><a href="/tags/DLZ/" style="font-size: 10.00px;">DLZ</a><a href="/tags/DNS/" style="font-size: 10.00px;">DNS</a><a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/docker/" style="font-size: 10.00px;">docker</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/mha/" style="font-size: 10.00px;">mha</a><a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a><a href="/tags/ops/" style="font-size: 20.00px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 16.67px;">python</a><a href="/tags/sharding/" style="font-size: 13.33px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 13.33px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
+       <a href="/tags/BIND/" style="font-size: 10.00px;">BIND</a><a href="/tags/DLZ/" style="font-size: 10.00px;">DLZ</a><a href="/tags/DNS/" style="font-size: 13.33px;">DNS</a><a href="/tags/PowerDNS/" style="font-size: 10.00px;">PowerDNS</a><a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/docker/" style="font-size: 10.00px;">docker</a><a href="/tags/fabric/" style="font-size: 20.00px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/mha/" style="font-size: 10.00px;">mha</a><a href="/tags/mysql/" style="font-size: 16.67px;">mysql</a><a href="/tags/ops/" style="font-size: 20.00px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 16.67px;">python</a><a href="/tags/sharding/" style="font-size: 13.33px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 13.33px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a>
     </div>
   </div>
 
