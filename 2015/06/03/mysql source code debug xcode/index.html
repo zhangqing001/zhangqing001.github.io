@@ -4,23 +4,20 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>Install docker on CentOs | ruiaylin&#39;s Blog</title>
+    <title>MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="ruichao.lin">
     
-    <meta name="description" content="Install docker on CentOs 6.x
+    <meta name="description" content="MySQL源码分析导读
 
-Docker 的安装环境是对内核有要求的，官方也是建议 2.6.32-431 或者更高版本 
-
-安装EPEL的仓库
-rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-r">
+ 为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天">
     
     
     
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:site" content="ruiaylin" />
-    <meta name="twitter:title" content="Install docker on CentOs | ruiaylin&#39;s Blog" />
+    <meta name="twitter:title" content="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" />
       
     
     
@@ -81,15 +78,15 @@ rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-r">
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2015/05/04/install docker on centos 6.x/" title="Install docker on CentOs" itemprop="url">Install docker on CentOs</a>
+      <a href="/2015/06/03/mysql source code debug xcode/" title="MySQL源码之--调试环境Xcode" itemprop="url">MySQL源码之--调试环境Xcode</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
     </p>
   <p class="article-time">
-    <time datetime="2015-05-04T05:50:53.000Z" itemprop="datePublished">5月 4 2015</time>
-    更新日期:<time datetime="2015-05-05T07:18:39.000Z" itemprop="dateModified">5月 5 2015</time>
+    <time datetime="2015-06-03T00:50:53.000Z" itemprop="datePublished">6月 3 2015</time>
+    更新日期:<time datetime="2015-06-03T02:12:38.000Z" itemprop="dateModified">6月 3 2015</time>
     
   </p>
 </header>
@@ -98,48 +95,77 @@ rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-r">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_docker_on_CentOs_6-x"><span class="toc-number">1.</span> <span class="toc-text">Install docker on CentOs 6.x</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装EPEL的仓库"><span class="toc-number">1.1.</span> <span class="toc-text">安装EPEL的仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新lib_包"><span class="toc-number">1.2.</span> <span class="toc-text">更新lib 包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动docker进程"><span class="toc-number">1.4.</span> <span class="toc-text">启动docker进程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_docker_on_CentOs_7-x"><span class="toc-number">2.</span> <span class="toc-text">Install docker on CentOs 7.x</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装-1"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭防火墙"><span class="toc-number">2.2.</span> <span class="toc-text">关闭防火墙</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#summary"><span class="toc-number">3.</span> <span class="toc-text">summary</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL源码分析导读"><span class="toc-number">1.</span> <span class="toc-text">MySQL源码分析导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装必要的软件和调试工具"><span class="toc-number">2.</span> <span class="toc-text">安装必要的软件和调试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode_IDE安装"><span class="toc-number">2.1.</span> <span class="toc-text">Xcode IDE安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装gdb_调试器"><span class="toc-number">2.2.</span> <span class="toc-text">安装gdb 调试器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_cmake_工具"><span class="toc-number">2.3.</span> <span class="toc-text">安装 cmake 工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备MySQL源码"><span class="toc-number">3.</span> <span class="toc-text">准备MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建_Xcode_工程文件，并进行预编译"><span class="toc-number">4.</span> <span class="toc-text">构建 Xcode 工程文件，并进行预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译MySQL源码"><span class="toc-number">5.</span> <span class="toc-text">编译MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化数据库"><span class="toc-number">6.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xcode_调试"><span class="toc-number">7.</span> <span class="toc-text">Xcode 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
 		</div>
 		
-		<h2 id="Install_docker_on_CentOs_6-x">Install docker on CentOs 6.x</h2>
+		<h3 id="MySQL源码分析导读">MySQL源码分析导读</h3>
 <blockquote>
-<p>Docker 的安装环境是对内核有要求的，官方也是建议 2.6.32-431 或者更高版本 </p>
+<p> 为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。<br> 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天我们就主要从环境的<br> 构建说起，MAC 下面最完备的IDE就是 Xcode了，接下来我们看一下，如何使用Xcode来进行MySQL的代码阅读和调试工作。</p>
 </blockquote>
-<h3 id="安装EPEL的仓库">安装EPEL的仓库</h3>
-<pre><code>rpm -iUvh <span class="symbol">http:</span>/<span class="regexp">/dl.fedoraproject.org/pub</span><span class="regexp">/epel/</span><span class="number">6</span>/x86_64/epel-release-<span class="number">6</span>-<span class="number">8</span>.noarch.rpm
-</code></pre><h3 id="更新lib_包">更新lib 包</h3>
-<pre><code>yum <span class="keyword">update</span> -<span class="keyword">y</span>
-</code></pre><h3 id="安装">安装</h3>
-<pre><code>yum -y install docker-<span class="built_in">io</span>
-</code></pre><h3 id="启动docker进程">启动docker进程</h3>
-<pre><code><span class="class"><span class="keyword">service</span> <span class="title">docker</span> start</span>
-</code></pre><h2 id="Install_docker_on_CentOs_7-x">Install docker on CentOs 7.x</h2>
-<h3 id="安装-1">安装</h3>
-<pre><code> yum <span class="operator"><span class="keyword">install</span> docker</span>
-</code></pre><h3 id="关闭防火墙">关闭防火墙</h3>
-<pre><code>systemctl <span class="keyword">stop</span> firewalld 
-</code></pre><h2 id="summary">summary</h2>
-<pre><code><span class="function_or_atom">docker</span> <span class="function_or_atom">installation</span> <span class="function_or_atom">is</span> <span class="function_or_atom">simple</span> <span class="exclamation_mark">!</span><span class="exclamation_mark">!</span>
-</code></pre>  
+<h3 id="安装必要的软件和调试工具">安装必要的软件和调试工具</h3>
+<h4 id="Xcode_IDE安装">Xcode IDE安装</h4>
+<p>AppStore上面搜索 Xcode，然后下载安装即可。 </p>
+<h4 id="安装gdb_调试器">安装gdb 调试器</h4>
+<ol>
+<li><p>安装 homebrew </p>
+<p> 官方文档： <a href="http://brew.sh/" target="_blank" rel="external">http://brew.sh/</a></p>
+</li>
+<li><p>安装 gdb 并签名，具体步骤可以baidu或者google ，附上一个教程</p>
+<p> <a href="http://ntraft.com/installing-gdb-on-os-x-mavericks/" target="_blank" rel="external">http://ntraft.com/installing-gdb-on-os-x-mavericks/</a></p>
+<h4 id="安装_cmake_工具">安装 cmake 工具</h4>
+</li>
+</ol>
+<p>mysql的编译是采用的cmake ，官网直接下载安装即可：<br>cmake <a href="http://www.macupdate.com/app/mac/49301/cmake2014-5-3CMake" target="_blank" rel="external">官网下载</a></p>
+<h3 id="准备MySQL源码">准备MySQL源码</h3>
+<p>推荐Percona 版本或者Mariadb<br>Percona 源码 <a href="https://www.percona.com/downloads/Percona-Server-5.6/" target="_blank" rel="external">下载链接</a>.<br>Mariadb 源码 <a href="https://downloads.mariadb.org/" target="_blank" rel="external">下载链接</a> .</p>
+<h3 id="构建_Xcode_工程文件，并进行预编译">构建 Xcode 工程文件，并进行预编译</h3>
+<p>我们以Percona5.6.21为例：</p>
+<pre><code>cd  percona-server-<span class="number">5.6</span>.<span class="number">21</span>-<span class="number">70.0</span>
+mkdir work 
+// 源码目录执行,由于tokudb目前无法支持mac，所以要关闭编译
+   cmake . -G <span class="string">"Xcode"</span> <span class="variable">-DWITH_DEBUG=</span><span class="number">1</span>  <span class="variable">-DWITH_TOKUDB_STORAGE_ENGINE=</span>OFF <span class="variable">-DWITHOUT_TOKUDB_STORAGE_ENGINE=</span>ON <span class="variable">-DCMAKE_INSTALL_PREFIX=</span>/Users/ruiaylin/Documents/MySQL/percona-server-<span class="number">5.6</span>.<span class="number">24</span>/work
+</code></pre><p>cmake 之后，会生成一个 xcode的工程文件， 使用xcode 打开就可以把mysql工程加入到 xcode了。 </p>
+<h3 id="编译MySQL源码">编译MySQL源码</h3>
+<p>在加入了xcode之后，直接点击xcode的编译按钮就可以进行编译和build了，等完成之后会生成对应的二进制可执行文件。<br>这个过程其实就是手工执行 make ， make install的过程。但是 编译完成需要自己手工进行可执行文件的copy工作。</p>
+<pre><code>cd work ; mkdir {bin,share,scripts,data} 
+cp sql<span class="regexp">/Debug/mysqld work/bin/</span>
+cp client<span class="regexp">/Debug/mysql* work/bin/</span>
+cp extra<span class="regexp">/Debug/my_print_defaults work/bin/</span>
+cp -r sql<span class="regexp">/share/</span>* work<span class="regexp">/share/</span>
+cp -r scripts<span class="regexp">/* work/scripts/</span>
+chmod +x work<span class="regexp">/scripts/</span>*
+cp scripts<span class="regexp">/*.sql  work/share/</span>
+cp support-files<span class="regexp">/*.cnf work/share/</span> 
+</code></pre><h3 id="初始化数据库">初始化数据库</h3>
+<pre><code>.<span class="regexp">/scripts/m</span>ysql_install_db --user=ruiaylin --basedir=<span class="regexp">/Users/</span>ruiaylin<span class="regexp">/Documents/</span>MySQL<span class="regexp">/percona-server-5.6.24/</span>work --datadir=<span class="regexp">/Users/</span>ruiaylin<span class="regexp">/Documents/</span>MySQL<span class="regexp">/percona-server-5.6.24/</span>work<span class="regexp">/data  --force</span>
+</code></pre><h3 id="Xcode_调试">Xcode 调试</h3>
+<p>xcode中调试 MySQL ， 配置三个三个环节变量： </p>
+<pre><code>-<span class="ruby">-user=ruiaylin 
+</span>-<span class="ruby">-basedir=<span class="regexp">/Users/ruiaylin</span><span class="regexp">/Documents/</span><span class="constant">MySQL</span>/percona-server-<span class="number">5.6</span>.<span class="number">24</span>/work 
+</span>-<span class="ruby">-datadir=<span class="regexp">/Users/ruiaylin</span><span class="regexp">/Documents/</span><span class="constant">MySQL</span>/percona-server-<span class="number">5.6</span>.<span class="number">24</span>/work/data</span>
+</code></pre><p>   my.cnf 放到 /etc下面。</p>
+<h3 id="总结">总结</h3>
+<p>   尽情享受吧</p>
+  
 	</div>
 		<footer class="article-footer clearfix">
 
   <div class="article-tags">
   
-  <span></span> <a href="/tags/docker/">docker</a>
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/code/">code</a><a href="/tags/mysql/">mysql</a>
   </div>
 
 
 <div class="article-categories">
   <span></span>
-  <a class="article-category-link" href="/categories/docker/">docker</a>
+  <a class="article-category-link" href="/categories/MySQL/">MySQL</a>
 </div>
 
 
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2015/05/04/install docker on centos 6.x/" data-title="Install docker on CentOs | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div data-url="http://yoursite.com/2015/06/03/mysql source code debug xcode/" data-title="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
   </div>
 
 </div>
@@ -148,19 +174,11 @@ rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-r">
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2015/06/03/mysql source code debug xcode/" title="MySQL源码之--调试环境Xcode">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  MySQL源码之--调试环境Xcode</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2015/03/30/Put-PowerDNS-to-use/"  title="Put PowerDNS to Practice">
+<a href="/2015/05/04/install docker on centos 6.x/"  title="Install docker on CentOs">
  <strong>NEXT:</strong><br/> 
- <span>Put PowerDNS to Practice
+ <span>Install docker on CentOs
 </span>
 </a>
 </div>
@@ -173,7 +191,7 @@ rpm -iUvh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-r">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_docker_on_CentOs_6-x"><span class="toc-number">1.</span> <span class="toc-text">Install docker on CentOs 6.x</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装EPEL的仓库"><span class="toc-number">1.1.</span> <span class="toc-text">安装EPEL的仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#更新lib_包"><span class="toc-number">1.2.</span> <span class="toc-text">更新lib 包</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装"><span class="toc-number">1.3.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#启动docker进程"><span class="toc-number">1.4.</span> <span class="toc-text">启动docker进程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Install_docker_on_CentOs_7-x"><span class="toc-number">2.</span> <span class="toc-text">Install docker on CentOs 7.x</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#安装-1"><span class="toc-number">2.1.</span> <span class="toc-text">安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#关闭防火墙"><span class="toc-number">2.2.</span> <span class="toc-text">关闭防火墙</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#summary"><span class="toc-number">3.</span> <span class="toc-text">summary</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL源码分析导读"><span class="toc-number">1.</span> <span class="toc-text">MySQL源码分析导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装必要的软件和调试工具"><span class="toc-number">2.</span> <span class="toc-text">安装必要的软件和调试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode_IDE安装"><span class="toc-number">2.1.</span> <span class="toc-text">Xcode IDE安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装gdb_调试器"><span class="toc-number">2.2.</span> <span class="toc-text">安装gdb 调试器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_cmake_工具"><span class="toc-number">2.3.</span> <span class="toc-text">安装 cmake 工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备MySQL源码"><span class="toc-number">3.</span> <span class="toc-text">准备MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建_Xcode_工程文件，并进行预编译"><span class="toc-number">4.</span> <span class="toc-text">构建 Xcode 工程文件，并进行预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译MySQL源码"><span class="toc-number">5.</span> <span class="toc-text">编译MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化数据库"><span class="toc-number">6.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xcode_调试"><span class="toc-number">7.</span> <span class="toc-text">Xcode 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
   </div>
 
 <div id="asidepart">
