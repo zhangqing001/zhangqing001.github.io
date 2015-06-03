@@ -86,7 +86,7 @@
     </p>
   <p class="article-time">
     <time datetime="2015-06-03T00:50:53.000Z" itemprop="datePublished">6月 3 2015</time>
-    更新日期:<time datetime="2015-06-03T02:12:38.000Z" itemprop="dateModified">6月 3 2015</time>
+    更新日期:<time datetime="2015-06-03T02:18:19.000Z" itemprop="dateModified">6月 3 2015</time>
     
   </p>
 </header>
@@ -119,8 +119,8 @@
 <h3 id="准备MySQL源码">准备MySQL源码</h3>
 <p>推荐Percona 版本或者Mariadb<br>Percona 源码 <a href="https://www.percona.com/downloads/Percona-Server-5.6/" target="_blank" rel="external">下载链接</a>.<br>Mariadb 源码 <a href="https://downloads.mariadb.org/" target="_blank" rel="external">下载链接</a> .</p>
 <h3 id="构建_Xcode_工程文件，并进行预编译">构建 Xcode 工程文件，并进行预编译</h3>
-<p>我们以Percona5.6.21为例：</p>
-<pre><code>cd  percona-server-<span class="number">5.6</span>.<span class="number">21</span>-<span class="number">70.0</span>
+<p>我们以percona-server-5.6.24为例：</p>
+<pre><code>cd  percona-server-<span class="number">5.6</span>.<span class="number">24</span>
 mkdir work 
 // 源码目录执行,由于tokudb目前无法支持mac，所以要关闭编译
    cmake . -G <span class="string">"Xcode"</span> <span class="variable">-DWITH_DEBUG=</span><span class="number">1</span>  <span class="variable">-DWITH_TOKUDB_STORAGE_ENGINE=</span>OFF <span class="variable">-DWITHOUT_TOKUDB_STORAGE_ENGINE=</span>ON <span class="variable">-DCMAKE_INSTALL_PREFIX=</span>/Users/ruiaylin/Documents/MySQL/percona-server-<span class="number">5.6</span>.<span class="number">24</span>/work
