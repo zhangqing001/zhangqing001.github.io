@@ -90,7 +90,7 @@ nohup mast">
     </p>
   <p class="article-time">
     <time datetime="2015-03-05T05:50:53.000Z" itemprop="datePublished">3月 5 2015</time>
-    更新日期:<time datetime="2015-07-01T06:17:54.000Z" itemprop="dateModified">7月 1 2015</time>
+    更新日期:<time datetime="2015-07-01T06:25:14.000Z" itemprop="dateModified">7月 1 2015</time>
     
   </p>
 </header>
@@ -99,7 +99,7 @@ nohup mast">
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MHA_维护命令"><span class="toc-number">1.</span> <span class="toc-text">MHA 维护命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SSH登陆检查"><span class="toc-number">1.1.</span> <span class="toc-text">SSH登陆检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#REPL_健康检查"><span class="toc-number">1.2.</span> <span class="toc-text">REPL 健康检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动MHA监控进程"><span class="toc-number">1.3.</span> <span class="toc-text">启动MHA监控进程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#检查监控进程的状态"><span class="toc-number">1.4.</span> <span class="toc-text">检查监控进程的状态</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#停止监控进程"><span class="toc-number">1.5.</span> <span class="toc-text">停止监控进程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#人为手工切换failover"><span class="toc-number">2.</span> <span class="toc-text">人为手工切换failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动正常切换"><span class="toc-number">3.</span> <span class="toc-text">手动正常切换</span></a></li></ol>
+		<ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MHA_维护命令"><span class="toc-number">1.</span> <span class="toc-text">MHA 维护命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SSH登陆检查"><span class="toc-number">1.1.</span> <span class="toc-text">SSH登陆检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#REPL_健康检查"><span class="toc-number">1.2.</span> <span class="toc-text">REPL 健康检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动MHA监控进程"><span class="toc-number">1.3.</span> <span class="toc-text">启动MHA监控进程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#检查监控进程的状态"><span class="toc-number">1.4.</span> <span class="toc-text">检查监控进程的状态</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#停止监控进程"><span class="toc-number">1.5.</span> <span class="toc-text">停止监控进程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#人为手工切换failover"><span class="toc-number">2.</span> <span class="toc-text">人为手工切换failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动正常切换"><span class="toc-number">3.</span> <span class="toc-text">手动正常切换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Summary"><span class="toc-number">4.</span> <span class="toc-text">Summary</span></a></li></ol>
 		</div>
 		
 		<h4 id="MHA_维护命令">MHA 维护命令</h4>
@@ -135,6 +135,8 @@ nohup mast">
 <pre><code><span class="comment">masterha_master_switch</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">conf=/mha/mha_groups/app1</span><span class="string">.</span><span class="comment">cnf</span> <span class="literal">-</span><span class="literal">-</span><span class="comment">master_state=alive</span>   <span class="literal">-</span><span class="literal">-</span><span class="comment">orig_master_is_new_slave</span>
 </code></pre><p>—orig_master_is_new_slave 将原master变为slave节点 </p>
 <p>—running_updates_limit=10000 切换时候选master如果有延迟的话，mha切换不能成功，加上此参数表示延迟在此时间范围内都可切换（单位为s）  </p>
+<h4 id="Summary">Summary</h4>
+<p>MHA 总体还是比较简单的，测试过程中没有出过太多问题， 接下来我们会针对，内部DNS和MHA结合的部分来进行大致的代码实现。</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -188,7 +190,7 @@ nohup mast">
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MHA_维护命令"><span class="toc-number">1.</span> <span class="toc-text">MHA 维护命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SSH登陆检查"><span class="toc-number">1.1.</span> <span class="toc-text">SSH登陆检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#REPL_健康检查"><span class="toc-number">1.2.</span> <span class="toc-text">REPL 健康检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动MHA监控进程"><span class="toc-number">1.3.</span> <span class="toc-text">启动MHA监控进程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#检查监控进程的状态"><span class="toc-number">1.4.</span> <span class="toc-text">检查监控进程的状态</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#停止监控进程"><span class="toc-number">1.5.</span> <span class="toc-text">停止监控进程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#人为手工切换failover"><span class="toc-number">2.</span> <span class="toc-text">人为手工切换failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动正常切换"><span class="toc-number">3.</span> <span class="toc-text">手动正常切换</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#MHA_维护命令"><span class="toc-number">1.</span> <span class="toc-text">MHA 维护命令</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#SSH登陆检查"><span class="toc-number">1.1.</span> <span class="toc-text">SSH登陆检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#REPL_健康检查"><span class="toc-number">1.2.</span> <span class="toc-text">REPL 健康检查</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#启动MHA监控进程"><span class="toc-number">1.3.</span> <span class="toc-text">启动MHA监控进程</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#检查监控进程的状态"><span class="toc-number">1.4.</span> <span class="toc-text">检查监控进程的状态</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#停止监控进程"><span class="toc-number">1.5.</span> <span class="toc-text">停止监控进程</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#人为手工切换failover"><span class="toc-number">2.</span> <span class="toc-text">人为手工切换failover</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#手动正常切换"><span class="toc-number">3.</span> <span class="toc-text">手动正常切换</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Summary"><span class="toc-number">4.</span> <span class="toc-text">Summary</span></a></li></ol>
   </div>
 
 <div id="asidepart">
