@@ -26,6 +26,7 @@
 <meta name="twitter:description" content="MySQL源码分析导读
 
  为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天我们就主要从环境的 构建说起，MAC 下面最完备的IDE就是 Xcode了，接下来我们看一下，如何使">
+<meta name="twitter:creator" content="@ruiaylin">
 
 
     
@@ -177,7 +178,7 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 
 	<div class="article-share" id="share">
 	
-	  <div data-url="http://yoursite.com/2015/06/03/mysql source code debug xcode/" data-title="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" data-tsina="null" class="share clearfix">
+	  <div data-url="http://yoursite.com/2015/06/03/mysql source code debug xcode/" data-title="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" data-tsina="undefined" class="share clearfix">
 	  </div>
 	
 	</div>
@@ -218,6 +219,13 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 <aside class="clearfix">
 
   
+<div class="github-card">
+<p class="asidetitle">Github 名片</p>
+<div class="github-card" data-github="ruiaylin" data-width="220" data-height="119" data-theme="medium">
+<script type="text/javascript" src="//cdn.jsdelivr.net/github-cards/latest/widget.js" ></script>
+</div>
+  </div>
+
 
 
   
@@ -287,11 +295,11 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 			
 		
 			
-				<li><a href="/tags/mha/" title="mha">mha<sup>2</sup></a></li>
+				<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
+				<li><a href="/tags/mha/" title="mha">mha<sup>2</sup></a></li>
 			
 		
 			
@@ -311,11 +319,11 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 			
 		
 			
-				<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
+				<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
+				<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
 			
 		
 			
@@ -335,11 +343,11 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 			
 		
 			
-				<li><a href="/tags/tools/" title="tools">tools<sup>1</sup></a></li>
+				<li><a href="/tags/pssh/" title="pssh">pssh<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
+				<li><a href="/tags/tools/" title="tools">tools<sup>1</sup></a></li>
 			
 		
 		</ul>
@@ -352,13 +360,13 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
         
           <li>
             
-            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            	<a href="http://flask.pocoo.org/" target="_blank" title="Flask Documentation">Flask Docs</a>
             
           </li>
         
           <li>
             
-            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            	<a href="http://tympanus.net/codrops/ " target="_blank" title=" front end development">Codrops</a>
             
           </li>
         
@@ -374,7 +382,7 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 
   <div class="weiboshow">
   <p class="asidetitle">新浪微博</p>
-    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=b3593ceb&dpc=1"></iframe>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=undefined&verifier=&dpc=1"></iframe>
 </div>
 
 
@@ -390,22 +398,30 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 	
 	
 	<section class="info">
-		<p> Hello ,I&#39;m Larry Page in Google. <br/>
-			This is my blog,believe it or not.</p>
+		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
+			Previous : work at Alipay.com as a database engineer for three years </p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
 		
-		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
+		
+		<a href="https://github.com/ruiaylin" target="_blank" class="icon-github" title="github"></a>
+		
+		
+		
+		<a href="https://twitter.com/ruiaylin" target="_blank" class="icon-twitter" title="twitter"></a>
+		
+		
+		<a href="https://www.facebook.com/ruiayLin" target="_blank" class="icon-facebook" title="facebook"></a>
+		
+		
+		<a href="https://www.linkedin.com/in/ruichao-lin-5713624a" target="_blank" class="icon-linkedin" title="linkedin"></a>
 		
 		
 		
 		
 		
-		
-		
-		
-		
+		<a href="mailto:ruiaylin@gmail.com" target="_blank" class="icon-email" title="Email Me"></a>
 		
 	</div>
 			
