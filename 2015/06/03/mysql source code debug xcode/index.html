@@ -5,28 +5,38 @@
   <meta charset="UTF-8">
   
     <title>MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="ruichao.lin">
     
+
+    
     <meta name="description" content="MySQL源码分析导读
 
- 为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天">
+ 为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天我们就主要从环境的 构建说起，MAC 下面最完备的IDE就是 Xcode了，接下来我们看一下，如何使">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL源码之--调试环境Xcode">
+<meta property="og:url" content="http://yoursite.com/2015/06/03/mysql source code debug xcode/">
+<meta property="og:site_name" content="ruiaylin's Blog">
+<meta property="og:description" content="MySQL源码分析导读
+
+ 为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天我们就主要从环境的 构建说起，MAC 下面最完备的IDE就是 Xcode了，接下来我们看一下，如何使">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MySQL源码之--调试环境Xcode">
+<meta name="twitter:description" content="MySQL源码分析导读
+
+ 为了更好的使用MySQL数据库，从而在数据库架构设计与应用时给出最好的解决方案,从今天开始对MySQL源码进行一些初步的学习和分析。 当然，首先推荐几本书：Pro MySQL , Expert MySQL , mariadb的设计和实现。 另外就是构建阅读和调试环境，今天我们就主要从环境的 构建说起，MAC 下面最完备的IDE就是 Xcode了，接下来我们看一下，如何使">
+
+
     
-    
-    
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="ruiaylin" />
-    <meta name="twitter:title" content="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" />
-      
-    
+    <link rel="alternative" href="/atom.xml" title="ruiaylin&#39;s Blog" type="application/atom+xml">
     
     
     <link rel="icon" href="/img/favicon.ico">
     
     
-    <link rel="apple-touch-icon" href="/img/pacman.jpg">
-    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
     
     <link rel="stylesheet" href="/css/style.css" type="text/css">
 
@@ -34,10 +44,11 @@
 
   <body>
     <header>
-      <div>
+      
+<div>
 		
 			<div id="imglogo">
-				<a href="/"><img src="/img/logo.svg" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
+				<a href="/"><img src="/img/logo.png" alt="ruiaylin&#39;s Blog" title="ruiaylin&#39;s Blog"/></a>
 			</div>
 			
 			<div id="textlogo">
@@ -50,19 +61,17 @@
 				<ul>
 					<ul>
 					 
-						<li><a href="/">博客</a></li>
+						<li><a href="/">Home</a></li>
 					
-						<li><a href="/archives">归档</a></li>
+						<li><a href="/archives">Archives</a></li>
 					
-						<li><a href="/labs">实验室</a></li>
-					
-						<li><a href="/about">关于</a></li>
+						<li><a href="/about">About</a></li>
 					
 					<li>
-					
+ 					
 					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
 						<label>Search</label>
-						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
+						<input type="search" id="search" name="q" autocomplete="off" maxlength="20" placeholder="搜索" />
 						<input type="hidden" name="q" value="site:yoursite.com">
 					</form>
 					
@@ -70,10 +79,10 @@
 				</ul>
 			</nav>			
 </div>
-
     </header>
     <div id="container">
       <div id="main" class="post" itemscope itemprop="blogPost">
+  
 	<article itemprop="articleBody"> 
 		<header class="article-info clearfix">
   <h1 itemprop="name">
@@ -81,21 +90,21 @@
       <a href="/2015/06/03/mysql source code debug xcode/" title="MySQL源码之--调试环境Xcode" itemprop="url">MySQL源码之--调试环境Xcode</a>
   </h1>
   <p class="article-author">By
-    
-      <a href="http://yoursite.com" title="ruichao.lin">ruichao.lin</a>
-    </p>
+       
+		<a href="/about" title="ruichao.lin" target="_blank" itemprop="author">ruichao.lin</a>
+		
   <p class="article-time">
-    <time datetime="2015-06-03T00:50:53.000Z" itemprop="datePublished">6月 3 2015</time>
-    更新日期:<time datetime="2015-06-03T02:20:24.000Z" itemprop="dateModified">6月 3 2015</time>
+    <time datetime="2015-06-03T00:50:53.000Z" itemprop="datePublished"> 发表于 6月 3 2015</time>
     
   </p>
 </header>
 	<div class="article-content">
 		
-		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
-		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL源码分析导读"><span class="toc-number">1.</span> <span class="toc-text">MySQL源码分析导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装必要的软件和调试工具"><span class="toc-number">2.</span> <span class="toc-text">安装必要的软件和调试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode_IDE安装"><span class="toc-number">2.1.</span> <span class="toc-text">Xcode IDE安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装gdb_调试器"><span class="toc-number">2.2.</span> <span class="toc-text">安装gdb 调试器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_cmake_工具"><span class="toc-number">2.3.</span> <span class="toc-text">安装 cmake 工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备MySQL源码"><span class="toc-number">3.</span> <span class="toc-text">准备MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建_Xcode_工程文件，并进行预编译"><span class="toc-number">4.</span> <span class="toc-text">构建 Xcode 工程文件，并进行预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译MySQL源码"><span class="toc-number">5.</span> <span class="toc-text">编译MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化数据库"><span class="toc-number">6.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xcode_调试"><span class="toc-number">7.</span> <span class="toc-text">Xcode 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+		
+			<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL源码分析导读"><span class="toc-number">1.</span> <span class="toc-text">MySQL源码分析导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装必要的软件和调试工具"><span class="toc-number">2.</span> <span class="toc-text">安装必要的软件和调试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode_IDE安装"><span class="toc-number">2.1.</span> <span class="toc-text">Xcode IDE安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装gdb_调试器"><span class="toc-number">2.2.</span> <span class="toc-text">安装gdb 调试器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_cmake_工具"><span class="toc-number">2.3.</span> <span class="toc-text">安装 cmake 工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备MySQL源码"><span class="toc-number">3.</span> <span class="toc-text">准备MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建_Xcode_工程文件，并进行预编译"><span class="toc-number">4.</span> <span class="toc-text">构建 Xcode 工程文件，并进行预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译MySQL源码"><span class="toc-number">5.</span> <span class="toc-text">编译MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化数据库"><span class="toc-number">6.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xcode_调试"><span class="toc-number">7.</span> <span class="toc-text">Xcode 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+		
 		</div>
 		
 		<h3 id="MySQL源码分析导读">MySQL源码分析导读</h3>
@@ -149,12 +158,7 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
   
 	</div>
 		<footer class="article-footer clearfix">
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/code/">code</a><a href="/tags/mysql/">mysql</a>
-  </div>
-
+<div class="article-catetags">
 
 <div class="article-categories">
   <span></span>
@@ -162,14 +166,26 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 </div>
 
 
-
-<div class="article-share" id="share">
-
-  <div data-url="http://yoursite.com/2015/06/03/mysql source code debug xcode/" data-title="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" data-tsina="1828464541" class="share clearfix">
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/源码/">源码</a><a href="/tags/code/">code</a><a href="/tags/mysql/">mysql</a>
   </div>
 
 </div>
-</footer>   	       
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="http://yoursite.com/2015/06/03/mysql source code debug xcode/" data-title="MySQL源码之--调试环境Xcode | ruiaylin&#39;s Blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
 	</article>
 	
 <nav class="article-nav clearfix">
@@ -177,7 +193,7 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 
 <div class="next">
 <a href="/2015/05/04/install docker on centos 6.x/"  title="Install docker on CentOs">
- <strong>NEXT:</strong><br/> 
+ <strong>下一篇：</strong><br/> 
  <span>Install docker on CentOs
 </span>
 </a>
@@ -186,12 +202,15 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 </nav>
 
 	
+
 </div>  
       <div class="openaside"><a class="navbutton" href="#" title="显示侧边栏"></a></div>
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
-  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL源码分析导读"><span class="toc-number">1.</span> <span class="toc-text">MySQL源码分析导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装必要的软件和调试工具"><span class="toc-number">2.</span> <span class="toc-text">安装必要的软件和调试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode_IDE安装"><span class="toc-number">2.1.</span> <span class="toc-text">Xcode IDE安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装gdb_调试器"><span class="toc-number">2.2.</span> <span class="toc-text">安装gdb 调试器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_cmake_工具"><span class="toc-number">2.3.</span> <span class="toc-text">安装 cmake 工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备MySQL源码"><span class="toc-number">3.</span> <span class="toc-text">准备MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建_Xcode_工程文件，并进行预编译"><span class="toc-number">4.</span> <span class="toc-text">构建 Xcode 工程文件，并进行预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译MySQL源码"><span class="toc-number">5.</span> <span class="toc-text">编译MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化数据库"><span class="toc-number">6.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xcode_调试"><span class="toc-number">7.</span> <span class="toc-text">Xcode 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+ 
+ <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL源码分析导读"><span class="toc-number">1.</span> <span class="toc-text">MySQL源码分析导读</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#安装必要的软件和调试工具"><span class="toc-number">2.</span> <span class="toc-text">安装必要的软件和调试工具</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Xcode_IDE安装"><span class="toc-number">2.1.</span> <span class="toc-text">Xcode IDE安装</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装gdb_调试器"><span class="toc-number">2.2.</span> <span class="toc-text">安装gdb 调试器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装_cmake_工具"><span class="toc-number">2.3.</span> <span class="toc-text">安装 cmake 工具</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#准备MySQL源码"><span class="toc-number">3.</span> <span class="toc-text">准备MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#构建_Xcode_工程文件，并进行预编译"><span class="toc-number">4.</span> <span class="toc-text">构建 Xcode 工程文件，并进行预编译</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#编译MySQL源码"><span class="toc-number">5.</span> <span class="toc-text">编译MySQL源码</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#初始化数据库"><span class="toc-number">6.</span> <span class="toc-text">初始化数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Xcode_调试"><span class="toc-number">7.</span> <span class="toc-text">Xcode 调试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#总结"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol>
+ 
   </div>
 
 <div id="asidepart">
@@ -199,54 +218,165 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 <aside class="clearfix">
 
   
+
+
+  
 <div class="categorieslist">
 	<p class="asidetitle">分类</p>
 		<ul>
 		
+		  
 			<li><a href="/categories/MySQL/" title="MySQL">MySQL<sup>1</sup></a></li>
+		  
 		
+		  
 			<li><a href="/categories/docker/" title="docker">docker<sup>2</sup></a></li>
+		  
 		
+		  
 			<li><a href="/categories/linux/" title="linux">linux<sup>3</sup></a></li>
+		  
 		
+		  
 			<li><a href="/categories/mysql/" title="mysql">mysql<sup>11</sup></a></li>
+		  
 		
+		  
 			<li><a href="/categories/ops/" title="ops">ops<sup>1</sup></a></li>
+		  
 		
+		  
 			<li><a href="/categories/oracle/" title="oracle">oracle<sup>1</sup></a></li>
+		  
 		
+		  
 			<li><a href="/categories/python/" title="python">python<sup>8</sup></a></li>
+		  
 		
 		</ul>
 </div>
 
 
   
-  <div class="tagcloudlist">
-    <p class="asidetitle">标签云</p>
-    <div class="tagcloudlist clearfix">
-       <a href="/tags/BIND/" style="font-size: 10.00px;">BIND</a><a href="/tags/DLZ/" style="font-size: 10.00px;">DLZ</a><a href="/tags/DNS/" style="font-size: 12.50px;">DNS</a><a href="/tags/PowerDNS/" style="font-size: 10.00px;">PowerDNS</a><a href="/tags/autofailover/" style="font-size: 10.00px;">autofailover</a><a href="/tags/code/" style="font-size: 10.00px;">code</a><a href="/tags/docker/" style="font-size: 12.50px;">docker</a><a href="/tags/fabric/" style="font-size: 17.50px;">fabric</a><a href="/tags/load-data/" style="font-size: 10.00px;">load-data</a><a href="/tags/mha/" style="font-size: 12.50px;">mha</a><a href="/tags/mysql/" style="font-size: 20.00px;">mysql</a><a href="/tags/ops/" style="font-size: 17.50px;">ops</a><a href="/tags/optimization/" style="font-size: 10.00px;">optimization</a><a href="/tags/pssh/" style="font-size: 10.00px;">pssh</a><a href="/tags/python/" style="font-size: 15.00px;">python</a><a href="/tags/sharding/" style="font-size: 12.50px;">sharding</a><a href="/tags/shell/" style="font-size: 10.00px;">shell</a><a href="/tags/summary/" style="font-size: 10.00px;">summary</a><a href="/tags/threading/" style="font-size: 10.00px;">threading</a><a href="/tags/tools/" style="font-size: 10.00px;">tools</a><a href="/tags/xtrabackup/" style="font-size: 12.50px;">xtrabackup</a><a href="/tags/多实例/" style="font-size: 10.00px;">多实例</a><a href="/tags/源码/" style="font-size: 10.00px;">源码</a>
-    </div>
-  </div>
+<div class="tagslist">
+	<p class="asidetitle">标签</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/mysql/" title="mysql">mysql<sup>5</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/ops/" title="ops">ops<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/fabric/" title="fabric">fabric<sup>4</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/python/" title="python">python<sup>3</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/xtrabackup/" title="xtrabackup">xtrabackup<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/docker/" title="docker">docker<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mha/" title="mha">mha<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/sharding/" title="sharding">sharding<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DNS/" title="DNS">DNS<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/summary/" title="summary">summary<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/源码/" title="源码">源码<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/code/" title="code">code<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/autofailover/" title="autofailover">autofailover<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/shell/" title="shell">shell<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/DLZ/" title="DLZ">DLZ<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/BIND/" title="BIND">BIND<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/optimization/" title="optimization">optimization<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/load-data/" title="load-data">load-data<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/tools/" title="tools">tools<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/threading/" title="threading">threading<sup>1</sup></a></li>
+			
+		
+		</ul>
+</div>
 
 
   <div class="linkslist">
   <p class="asidetitle">友情链接</p>
     <ul>
-		<li><a href="http://www.mysqlperformanceblog.com/" target="_blank" title="mysqlperformanceblog">mysqlperformanceblog.com</a></li>
-		<li><a href="http://highscalability.com/" target="_blank" title="aws">highscalability.com</a></li>
-		<li><a href="https://blogs.oracle.com/mysqlinnodb/" target="_blank" title="aws">blogs.oracle.com/mysqlinnodb</a></li>
-		<li><a href="http://blog.jcole.us/" target="_blank" title="JeremyCole">Jeremy Cole</a></li>
-		<li><a href="http://mysqldba.cn/forum.php" target="_blank" title="mysqldba">mysqldba.cn</a></li>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://wuchong.me" target="_blank" title="Jark&#39;s Blog">Jark&#39;s Blog</a>
+            
+          </li>
+        
     </ul>
-</div> 
+</div>
 
-
+  
 
 
   <div class="rsspart">
-	<a href="null" target="_blank" title="rss">RSS 订阅</a>
+	<a href="/atom.xml" target="_blank" title="rss">RSS 订阅</a>
 </div>
+
+  <div class="weiboshow">
+  <p class="asidetitle">新浪微博</p>
+    <iframe width="100%" height="119" class="share_self"  frameborder="0" scrolling="no" src="http://widget.weibo.com/weiboshow/index.php?language=&width=0&height=119&fansRow=2&ptype=1&speed=0&skin=9&isTitle=1&noborder=1&isWeibo=0&isFans=0&uid=null&verifier=b3593ceb&dpc=1"></iframe>
+</div>
+
 
 </aside>
 </div>
@@ -260,32 +390,41 @@ cp support-files<span class="regexp">/*.cnf work/share/</span>
 	
 	
 	<section class="info">
-		<p> I&#39;m ruiayLin , work at AUTOHOME.COM.CN   <br/>
-			Previous : work at Alipay.com as a database engineer for three years </p>
+		<p> Hello ,I&#39;m Larry Page in Google. <br/>
+			This is my blog,believe it or not.</p>
 	</section>
 	 
 	<div class="social-font" class="clearfix">
 		
-		<a href="http://weibo.com/1828464541" target="_blank" title="weibo"></a>
+		<a href="http://weibo.com/2176287895" target="_blank" class="icon-weibo" title="微博"></a>
 		
 		
-		<a href="https://twitter.com/ruiaylin" target="_blank" title="twitter"></a>
 		
 		
-		<a href="https://github.com/ruiaylin" target="_blank" title="github"></a>
 		
 		
-		<a href="https://www.facebook.com/alexlrc.lin" target="_blank" title="facebook"></a>
+		
+		
+		
 		
 	</div>
-		<p class="copyright">Powered by <a href="http://zespia.tw/hexo/" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2015 
+			
 		
-		<a href="http://yoursite.com" target="_blank" title="ruichao.lin">ruichao.lin</a>
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2016 
+		
+		<a href="/about" target="_blank" title="ruichao.lin">ruichao.lin</a>
+		
 		
 		</p>
 </div>
 </footer>
-    <script src="/js/jquery-2.1.0.min.js"></script>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
 <script type="text/javascript">
 $(document).ready(function(){ 
   $('.navbar').click(function(){
@@ -303,20 +442,6 @@ $(document).ready(function(){
       a = $('#asidepart'),
       c = $('.closeaside'),
       o = $('.openaside');
-  $(window).resize(function(){
-    getSize(); 
-    if (myWidth >= 1024) {
-      $('header nav').removeClass('shownav');
-    }else
-    {
-      m.removeClass('moveMain');
-      a.css('display', 'block').removeClass('fadeOut');
-      o.css('display', 'none');
-      
-      $('#toc.toc-aside').css('display', 'none');
-        
-    }
-  });
   c.click(function(){
     a.addClass('fadeOut').css('display', 'none');
     o.css('display', 'block').addClass('fadeIn');
@@ -330,6 +455,20 @@ $(document).ready(function(){
   $(window).scroll(function(){
     o.css("top",Math.max(80,260-$(this).scrollTop()));
   });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
 });
 </script>
 
@@ -338,8 +477,6 @@ $(document).ready(function(){
   var ai = $('.article-content>iframe'),
       ae = $('.article-content>embed'),
       t  = $('#toc'),
-      h  = $('article h2')
-      ah = $('article h2'),
       ta = $('#toc.toc-aside'),
       o  = $('.openaside'),
       c  = $('.closeaside');
@@ -349,19 +486,15 @@ $(document).ready(function(){
   if(ae.length>0){
    ae.wrap('<div class="video-container" />');
   };
-  if(ah.length==0){
-    t.css('display','none');
-  }else{
-    c.click(function(){
-      ta.css('display', 'block').addClass('fadeIn');
-    });
-    o.click(function(){
-      ta.css('display', 'none');
-    });
-    $(window).scroll(function(){
-      ta.css("top",Math.max(140,320-$(this).scrollTop()));
-    });
-  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
 });
 </script>
 
@@ -372,27 +505,53 @@ $(document).ready(function(){
       url = $this.attr('data-url'),
       encodedUrl = encodeURIComponent(url),
       title = $this.attr('data-title'),
-      tsina = $this.attr('data-tsina');
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
   var html = [
-  '<a href="#" class="overlay" id="qrcode"></a>',
-  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
-  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
   '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
-  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
   '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
-  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
   '<span title="Share to"></span>'
   ].join('');
   $this.append(html);
-  $('.article-share-qrcode').click(function(){
-    var imgSrc = $('#qrcode-pic').attr('data-src');
-    $('#qrcode-pic').attr('src', imgSrc);
-    $('#qrcode-pic').load(function(){
-        $('.qrcode strong').text(' ');
-    });
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
   });
-});     
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
 </script>
+
+
+
+
+
 
 
 
@@ -419,6 +578,43 @@ $(document).ready(function(){
 </script>
 
 
+
+<!-- Analytics Begin -->
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "//hm.baidu.com/hm.js?e6d1f421bbc9962127a50488f9ed37d1";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回顶部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<!-- Tiny_search End -->
 
   </body>
 </html>
